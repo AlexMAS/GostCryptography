@@ -5,7 +5,7 @@ Provides abstractions for working with russian national cryptographic algorithms
 
 - [NuGet Package](https://www.nuget.org/packages/GostCryptography)
 - [Examples](Source/GostCryptography.Tests)
-- [License](LICENSE.md)
+- [License](LICENSE)
 
 ## Implemented algorithms
 
