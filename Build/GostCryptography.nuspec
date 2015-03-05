@@ -1,0 +1,16 @@
+﻿<?xml version="1.0"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+		<id>GostCryptography</id>
+		<title>GostCryptography</title>
+		<description>.NET driver for ViPNet CSP and CryptoPro CSP</description>
+		<summary>GostCryptography is .NET driver for ViPNet CSP and CryptoPro CSP. Provides abstractions for working with russian national cryptographic algorithms (GOST).</summary>
+		<version>1.0.0</version>
+		<authors>Alexander Mezhov</authors>
+		<licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<language>en-US</language>
+		<tags>GOST Cryptography ViPNet CryptoPro</tags>
+		<projectUrl>https://github.com/AlexMAS/GostCryptography</projectUrl>
+	</metadata>
+</package>

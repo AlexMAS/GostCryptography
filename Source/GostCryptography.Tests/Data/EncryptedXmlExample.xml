@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MyXml>
+	<SomeElement Encrypt="false">
+		Here is public data.
+	</SomeElement>
+	<SomeElement Encrypt="true">
+		Here is private data.
+	</SomeElement>
+	<SomeElement Encrypt="true">
+		Here is private data.
+	</SomeElement>
+	<SomeElement Encrypt="true">
+		Here is private data.
+	</SomeElement>
+</MyXml>

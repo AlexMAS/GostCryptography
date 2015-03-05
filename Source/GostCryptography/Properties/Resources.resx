@@ -1,0 +1,378 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="InvalidCspProviderFlags" xml:space="preserve">
+    <value>Value of CspProviderFlags is invalid.</value>
+  </data>
+  <data name="InvalidDataOffset" xml:space="preserve">
+    <value>Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.</value>
+  </data>
+  <data name="Asn1DecodeError" xml:space="preserve">
+    <value>ASN.1 encoded byte array contains invalid structure '{0}'.</value>
+  </data>
+  <data name="Asn1DecodeAlg" xml:space="preserve">
+    <value>ASN.1 encoded byte array contains algorithm identifier with unknown OID '{0}'.</value>
+  </data>
+  <data name="Asn1DecodeAlgorithmParameters" xml:space="preserve">
+    <value>ASN.1 encoded byte array does not contains algorithm parameters.</value>
+  </data>
+  <data name="Asn1EncodeError" xml:space="preserve">
+    <value>ASN.1 encode '{0}' error.</value>
+  </data>
+  <data name="Asn1EncodeErrorWithValue" xml:space="preserve">
+    <value>ASN.1 encode '{0}' error. Source value: '{1}'.</value>
+  </data>
+  <data name="ShouldSupportGost3410" xml:space="preserve">
+    <value>Parameter must support GOST R 34.10 algorithm.</value>
+  </data>
+  <data name="AlgorithmNotAvailable" xml:space="preserve">
+    <value>Cryptographic service provider (CSP) could not be found for this algorithm.</value>
+  </data>
+  <data name="IncorrectFeedbackSize" xml:space="preserve">
+    <value>Feedback size for the cipher feedback mode (CFB) must be 8 bits.</value>
+  </data>
+  <data name="CipherTextSteamingNotSupported" xml:space="preserve">
+    <value>Cipher Text Steaming mode (CTS) is not supported by this implementation.</value>
+  </data>
+  <data name="RequiredGost28147" xml:space="preserve">
+    <value>Required GOST 28147 key handle.</value>
+  </data>
+  <data name="InvalidString" xml:space="preserve">
+    <value>CSP return invalid string.</value>
+  </data>
+  <data name="NoPrivateKey" xml:space="preserve">
+    <value>Object contains only the public half of a key pair. A private key must also be provided.</value>
+  </data>
+  <data name="KeyAlgorithmNotSupported" xml:space="preserve">
+    <value>The specified cryptographic service provider (CSP) does not support this key algorithm.</value>
+  </data>
+  <data name="EphemKeyOperationNotSupported" xml:space="preserve">
+    <value>Cryptography operation is not supported on ephemeral key.</value>
+  </data>
+  <data name="RequiredGost3411" xml:space="preserve">
+    <value>GOST R 34.10 requires GOST R 34.11 hash.</value>
+  </data>
+  <data name="RequiredGostHash" xml:space="preserve">
+    <value>Hash algorithm must be GOST R 34.11, GOST R 34.11 HMAC or GOST R 34.11 Imit.</value>
+  </data>
+  <data name="InvalidFromXmlString" xml:space="preserve">
+    <value>Input string does not contain a valid encoding of the '{0}' parameter.</value>
+  </data>
+  <data name="InvalidHashSize" xml:space="preserve">
+    <value>GOST R 34.11-94 algorithm hash size is 32 bytes.</value>
+  </data>
+  <data name="InvalidIvSize" xml:space="preserve">
+    <value>Specified initialization vector (IV) does not match the block size for this algorithm.</value>
+  </data>
+  <data name="InvalidPaddingMode" xml:space="preserve">
+    <value>Specified padding mode is not valid for this algorithm.</value>
+  </data>
+  <data name="UserInteractiveNotSupported" xml:space="preserve">
+    <value>The current session is not interactive.</value>
+  </data>
+  <data name="DecryptInvalidDataSize" xml:space="preserve">
+    <value>Length of the data to decrypt is invalid.</value>
+  </data>
+  <data name="EncryptInvalidDataSize" xml:space="preserve">
+    <value>Length of the data to encrypt is invalid.</value>
+  </data>
+  <data name="SymmetryExportBulkKeyNotSupported" xml:space="preserve">
+    <value>Bulk session key export from CSP is not supported.</value>
+  </data>
+  <data name="SymmetryImportBulkKeyNotSupported" xml:space="preserve">
+    <value>Bulk session key import from CSP is not supported.</value>
+  </data>
+  <data name="UserExportBulkBlob" xml:space="preserve">
+    <value>Bulk private key blob export is not supported.</value>
+  </data>
+  <data name="UserExportBulkKeyNotSupported" xml:space="preserve">
+    <value>Bulk user key export from CSP is not supported.</value>
+  </data>
+  <data name="UserImportBulkBlob" xml:space="preserve">
+    <value>Bulk private key blob import is not supported.</value>
+  </data>
+  <data name="UserImportBulkKeyNotSupported" xml:space="preserve">
+    <value>Bulk user key import to CSP is not supported.</value>
+  </data>
+  <data name="XmlMissingDecryptionKey" xml:space="preserve">
+    <value>Unable to retrieve the decryption key.</value>
+  </data>
+  <data name="Gost28147UnsafeCreateDecryptorNotSupported" xml:space="preserve">
+    <value>Bulk session key import from CSP is not supported. Use safe method CreateDecryptor() with DecodePrivateKey().</value>
+  </data>
+  <data name="Gost28147UnsafeCreateEncryptor" xml:space="preserve">
+    <value>Bulk session key import from CSP is not supported. Use safe method CreateEncryptor() with EncodePrivateKey().</value>
+  </data>
+  <data name="InvalidHashAlgorithm" xml:space="preserve">
+    <value>Invalid hash algorithm.</value>
+  </data>
+  <data name="Asn1IllegalCharacter" xml:space="preserve">
+    <value>ASN.1 illegal character '{0}'.</value>
+  </data>
+  <data name="Asn1InvalidDateFormat" xml:space="preserve">
+    <value>ASN.1 invalid date format.</value>
+  </data>
+  <data name="Asn1InvalidEncodedDataLength" xml:space="preserve">
+    <value>ASN.1 encoded data length must be a multiple of four.</value>
+  </data>
+  <data name="Asn1InvalidNumberFormat" xml:space="preserve">
+    <value>ASN.1 invalid number format.</value>
+  </data>
+  <data name="Asn1EndOfBufferException" xml:space="preserve">
+    <value>ASN.1 decode error. Unexpected end-of-buffer encountered. Offset {0}.</value>
+  </data>
+  <data name="Asn1InvalidLengthException" xml:space="preserve">
+    <value>ASN.1 decode error: Invalid length value.</value>
+  </data>
+  <data name="Asn1ConsVioException" xml:space="preserve">
+    <value>ASN.1 element '{0}' with value '{1}' violates defined constraint.</value>
+  </data>
+  <data name="Asn1FractionNotSupportedForUtcTime" xml:space="preserve">
+    <value>ASN.1 fraction doesn't supported for UTCTime.</value>
+  </data>
+  <data name="Asn1HoursExpected" xml:space="preserve">
+    <value>ASN.1 hours expected.</value>
+  </data>
+  <data name="Asn1IntegerValueIsTooLarge" xml:space="preserve">
+    <value>ASN.1 integer value is too large.</value>
+  </data>
+  <data name="Asn1InvalidCenturyValue" xml:space="preserve">
+    <value>ASN.1 invalid century value: {0}.</value>
+  </data>
+  <data name="Asn1InvalidChoiceOptionException" xml:space="preserve">
+    <value>ASN.1 Object assigned to value not in CHOICE.</value>
+  </data>
+  <data name="Asn1InvalidChoiceOptionTagException" xml:space="preserve">
+    <value>ASN.1 decode error. Element with tag '{0}' not in CHOICE. Offset: {1}.</value>
+  </data>
+  <data name="Asn1InvalidDayValue" xml:space="preserve">
+    <value>ASN.1 invalid day value: {0}.</value>
+  </data>
+  <data name="Asn1InvalidDayValueForMonthAndYear" xml:space="preserve">
+    <value>ASN.1 invalid day value: {0} for month {1} and year {2}.</value>
+  </data>
+  <data name="Asn1InvalidDecimalMark" xml:space="preserve">
+    <value>ASN.1 invalid decimal mark.</value>
+  </data>
+  <data name="Asn1InvalidDiffHour" xml:space="preserve">
+    <value>ASN.1 invalid DiffHour.</value>
+  </data>
+  <data name="Asn1InvalidDiffHourValue" xml:space="preserve">
+    <value>ASN.1 invalid DiffHour value: {0}.</value>
+  </data>
+  <data name="Asn1InvalidDiffMinute" xml:space="preserve">
+    <value>ASN.1 invalid DiffMinute.</value>
+  </data>
+  <data name="Asn1InvalidDiffMinuteValue" xml:space="preserve">
+    <value>ASN.1 invalid DiffMinute value: {0}.</value>
+  </data>
+  <data name="Asn1InvalidFormatOfBitString" xml:space="preserve">
+    <value>ASN.1 invalid format of bit string: initial octet is invalid ({0}).</value>
+  </data>
+  <data name="Asn1InvalidFormatOfConstructedValue" xml:space="preserve">
+    <value>ASN.1 decode error. ASN.1 invalid format of constructed value. Offset: {0}.</value>
+  </data>
+  <data name="Asn1InvalidHourValue" xml:space="preserve">
+    <value>ASN.1 invalid hour value: {0}.</value>
+  </data>
+  <data name="Asn1InvalidMinuteValue" xml:space="preserve">
+    <value>ASN.1 invalid minute value: {0}.</value>
+  </data>
+  <data name="Asn1InvalidMonthValue" xml:space="preserve">
+    <value>ASN.1 invalid month value: {0}.</value>
+  </data>
+  <data name="Asn1InvalidMonthValueForDayAndYear" xml:space="preserve">
+    <value>ASN.1 invalid month value: {0} for day {1} and year {2}.</value>
+  </data>
+  <data name="Asn1InvalidObjectIdException" xml:space="preserve">
+    <value>ASN.1 invalid object identifier value.</value>
+  </data>
+  <data name="Asn1InvalidSecondValue" xml:space="preserve">
+    <value>ASN.1 invalid second value: {0}.</value>
+  </data>
+  <data name="Asn1InvalidTagValue" xml:space="preserve">
+    <value>ASN.1 invalid tag value: too big.</value>
+  </data>
+  <data name="Asn1InvalidYearValue" xml:space="preserve">
+    <value>ASN.1 invalid year value: {0}.</value>
+  </data>
+  <data name="Asn1InvalidYearValueForDayAndMonth" xml:space="preserve">
+    <value>ASN.1 invalid year value: {0} for day {1} and month {2}.</value>
+  </data>
+  <data name="Asn1MinutesExpected" xml:space="preserve">
+    <value>ASN.1 minutes expected.</value>
+  </data>
+  <data name="Asn1MissingRequiredException" xml:space="preserve">
+    <value>ASN.1 decode error. SEQUENCE or SET is missing a required element. Offset: {0}.</value>
+  </data>
+  <data name="Asn1SeqOrderException" xml:space="preserve">
+    <value>ASN.1 elements in SEQUENCE not in correct order.</value>
+  </data>
+  <data name="Asn1TableConstraint" xml:space="preserve">
+    <value>ASN.1 table constraint: parameters decode failed.</value>
+  </data>
+  <data name="Asn1TagMatchFailedException" xml:space="preserve">
+    <value>ASN.1 decode error. Tag match failed: expected '{0}', parsed '{1}'. Offset {2}.</value>
+  </data>
+  <data name="Asn1TimeStringCouldNotBeGenerated" xml:space="preserve">
+    <value>ASN.1 time string could not be generated.</value>
+  </data>
+  <data name="Asn1TooBigIntegerValue" xml:space="preserve">
+    <value>ASN.1 too big integer value (length is {0}).</value>
+  </data>
+  <data name="Asn1UnexpectedSymbol" xml:space="preserve">
+    <value>ASN.1 unexpected '.' or ','.</value>
+  </data>
+  <data name="Asn1UnexpectedValuesAtEndOfString" xml:space="preserve">
+    <value>ASN.1 unexpected values at end of string.</value>
+  </data>
+  <data name="Asn1UnexpectedZoneOffset" xml:space="preserve">
+    <value>ASN.1 unexpected zone offset in DER/CER/PER time string.</value>
+  </data>
+  <data name="Asn1ValueParseException" xml:space="preserve">
+    <value>ASN.1 value parse failed. String: '{0}'. Offset: {1}.</value>
+  </data>
+  <data name="InvalidDiffValue" xml:space="preserve">
+    <value>ASN.1 invalid Diff value: {0}.</value>
+  </data>
+  <data name="Asn1IllegalDigit" xml:space="preserve">
+    <value>ASN.1 illegal digit in BigInteger.</value>
+  </data>
+  <data name="Asn1IllegalEmbeddedMinusSign" xml:space="preserve">
+    <value>ASN.1 illegal embedded minus sign in BigInteger.</value>
+  </data>
+  <data name="Asn1InvalidFormatForBigIntegerValue" xml:space="preserve">
+    <value>ASN.1 invalid format for BigInteger value.</value>
+  </data>
+  <data name="Asn1ReadOutputStreamNotSupported" xml:space="preserve">
+    <value>ASN.1 read output stream not supported.</value>
+  </data>
+  <data name="Asn1ZeroLengthBigInteger" xml:space="preserve">
+    <value>ASN.1 zero length BigInteger.</value>
+  </data>
+  <data name="XmlCannotFindPrivateMember" xml:space="preserve">
+    <value>Cannot find private member '{0}'.</value>
+  </data>
+  <data name="XmlKeyInfoRequired" xml:space="preserve">
+    <value>A KeyInfo element is required to check the signature.</value>
+  </data>
+  <data name="XmlMissingAlgorithm" xml:space="preserve">
+    <value>Symmetric algorithm is not specified.</value>
+  </data>
+</root>

@@ -1,0 +1,21 @@
+# Build results
+
+[Bb]in/
+[Oo]bj/
+[Aa]ssemblies/
+
+# User-specific files
+
+*.suo
+*.user
+*.csproj.DotSettings
+
+# ReSharper is a .NET coding add-in
+
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# NuGet Packages Directory
+
+packages/
+!packages/repositories.config

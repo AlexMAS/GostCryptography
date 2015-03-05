@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MyXml>
+	<SomeElement Id="Id1">
+		Here is some data to sign.
+	</SomeElement>
+</MyXml>

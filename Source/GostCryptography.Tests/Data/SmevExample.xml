@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"
+			xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+			xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+			>
+	<S:Header>
+		<wsse:Security S:actor="http://smev.gosuslugi.ru/actors/smev">
+			<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+				<ds:KeyInfo>
+					<wsse:SecurityTokenReference>
+						<wsse:Reference URI="#SenderCertificate"/>
+					</wsse:SecurityTokenReference>
+				</ds:KeyInfo>
+			</ds:Signature>
+			<wsse:BinarySecurityToken EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary"
+									  ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"
+									  wsu:Id="SenderCertificate"
+									  >
+			</wsse:BinarySecurityToken>
+		</wsse:Security>
+	</S:Header>
+	<S:Body wsu:Id="body">
+		<ws:queryINNFL xmlns:ws="http://ws.unisoft/">
+			<smev:Message xmlns:smev="http://smev.gosuslugi.ru/rev110801">
+				<smev:Sender>
+					<smev:Code>MINECONOMSK_SYS_1</smev:Code>
+					<smev:Name>Минэкономразвития СК</smev:Name>
+				</smev:Sender>
+				<smev:Recipient>
+					<smev:Code>13312</smev:Code>
+					<smev:Name>ФНС</smev:Name>
+				</smev:Recipient>
+				<smev:Originator>
+					<smev:Code>MINECONOMSK_SYS_1</smev:Code>
+					<smev:Name>Минэкономразвития СК</smev:Name>
+				</smev:Originator>
+				<smev:TypeCode>2</smev:TypeCode>
+				<smev:Date>2012-03-13T11:10:54.54Z</smev:Date>
+			</smev:Message>
+			<smev:MessageData xmlns:smev="http://smev.gosuslugi.ru/rev110801">
+				<smev:AppData wsu:Id="fns-AppData">
+					<Документ xmlns="http://ws.unisoft/FNSINN/queryINNFL" ВерсФорм="4.01" ИдЗапрос="AB324006-978B-44D4-933D-C5E6DFA8A576">
+						<СвЮЛ ИННЮЛ="7825497650" НаимОрг="Нагрузочное тестирование" ОГРН="1037843048880"/>
+						<СвФЛ ДатаРожд="12.07.1954" МестоРожд="РОССИЯ,,ГОРЬКОВСКАЯ ОБЛ.,АРЗАМАССКИЙ Р-Н,,НИКОЛЬСКОЕ С., ,,,">
+							<ФИО Имя="ПЕТР" Отчество="АЛЕКСЕЕВИЧ" Фамилия="ЧАХЛОВ"/>
+							<УдЛичнФЛ ВыдДок="АРОВД" ДатаДок="16.11.2002" КодВидДок="21" СерНомДок="22 02 919928"/>
+						</СвФЛ>
+					</Документ>
+				</smev:AppData>
+			</smev:MessageData>
+		</ws:queryINNFL>
+	</S:Body>
+</S:Envelope>
