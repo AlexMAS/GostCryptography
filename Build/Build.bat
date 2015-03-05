@@ -1,6 +1,7 @@
 call "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\vcvarsall.bat"
 
-msbuild ..\GostCryptography.sln /t:Clean /p:Configuration=Release
+msbuild "..\GostCryptography.sln" /t:Clean /p:Configuration=Release
+msbuild "..\GostCryptography.sln" /p:Configuration=Release
 
 if exist "..\Assemblies\Package\" rmdir /s /q "..\Assemblies\Package\"
 mkdir "..\Assemblies\Package"
@@ -11,4 +12,4 @@ copy "..\Assemblies\GostCryptography.xml" "..\Assemblies\Package\lib\GostCryptog
 copy "GostCryptography.nuspec" "..\Assemblies\Package\GostCryptography.nuspec"
 
 set EnableNuGetPackageRestore=true
-"..\Tools\NuGet\NuGet.exe" pack "GostCryptography.nuspec" -OutputDirectory "..\Assemblies\Package"
+"..\Tools\NuGet\NuGet.exe" pack "..\Assemblies\Package\GostCryptography.nuspec" -OutputDirectory "..\Assemblies\Package"
