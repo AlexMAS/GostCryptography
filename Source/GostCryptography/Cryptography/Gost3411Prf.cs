@@ -7,7 +7,7 @@ using GostCryptography.Properties;
 namespace GostCryptography.Cryptography
 {
 	/// <summary>
-	/// Реализация алгоритма генерации псевдослучайной последовательности (Pseudorandom Function, PFR) по ГОСТ Р 34.11.
+	/// Реализация алгоритма генерации псевдослучайной последовательности (Pseudorandom Function, PRF) по ГОСТ Р 34.11.
 	/// </summary>
 	public sealed class Gost3411Prf : IDisposable
 	{
