@@ -28,3 +28,13 @@ Provides abstractions for working with russian national cryptographic algorithms
 
 - [XML encryption based on the GOST R 34.10](Source/GostCryptography/Xml/GostEncryptedXml.cs)
 - [XML signing based on XML-DSig and the GOST R 34.10](Source/GostCryptography/Xml/GostSignedXml.cs)
+
+## Select CSP
+
+```C#
+// ViPNet CSP (by default)
+GostCryptoConfig.ProviderType = ProviderTypes.VipNet;
+
+// CryptoPro CSP
+GostCryptoConfig.ProviderType = ProviderTypes.CryptoPro;
+```
