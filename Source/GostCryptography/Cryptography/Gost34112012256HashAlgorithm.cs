@@ -14,6 +14,7 @@ namespace GostCryptography.Cryptography
         {
         }
 
+        [SecuritySafeCritical]
         protected override SafeHashHandleImpl CreateHashHandle()
         {
             return CryptoApiHelper.CreateHash_3411_2012_256(CryptoApiHelper.ProviderHandle);

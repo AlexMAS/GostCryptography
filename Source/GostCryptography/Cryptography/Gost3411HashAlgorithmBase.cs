@@ -15,6 +15,7 @@ namespace GostCryptography.Cryptography
         public const int DefaultHashSizeValue = 256;
 
 
+        [SecuritySafeCritical]
         protected Gost3411HashAlgorithmBase()
         {
             HashSizeValue = DefaultHashSizeValue;
@@ -26,6 +27,7 @@ namespace GostCryptography.Cryptography
         /// <summary>
         /// Создает дескриптор функции хэширования криптографического провайдера.
         /// </summary>
+        [SecuritySafeCritical]
         protected abstract SafeHashHandleImpl CreateHashHandle();
 
 

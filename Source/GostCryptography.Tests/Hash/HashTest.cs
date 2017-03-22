@@ -53,6 +53,7 @@ namespace GostCryptography.Tests.Hash
 
             // Then
             Assert.IsNotNull(hashValue);
+            Assert.AreEqual(32, hashValue.Length);
         }
 
         [Test]
@@ -72,6 +73,7 @@ namespace GostCryptography.Tests.Hash
 
             // Then
             Assert.IsNotNull(hashValue);
+            Assert.AreEqual(64, hashValue.Length);
         }
 
 
