@@ -7,40 +7,79 @@ using NUnit.Framework;
 
 namespace GostCryptography.Tests.Hash
 {
-	/// <summary>
-	/// Вычисление хэша.
-	/// </summary>
-	/// <remarks>
-	/// Тест создает поток байт, вычисляет хэш и проверяет его корректность.
-	/// </remarks>
-	[TestFixture(Description = "Вычисление хэша")]
-	public sealed class HashTest
-	{
-		[Test]
-		public void ShouldComputeHash()
-		{
-			// Given
-			var dataStream = CreateDataStream();
+    /// <summary>
+    /// Вычисление хэша в соответствии с ГОСТ Р 34.11.
+    /// </summary>
+    /// <remarks>
+    /// Тест создает поток байт, вычисляет хэш в соответствии с ГОСТ Р 34.11 и проверяет его корректность.
+    /// </remarks>
+    [TestFixture(Description = "Вычисление хэша в соответствии с ГОСТ Р 34.11")]
+    public sealed class HashTest
+    {
+        [Test]
+        public void ShouldComputeHash3411_94()
+        {
+            // Given
+            var dataStream = CreateDataStream();
 
-			// When
+            // When
 
-			byte[] hashValue;
+            byte[] hashValue;
 
-			using (var hash = new Gost3411HashAlgorithm())
-			{
-				hashValue = hash.ComputeHash(dataStream);
-			}
+            using (var hash = new Gost3411HashAlgorithm())
+            {
+                hashValue = hash.ComputeHash(dataStream);
+            }
 
-			// Then
-			Assert.IsNotNull(hashValue);
-			Assert.AreEqual(32, hashValue.Length);
-		}
+            // Then
+            Assert.IsNotNull(hashValue);
+            Assert.AreEqual(32, hashValue.Length);
+        }
 
-		private static Stream CreateDataStream()
-		{
-			// Некоторый поток байт
+        [Test]
+        public void ShouldComputeHash3411_2012_256()
+        {
+            // Given
+            var dataStream = CreateDataStream();
 
-			return new MemoryStream(Encoding.UTF8.GetBytes("Some data for hash..."));
-		}
-	}
+            // When
+
+            byte[] hashValue;
+
+            using (var hash = new Gost34112012256HashAlgorithm())
+            {
+                hashValue = hash.ComputeHash(dataStream);
+            }
+
+            // Then
+            Assert.IsNotNull(hashValue);
+        }
+
+        [Test]
+        public void ShouldComputeHash3411_2012_512()
+        {
+            // Given
+            var dataStream = CreateDataStream();
+
+            // When
+
+            byte[] hashValue;
+
+            using (var hash = new Gost34112012512HashAlgorithm())
+            {
+                hashValue = hash.ComputeHash(dataStream);
+            }
+
+            // Then
+            Assert.IsNotNull(hashValue);
+        }
+
+
+        private static Stream CreateDataStream()
+        {
+            // Некоторый поток байт
+
+            return new MemoryStream(Encoding.UTF8.GetBytes("Some data for hash..."));
+        }
+    }
 }

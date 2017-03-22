@@ -206,7 +206,7 @@ namespace GostCryptography.Cryptography
 
 			var providerHandle = CryptoApiHelper.ProviderHandle;
 
-			var hashHandle = CryptoApiHelper.CreateHash(providerHandle);
+			var hashHandle = CryptoApiHelper.CreateHash_3411_94(providerHandle);
 			CryptoApiHelper.HashData(hashHandle, password, 0, password.Length);
 
 			var symKeyHandle = CryptoApiHelper.DeriveSymKey(providerHandle, hashHandle);

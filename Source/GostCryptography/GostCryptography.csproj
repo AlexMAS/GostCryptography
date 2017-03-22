@@ -134,7 +134,9 @@
     <Compile Include="Asn1\PKI\Explicit88\Gost94PubKeyType.cs" />
     <Compile Include="Asn1\PKI\Explicit88\GostR341194DigestParamsType.cs" />
     <Compile Include="Asn1\PKI\Explicit88\PkiConstants.cs" />
+    <Compile Include="Cryptography\Gost34112012512HashAlgorithm.cs" />
     <Compile Include="Cryptography\Gost3411Prf.cs" />
+    <Compile Include="Cryptography\Gost34112012256HashAlgorithm.cs" />
     <Compile Include="Cryptography\GostKeyValue.cs" />
     <Compile Include="Cryptography\GostSignatureDescription.cs" />
     <Compile Include="Cryptography\ProviderTypes.cs" />

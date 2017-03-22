@@ -1,10 +1,10 @@
 ﻿namespace GostCryptography.Native
 {
-	/// <summary>
-	/// Константы для работы с криптографическим провайдером.
-	/// </summary>
-	static class Constants
-	{
+    /// <summary>
+    /// Константы для работы с криптографическим провайдером.
+    /// </summary>
+    public static class Constants
+    {
         // ReSharper disable InconsistentNaming
 
 
@@ -18,12 +18,12 @@
         /// <summary>
         /// Идентификатор алгоритма обмена ключей по Диффи-Хеллману на базе закрытого ключа пользователя. Открытый ключ получается по ГОСТ Р 34.10 2012 (256 бит).
         /// </summary>
-		public const int CALG_DH_GR3410_2012_256_SF = 0xaa46;
+        public const int CALG_DH_GR3410_2012_256_SF = 0xaa46;
 
         /// <summary>
         /// Идентификатор алгоритма обмена ключей по Диффи-Хеллману на базе закрытого ключа пользователя. Открытый ключ получается по ГОСТ Р 34.10 2012 (512 бит).
         /// </summary>
-		public const int CALG_DH_GR3410_2012_512_SF = 0xaa42;
+        public const int CALG_DH_GR3410_2012_512_SF = 0xaa42;
 
 
         /// <summary>
@@ -34,12 +34,12 @@
         /// <summary>
         /// Идентификатор алгоритма обмена ключей по Диффи-Хеллману на базе закрытого ключа эфемерной пары. Открытый ключ получается по ГОСТ Р 34.10 2012 (256 бит).
         /// </summary>
-		public const int CALG_DH_GR3410_12_256_EPHEM = 0xaa47;
+        public const int CALG_DH_GR3410_12_256_EPHEM = 0xaa47;
 
         /// <summary>
         /// Идентификатор алгоритма обмена ключей по Диффи-Хеллману на базе закрытого ключа эфемерной пары. Открытый ключ получается по ГОСТ Р 34.10 2012 (512 бит).
         /// </summary>
-		public const int CALG_DH_GR3410_12_512_EPHEM = 0xaa43;
+        public const int CALG_DH_GR3410_12_512_EPHEM = 0xaa43;
 
 
         /// <summary>
@@ -66,12 +66,12 @@
         /// <summary>
         /// Идентификатор алгоритма хэширования в соответствии с ГОСТ Р 34.11-2012, длина выхода 256 бит.
         /// </summary>
-	    public const int CALG_GR3411_2012_256 = 0x8021;
+        public const int CALG_GR3411_2012_256 = 0x8021;
 
         /// <summary>
         /// Идентификатор алгоритма хэширования в соответствии с ГОСТ Р 34.11-2012, длина выхода 512 бит.
         /// </summary>
-	    public const int CALG_GR3411_2012_512 = 0x8022;
+        public const int CALG_GR3411_2012_512 = 0x8022;
 
 
         /// <summary>
@@ -111,272 +111,272 @@
         /// </summary>
         public const int CALG_PRO_EXPORT = 0x661f;
 
-		/// <summary>
-		/// Идентификатор алгоритма экспорта ключа по ГОСТ 28147-89.
-		/// </summary>
-		public const int CALG_SIMPLE_EXPORT = 0x6620;
+        /// <summary>
+        /// Идентификатор алгоритма экспорта ключа по ГОСТ 28147-89.
+        /// </summary>
+        public const int CALG_SIMPLE_EXPORT = 0x6620;
 
-		#endregion
+        #endregion
 
 
-		#region Настройки контекста криптографического провайдера
+        #region Настройки контекста криптографического провайдера
 
-		/// <summary>
-		/// Создать новый ключевой контейнер.
-		/// </summary>
-		public const uint CRYPT_NEWKEYSET = 8;
+        /// <summary>
+        /// Создать новый ключевой контейнер.
+        /// </summary>
+        public const uint CRYPT_NEWKEYSET = 8;
 
-		/// <summary>
-		/// Использовать ключи локальной машины.
-		/// </summary>
-		public const uint CRYPT_MACHINE_KEYSET = 0x20;
+        /// <summary>
+        /// Использовать ключи локальной машины.
+        /// </summary>
+        public const uint CRYPT_MACHINE_KEYSET = 0x20;
 
-		/// <summary>
-		/// Получить доступ к провайдеру без необходимости доступа к приватным ключам.
-		/// </summary>
-		public const uint CRYPT_VERIFYCONTEXT = 0xf0000000;
+        /// <summary>
+        /// Получить доступ к провайдеру без необходимости доступа к приватным ключам.
+        /// </summary>
+        public const uint CRYPT_VERIFYCONTEXT = 0xf0000000;
 
 
-		#endregion
+        #endregion
 
 
-		#region Параметры криптографического провайдера
+        #region Параметры криптографического провайдера
 
-		public const int PP_CLIENT_HWND = 1;
+        public const int PP_CLIENT_HWND = 1;
 
-		/// <summary>
-		/// Удаляет текущий контейнер с носителя.
-		/// </summary>
-		public const int PP_DELETE_KEYSET = 0x7d;
+        /// <summary>
+        /// Удаляет текущий контейнер с носителя.
+        /// </summary>
+        public const int PP_DELETE_KEYSET = 0x7d;
 
-		/// <summary>
-		/// Задаёт пароль (PIN) для доступа к ключу AT_KEYEXCHANGE.
-		/// </summary>
-		public const int PP_KEYEXCHANGE_PIN = 0x20;
+        /// <summary>
+        /// Задаёт пароль (PIN) для доступа к ключу AT_KEYEXCHANGE.
+        /// </summary>
+        public const int PP_KEYEXCHANGE_PIN = 0x20;
 
-		/// <summary>
-		/// Задаёт пароль (PIN) для доступа к ключу AT_SIGNATURE.
-		/// </summary>
-		public const int PP_SIGNATURE_PIN = 0x21;
+        /// <summary>
+        /// Задаёт пароль (PIN) для доступа к ключу AT_SIGNATURE.
+        /// </summary>
+        public const int PP_SIGNATURE_PIN = 0x21;
 
-		#endregion
+        #endregion
 
 
-		#region Параметры функции хэширования криптографического провайдера
+        #region Параметры функции хэширования криптографического провайдера
 
-		/// <summary>
-		/// Стартовый вектор функции хэширования, устанавливаемый приложением.
-		/// </summary>
-		public const int HP_HASHSTARTVECT = 8;
+        /// <summary>
+        /// Стартовый вектор функции хэширования, устанавливаемый приложением.
+        /// </summary>
+        public const int HP_HASHSTARTVECT = 8;
 
-		/// <summary>
-		/// Значение функции хэширования в little-endian порядке байт в соотвествии с типом GostR3411-94-Digest CPCMS [RFC 4490].
-		/// </summary>
-		public const int HP_HASHVAL = 2;
+        /// <summary>
+        /// Значение функции хэширования в little-endian порядке байт в соотвествии с типом GostR3411-94-Digest CPCMS [RFC 4490].
+        /// </summary>
+        public const int HP_HASHVAL = 2;
 
-		#endregion
+        #endregion
 
 
-		#region Параметры функций шифрования криптографического провайдера
+        #region Параметры функций шифрования криптографического провайдера
 
-		/// <summary>
-		/// Размер элемента.
-		/// </summary>
-		public const int EL_SIZE = 512;
+        /// <summary>
+        /// Размер элемента.
+        /// </summary>
+        public const int EL_SIZE = 512;
 
-		/// <summary>
-		/// Признак ключей ГОСТ 28147-89 и мастер ключей TLS.
-		/// </summary>
-		public const int G28147_MAGIC = 0x374A51FD;
+        /// <summary>
+        /// Признак ключей ГОСТ 28147-89 и мастер ключей TLS.
+        /// </summary>
+        public const int G28147_MAGIC = 0x374A51FD;
 
-		/// <summary>
-		/// Признак ключей ГОСТ Р 34.10-94 и ГОСТ Р 34.10-2001.
-		/// </summary>
-		public const int GR3410_1_MAGIC = 0x3147414D;
+        /// <summary>
+        /// Признак ключей ГОСТ Р 34.10-94 и ГОСТ Р 34.10-2001.
+        /// </summary>
+        public const int GR3410_1_MAGIC = 0x3147414D;
 
-		#endregion
+        #endregion
 
 
-		#region Параметры транспортировки ключей
+        #region Параметры транспортировки ключей
 
-		/// <summary>
-		/// Используется для транспортировки симметричных ключей CALG_G28147, CALG_UECSYMMETRIC.
-		/// </summary>
-		public const int SIMPLEBLOB = 1;
+        /// <summary>
+        /// Используется для транспортировки симметричных ключей CALG_G28147, CALG_UECSYMMETRIC.
+        /// </summary>
+        public const int SIMPLEBLOB = 1;
 
-		/// <summary>
-		/// Используется для транспортировки открытых ключей.
-		/// </summary>
-		public const int PUBLICKEYBLOB = 6;
+        /// <summary>
+        /// Используется для транспортировки открытых ключей.
+        /// </summary>
+        public const int PUBLICKEYBLOB = 6;
 
-		#endregion
+        #endregion
 
 
-		#region Параметры ключей криптографического провайдера
-
-		/// <summary>
-		/// Вектор инициализации (IV, синхропосылки) алгоритма шифрования.
-		/// </summary>
-		public const int KP_IV = 1;
-
-		/// <summary>
-		/// Метод дополнения шифра ключа.
-		/// </summary>
-		public const int KP_PADDING = 3;
-
-		/// <summary>
-		/// Режим шифра ключа.
-		/// </summary>
-		public const int KP_MODE = 4;
-
-		/// <summary>
-		/// Идентификатор алгоритма ключа.
-		/// </summary>
-		public const int KP_ALGID = 7;
-
-		/// <summary>
-		/// Строковый идентификатор узла замены.
-		/// </summary>
-		public const int KP_CIPHEROID = 0x68;
+        #region Параметры ключей криптографического провайдера
+
+        /// <summary>
+        /// Вектор инициализации (IV, синхропосылки) алгоритма шифрования.
+        /// </summary>
+        public const int KP_IV = 1;
+
+        /// <summary>
+        /// Метод дополнения шифра ключа.
+        /// </summary>
+        public const int KP_PADDING = 3;
+
+        /// <summary>
+        /// Режим шифра ключа.
+        /// </summary>
+        public const int KP_MODE = 4;
+
+        /// <summary>
+        /// Идентификатор алгоритма ключа.
+        /// </summary>
+        public const int KP_ALGID = 7;
+
+        /// <summary>
+        /// Строковый идентификатор узла замены.
+        /// </summary>
+        public const int KP_CIPHEROID = 0x68;
 
-		/// <summary>
-		/// Строковый идентификатор параметров ключа ГОСТ Р 34.10-2001, применяемых в алгоритме Диффи-Хеллмана.
-		/// </summary>
-		public const int KP_DHOID = 0x6a;
+        /// <summary>
+        /// Строковый идентификатор параметров ключа ГОСТ Р 34.10-2001, применяемых в алгоритме Диффи-Хеллмана.
+        /// </summary>
+        public const int KP_DHOID = 0x6a;
 
-		/// <summary>
-		/// Строковый идентификатор функции хэширования.
-		/// </summary>
-		public const int KP_HASHOID = 0x67;
-
-		/// <summary>
-		/// Закрытый ключ в ключевой паре.
-		/// </summary>
-		public const int KP_X = 14;
-
-		/// <summary>
-		/// Произведенный ключ может быть передан из криптопровайдера в ключевой блоб при экспорте ключа независимо сессии криптопровайдера (исключает CRYPT_ARCHIVABLE).
-		/// </summary>
-		public const int CRYPT_EXPORTABLE = 1;
-
-		/// <summary>
-		/// Произведенный ключ может быть передан из криптопровайдера в ключевой блоб при экспорте ключа в раках одной сессии криптопровайдера (исключает CRYPT_EXPORTABLE).
-		/// </summary>
-		public const int CRYPT_ARCHIVABLE = 0x4000;
-
-		/// <summary>
-		/// При любом запросе на доступ к носителю закрытого ключа пользователя выводится окно диалога, запрашивающего право доступа к ключу.
-		/// </summary>
-		public const int CRYPT_USER_PROTECTED = 2;
-
-		/// <summary>
-		/// Генерация пустой ключевой пары обмена.
-		/// </summary>
-		public const int CRYPT_PREGEN = 0x40;
-
-		/// <summary>
-		/// Пара ключей для обмена ключами.
-		/// </summary>
-		public const int AT_KEYEXCHANGE = 1;
+        /// <summary>
+        /// Строковый идентификатор функции хэширования.
+        /// </summary>
+        public const int KP_HASHOID = 0x67;
+
+        /// <summary>
+        /// Закрытый ключ в ключевой паре.
+        /// </summary>
+        public const int KP_X = 14;
+
+        /// <summary>
+        /// Произведенный ключ может быть передан из криптопровайдера в ключевой блоб при экспорте ключа независимо сессии криптопровайдера (исключает CRYPT_ARCHIVABLE).
+        /// </summary>
+        public const int CRYPT_EXPORTABLE = 1;
+
+        /// <summary>
+        /// Произведенный ключ может быть передан из криптопровайдера в ключевой блоб при экспорте ключа в раках одной сессии криптопровайдера (исключает CRYPT_EXPORTABLE).
+        /// </summary>
+        public const int CRYPT_ARCHIVABLE = 0x4000;
+
+        /// <summary>
+        /// При любом запросе на доступ к носителю закрытого ключа пользователя выводится окно диалога, запрашивающего право доступа к ключу.
+        /// </summary>
+        public const int CRYPT_USER_PROTECTED = 2;
+
+        /// <summary>
+        /// Генерация пустой ключевой пары обмена.
+        /// </summary>
+        public const int CRYPT_PREGEN = 0x40;
+
+        /// <summary>
+        /// Пара ключей для обмена ключами.
+        /// </summary>
+        public const int AT_KEYEXCHANGE = 1;
 
-		/// <summary>
-		/// Пара ключей для формирования цифровой подписи
-		/// </summary>
-		public const int AT_SIGNATURE = 2;
+        /// <summary>
+        /// Пара ключей для формирования цифровой подписи
+        /// </summary>
+        public const int AT_SIGNATURE = 2;
 
-		#endregion
+        #endregion
 
 
-		#region Методы дополнения шифра ключа (KP_PADDING)
+        #region Методы дополнения шифра ключа (KP_PADDING)
 
-		/// <summary>
-		/// PKCS#5.
-		/// </summary>
-		public const int PKCS5_PADDING = 1;
+        /// <summary>
+        /// PKCS#5.
+        /// </summary>
+        public const int PKCS5_PADDING = 1;
 
-		/// <summary>
-		/// Дополнение случайными байтами.
-		/// </summary>
-		public const int RANDOM_PADDING = 2;
+        /// <summary>
+        /// Дополнение случайными байтами.
+        /// </summary>
+        public const int RANDOM_PADDING = 2;
 
-		/// <summary>
-		/// Дополнение нулевыми байтами.
-		/// </summary>
-		public const int ZERO_PADDING = 3;
+        /// <summary>
+        /// Дополнение нулевыми байтами.
+        /// </summary>
+        public const int ZERO_PADDING = 3;
 
-		#endregion
+        #endregion
 
 
-		#region Режимы шифра ключа (KP_MODE)
+        #region Режимы шифра ключа (KP_MODE)
 
-		/// <summary>
-		/// Cipher Block Chaining (CBC).
-		/// </summary>
-		public const int CRYPT_MODE_CBC = 1;
+        /// <summary>
+        /// Cipher Block Chaining (CBC).
+        /// </summary>
+        public const int CRYPT_MODE_CBC = 1;
 
-		/// <summary>
-		/// Electronic codebook (ECB).
-		/// </summary>
-		public const int CRYPT_MODE_ECB = 2;
+        /// <summary>
+        /// Electronic codebook (ECB).
+        /// </summary>
+        public const int CRYPT_MODE_ECB = 2;
 
-		/// <summary>
-		/// Output Feedback (OFB).
-		/// </summary>
-		public const int CRYPT_MODE_OFB = 3;
+        /// <summary>
+        /// Output Feedback (OFB).
+        /// </summary>
+        public const int CRYPT_MODE_OFB = 3;
 
-		/// <summary>
-		/// Cipher Feedback (CFB).
-		/// </summary>
-		public const int CRYPT_MODE_CFB = 4;
+        /// <summary>
+        /// Cipher Feedback (CFB).
+        /// </summary>
+        public const int CRYPT_MODE_CFB = 4;
 
-		/// <summary>
-		/// Ciphertext stealing (CTS).
-		/// </summary>
-		public const int CRYPT_MODE_CTS = 5;
+        /// <summary>
+        /// Ciphertext stealing (CTS).
+        /// </summary>
+        public const int CRYPT_MODE_CTS = 5;
 
-		#endregion
+        #endregion
 
 
-		#region Коды ошибок
+        #region Коды ошибок
 
-		/// <summary>
-		/// Aлгоритм, который данный криптопровайдер не поддерживает.
-		/// </summary>
-		public const int NTE_BAD_ALGID = -2146893816;
+        /// <summary>
+        /// Aлгоритм, который данный криптопровайдер не поддерживает.
+        /// </summary>
+        public const int NTE_BAD_ALGID = -2146893816;
 
-		/// <summary>
-		/// Данные некорректного размера.
-		/// </summary>
-		public const int NTE_BAD_DATA = -2146893819;
+        /// <summary>
+        /// Данные некорректного размера.
+        /// </summary>
+        public const int NTE_BAD_DATA = -2146893819;
 
-		/// <summary>
-		/// Дескриптор хэша ошибочен.
-		/// </summary>
-		public const int NTE_BAD_HASH = -2146893822;
+        /// <summary>
+        /// Дескриптор хэша ошибочен.
+        /// </summary>
+        public const int NTE_BAD_HASH = -2146893822;
 
-		/// <summary>
-		/// Ключевой контейнер не был открыт или не существует.
-		/// </summary>
-		public const int NTE_BAD_KEYSET = -2146893802;
+        /// <summary>
+        /// Ключевой контейнер не был открыт или не существует.
+        /// </summary>
+        public const int NTE_BAD_KEYSET = -2146893802;
 
-		/// <summary>
-		/// Ключевой контейнер с заданным именем не существует.
-		/// </summary>
-		public const int NTE_KEYSET_NOT_DEF = -2146893799;
+        /// <summary>
+        /// Ключевой контейнер с заданным именем не существует.
+        /// </summary>
+        public const int NTE_KEYSET_NOT_DEF = -2146893799;
 
-		/// <summary>
-		/// Ключ с заданным параметром (AT_KEYEXCHANGE, AT_SIGNATURE или AT_UECSYMMETRICKEY) не существует.
-		/// </summary>
-		public const int NTE_NO_KEY = -2146893811;
+        /// <summary>
+        /// Ключ с заданным параметром (AT_KEYEXCHANGE, AT_SIGNATURE или AT_UECSYMMETRICKEY) не существует.
+        /// </summary>
+        public const int NTE_NO_KEY = -2146893811;
 
-		/// <summary>
-		/// Пользователь прервал операцию.
-		/// </summary>
-		public const int SCARD_W_CANCELLED_BY_USER = -2146434962;
+        /// <summary>
+        /// Пользователь прервал операцию.
+        /// </summary>
+        public const int SCARD_W_CANCELLED_BY_USER = -2146434962;
 
-		#endregion
+        #endregion
 
 
-		// ReSharper restore InconsistentNaming
-	}
+        // ReSharper restore InconsistentNaming
+    }
 }

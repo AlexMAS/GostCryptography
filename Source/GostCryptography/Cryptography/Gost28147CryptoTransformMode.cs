@@ -1,8 +1,8 @@
 ﻿namespace GostCryptography.Cryptography
 {
-	enum Gost28147CryptoTransformMode
-	{
-		Encrypt,
-		Decrypt
-	}
+    public enum Gost28147CryptoTransformMode
+    {
+        Encrypt,
+        Decrypt
+    }
 }
