@@ -5,7 +5,7 @@
     <title>GostCryptography</title>
     <description>.NET driver for ViPNet CSP and CryptoPro CSP</description>
     <summary>GostCryptography is .NET driver for ViPNet CSP and CryptoPro CSP. Provides abstractions for working with russian national cryptographic algorithms (GOST).</summary>
-    <version>1.1.0-alpha1</version>
+    <version>1.1.0</version>
     <authors>Alexander Mezhov</authors>
     <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
