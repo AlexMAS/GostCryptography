@@ -6,6 +6,7 @@
 
 # User-specific files
 
+.vs/
 *.suo
 *.user
 *.csproj.DotSettings
