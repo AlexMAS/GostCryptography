@@ -42,7 +42,7 @@ namespace GostCryptography.Cryptography
 			_provHandle = new SafeProvHandleImpl(provHandle, true);
 			_keyHandle = CryptoApiHelper.DuplicateKey(keyHandle);
 
-			if (CryptoApiHelper.GetKeyParameterInt32(_keyHandle, Constants.KP_ALGID) != Constants.CALG_G28147)
+			if (CryptoApiHelper.GetKeyParameterInt32(_keyHandle, (uint)Constants.KP_ALGID) != Constants.CALG_G28147)
 			{
 				throw ExceptionUtility.Argument("keyHandle", Resources.RequiredGost28147);
 			}
@@ -61,7 +61,7 @@ namespace GostCryptography.Cryptography
 			_provHandle = provHandle.DangerousAddRef();
 			_keyHandle = CryptoApiHelper.DuplicateKey(keyHandle);
 
-			if (CryptoApiHelper.GetKeyParameterInt32(_keyHandle, Constants.KP_ALGID) != Constants.CALG_G28147)
+			if (CryptoApiHelper.GetKeyParameterInt32(_keyHandle, (uint)Constants.KP_ALGID) != Constants.CALG_G28147)
 			{
 				throw ExceptionUtility.Argument("keyHandle", Resources.RequiredGost28147);
 			}
