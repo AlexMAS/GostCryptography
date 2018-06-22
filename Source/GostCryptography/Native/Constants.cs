@@ -1,6 +1,4 @@
-﻿using GostCryptography.Cryptography;
-
-namespace GostCryptography.Native
+﻿namespace GostCryptography.Native
 {
     /// <summary>
     /// Константы для работы с криптографическим провайдером.
@@ -234,7 +232,7 @@ namespace GostCryptography.Native
         /// <summary>
         /// Идентификатор алгоритма ключа.
         /// </summary>
-        public static int KP_ALGID => (GostCryptoConfig.ProviderType != ProviderTypes.VipNet) ? 7 : 108;
+        public const int KP_ALGID = 7;
 
         /// <summary>
         /// Строковый идентификатор узла замены.

@@ -615,7 +615,7 @@ namespace GostCryptography.Cryptography
 					}
 				}
 
-				var keyAlgIdInverted = CryptoApiHelper.GetKeyParameter(resultKeyHandle, (uint)Constants.KP_ALGID);
+				var keyAlgIdInverted = CryptoApiHelper.GetKeyParameter(resultKeyHandle, Constants.KP_ALGID);
 				var keyAlgId = keyAlgIdInverted[0] | (keyAlgIdInverted[1] << 8) | (keyAlgIdInverted[2] << 16) | (keyAlgIdInverted[3] << 24);
 
 				if ((keyAlgId != Constants.CALG_DH_EL_SF) && (keyAlgId != Constants.CALG_GR3410EL))
