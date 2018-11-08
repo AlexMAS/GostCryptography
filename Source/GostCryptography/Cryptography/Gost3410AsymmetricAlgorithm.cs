@@ -19,14 +19,23 @@ namespace GostCryptography.Cryptography
 	[SecuritySafeCritical]
 	public sealed class Gost3410AsymmetricAlgorithm : Gost3410AsymmetricAlgorithmBase, ICspAsymmetricAlgorithm
 	{
-		/// <summary>
-		/// Конструктор.
-		/// </summary>
+		/// <inheritdoc />
+		[SecuritySafeCritical]
+		public Gost3410AsymmetricAlgorithm()
+		{
+			LegalKeySizesValue = DefaultLegalKeySizes;
+			_providerParameters = CreateDefaultProviderParameters();
+			InitKeyContainer(_providerParameters, out _isRandomKeyContainer);
+		}
+
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		[ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
-		public Gost3410AsymmetricAlgorithm()
-			: this(null)
+		public Gost3410AsymmetricAlgorithm(int providerType) : base(providerType)
 		{
+			LegalKeySizesValue = DefaultLegalKeySizes;
+			_providerParameters = CreateDefaultProviderParameters();
+			InitKeyContainer(_providerParameters, out _isRandomKeyContainer);
 		}
 
 		/// <summary>
@@ -34,16 +43,11 @@ namespace GostCryptography.Cryptography
 		/// </summary>
 		/// <param name="providerParameters">Параметры криптографического провайдера.</param>
 		[SecuritySafeCritical]
-		public Gost3410AsymmetricAlgorithm(CspParameters providerParameters)
+		public Gost3410AsymmetricAlgorithm(CspParameters providerParameters) : base(providerParameters.ProviderType)
 		{
 			LegalKeySizesValue = DefaultLegalKeySizes;
-
-			_providerParameters = CreateProviderParameters(providerParameters, CspProviderFlags.UseMachineKeyStore, out _isRandomKeyContainer);
-
-			if (!_isRandomKeyContainer)
-			{
-				GetKeyPair();
-			}
+			_providerParameters = CopyExistingProviderParameters(providerParameters);
+			InitKeyContainer(_providerParameters, out _isRandomKeyContainer);
 		}
 
 
@@ -219,15 +223,15 @@ namespace GostCryptography.Cryptography
 		{
 			if (importedKeyBytes == null)
 			{
-				throw ExceptionUtility.ArgumentNull("importedKeyBytes");
+				throw ExceptionUtility.ArgumentNull(nameof(importedKeyBytes));
 			}
 
 			if (!IsPublicKeyBlob(importedKeyBytes))
 			{
-				throw ExceptionUtility.Argument("importedKeyBytes", Resources.UserImportBulkBlob);
+				throw ExceptionUtility.Argument(nameof(importedKeyBytes), Resources.UserImportBulkBlob);
 			}
 
-			var hProv = CryptoApiHelper.ProviderHandle;
+			var hProv = CryptoApiHelper.GetProviderHandle(ProviderType);
 			SafeKeyHandleImpl hKey;
 
 			_providerParameters.KeyNumber = CryptoApiHelper.ImportCspBlob(importedKeyBytes, hProv, SafeKeyHandleImpl.InvalidHandle, out hKey);
@@ -296,12 +300,12 @@ namespace GostCryptography.Cryptography
 		{
 			if (hash == null)
 			{
-				throw ExceptionUtility.ArgumentNull("hash");
+				throw ExceptionUtility.ArgumentNull(nameof(hash));
 			}
 
 			if (hash.Length != 32)
 			{
-				throw ExceptionUtility.ArgumentOutOfRange("hash", Resources.InvalidHashSize);
+				throw ExceptionUtility.ArgumentOutOfRange(nameof(hash), Resources.InvalidHashSize);
 			}
 
 			if (IsPublicKeyOnly)
@@ -365,12 +369,12 @@ namespace GostCryptography.Cryptography
 		{
 			if (hash == null)
 			{
-				throw ExceptionUtility.ArgumentNull("hash");
+				throw ExceptionUtility.ArgumentNull(nameof(hash));
 			}
 
 			if (signature == null)
 			{
-				throw ExceptionUtility.ArgumentNull("signature");
+				throw ExceptionUtility.ArgumentNull(nameof(signature));
 			}
 
 			if (hash.Length != 32)
@@ -393,7 +397,7 @@ namespace GostCryptography.Cryptography
 		{
 			GetKeyPair();
 
-			return new GostKeyExchangeAlgorithm(_providerHandle, _keyHandle, new GostKeyExchangeParameters(keyParameters));
+			return new GostKeyExchangeAlgorithm(ProviderType, _providerHandle, _keyHandle, new GostKeyExchangeParameters(keyParameters));
 		}
 
 
@@ -430,7 +434,7 @@ namespace GostCryptography.Cryptography
 
 			_keyHandle.TryDispose();
 
-			_providerHandle = CryptoApiHelper.ProviderHandle;
+			_providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType);
 			_keyHandle = CryptoApiHelper.ImportPublicKey(_providerHandle, new GostKeyExchangeParameters(keyParameters));
 
 			_isPublicKeyOnly = true;
@@ -454,6 +458,7 @@ namespace GostCryptography.Cryptography
 		}
 
 
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		protected override void Dispose(bool disposing)
 		{
@@ -478,12 +483,12 @@ namespace GostCryptography.Cryptography
 		{
 			if (hashAlg == null)
 			{
-				throw ExceptionUtility.ArgumentNull("hashAlg");
+				throw ExceptionUtility.ArgumentNull(nameof(hashAlg));
 			}
 
 			if (!GetHashAlgorithmOid(hashAlg).Equals(GostCryptoConfig.DefaultHashOid, StringComparison.OrdinalIgnoreCase))
 			{
-				throw ExceptionUtility.Argument("hashAlg", Resources.RequiredGost3411);
+				throw ExceptionUtility.Argument(nameof(hashAlg), Resources.RequiredGost3411);
 			}
 
 			HashAlgorithm hashAlgorithm = null;
@@ -528,13 +533,13 @@ namespace GostCryptography.Cryptography
 		{
 			string hashAlgOid = null;
 
-			if (hashAlg is string)
+			if (hashAlg is string hashAlgName)
 			{
-				hashAlgOid = GostCryptoConfig.MapNameToOid((string)hashAlg);
+				hashAlgOid = GostCryptoConfig.MapNameToOid(hashAlgName);
 
 				if (string.IsNullOrEmpty(hashAlgOid))
 				{
-					hashAlgOid = (string)hashAlg;
+					hashAlgOid = hashAlgName;
 				}
 			}
 			else if (hashAlg is HashAlgorithm)
@@ -548,7 +553,7 @@ namespace GostCryptography.Cryptography
 
 			if (string.IsNullOrEmpty(hashAlgOid))
 			{
-				throw ExceptionUtility.Argument("hashAlg", Resources.InvalidHashAlgorithm);
+				throw ExceptionUtility.Argument(nameof(hashAlg), Resources.InvalidHashAlgorithm);
 			}
 
 			return hashAlgOid;
@@ -580,7 +585,6 @@ namespace GostCryptography.Cryptography
 		private static void GetKeyPairValue(CspParameters providerParams, bool randomKeyContainer, out SafeProvHandleImpl providerHandle, out SafeKeyHandleImpl keyHandle)
 		{
 			SafeProvHandleImpl resultProviderHandle = null;
-
 			SafeKeyHandleImpl resultKeyHandle = null;
 
 			try
@@ -625,16 +629,8 @@ namespace GostCryptography.Cryptography
 			}
 			catch (Exception)
 			{
-				if (resultProviderHandle != null)
-				{
-					resultProviderHandle.Close();
-				}
-
-				if (resultKeyHandle != null)
-				{
-					resultKeyHandle.Close();
-				}
-
+				resultProviderHandle?.Close();
+				resultKeyHandle?.Close();
 				throw;
 			}
 
@@ -693,7 +689,7 @@ namespace GostCryptography.Cryptography
 		{
 			if (keyPassword == null)
 			{
-				throw ExceptionUtility.ArgumentNull("keyPassword");
+				throw ExceptionUtility.ArgumentNull(nameof(keyPassword));
 			}
 
 			var keyPasswordData = Marshal.SecureStringToCoTaskMemAnsi(keyPassword);
@@ -711,44 +707,24 @@ namespace GostCryptography.Cryptography
 			}
 		}
 
-		private static CspParameters CreateProviderParameters(CspParameters providerParameters, CspProviderFlags defaultFlags, out bool randomKeyContainer)
+
+		private CspParameters CreateDefaultProviderParameters(CspProviderFlags defaultFlags = CspProviderFlags.UseMachineKeyStore)
 		{
-			CspParameters parameters;
-
-			if (providerParameters == null)
+			return new CspParameters(ProviderType)
 			{
-				parameters = new CspParameters(GostCryptoConfig.ProviderType) { Flags = defaultFlags };
-			}
-			else
-			{
-				ValidateProviderParameters(providerParameters.Flags);
+				Flags = defaultFlags
+			};
+		}
 
-				parameters = new CspParameters(providerParameters.ProviderType, providerParameters.ProviderName, providerParameters.KeyContainerName) { Flags = providerParameters.Flags, KeyNumber = providerParameters.KeyNumber };
-			}
+		private CspParameters CopyExistingProviderParameters(CspParameters providerParameters)
+		{
+			ValidateProviderParameters(providerParameters.Flags);
 
-			// Установка типа ключа
-			if (parameters.KeyNumber == -1)
+			return new CspParameters(providerParameters.ProviderType, providerParameters.ProviderName, providerParameters.KeyContainerName)
 			{
-				parameters.KeyNumber = (int)KeyNumber.Exchange;
-			}
-			else if (parameters.KeyNumber == Constants.CALG_GR3410EL)
-			{
-				parameters.KeyNumber = (int)KeyNumber.Signature;
-			}
-			else if (parameters.KeyNumber == Constants.CALG_DH_EL_SF)
-			{
-				parameters.KeyNumber = (int)KeyNumber.Exchange;
-			}
-
-			// Использовать автогенерированный контейнер
-			randomKeyContainer = ((parameters.KeyContainerName == null) && ((parameters.Flags & CspProviderFlags.UseDefaultKeyContainer) == CspProviderFlags.NoFlags));
-
-			if (randomKeyContainer)
-			{
-				parameters.KeyContainerName = Guid.NewGuid().ToString();
-			}
-
-			return parameters;
+				Flags = providerParameters.Flags,
+				KeyNumber = providerParameters.KeyNumber
+			};
 		}
 
 		private static void ValidateProviderParameters(CspProviderFlags flags)
@@ -762,7 +738,7 @@ namespace GostCryptography.Cryptography
 
 				if ((flags & notExpectedFlags) != CspProviderFlags.NoFlags)
 				{
-					throw ExceptionUtility.Argument("flags", Resources.InvalidCspProviderFlags);
+					throw ExceptionUtility.Argument(nameof(flags), Resources.InvalidCspProviderFlags);
 				}
 			}
 
@@ -775,6 +751,35 @@ namespace GostCryptography.Cryptography
 				}
 
 				new UIPermission(UIPermissionWindow.SafeTopLevelWindows).Demand();
+			}
+		}
+
+		private void InitKeyContainer(CspParameters providerParameters, out bool randomKeyContainer)
+		{
+			// Установка типа ключа
+			if (providerParameters.KeyNumber == -1)
+			{
+				providerParameters.KeyNumber = (int)KeyNumber.Exchange;
+			}
+			else if (providerParameters.KeyNumber == Constants.CALG_GR3410EL)
+			{
+				providerParameters.KeyNumber = (int)KeyNumber.Signature;
+			}
+			else if (providerParameters.KeyNumber == Constants.CALG_DH_EL_SF)
+			{
+				providerParameters.KeyNumber = (int)KeyNumber.Exchange;
+			}
+
+			// Использовать автогенерированный контейнер
+			randomKeyContainer = ((providerParameters.KeyContainerName == null) && ((providerParameters.Flags & CspProviderFlags.UseDefaultKeyContainer) == CspProviderFlags.NoFlags));
+
+			if (randomKeyContainer)
+			{
+				providerParameters.KeyContainerName = Guid.NewGuid().ToString();
+			}
+			else
+			{
+				GetKeyPair();
 			}
 		}
 	}

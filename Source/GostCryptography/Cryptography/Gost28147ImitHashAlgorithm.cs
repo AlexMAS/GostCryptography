@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Security;
-using System.Security.Cryptography;
 using System.Security.Permissions;
 
 using GostCryptography.Native;
@@ -10,18 +9,22 @@ namespace GostCryptography.Cryptography
 	/// <summary>
 	/// Реализация функции вычисления имитовставки по ГОСТ 28147.
 	/// </summary>
-	public sealed class Gost28147ImitHashAlgorithm : Gost28147ImitHashAlgorithmBase
+	public class Gost28147ImitHashAlgorithm : Gost28147ImitHashAlgorithmBase
 	{
-		/// <summary>
-		/// Конструктор.
-		/// </summary>
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		public Gost28147ImitHashAlgorithm()
 		{
-			HashSizeValue = DefaultHashSize;
-
-			_keyAlgorithm = new Gost28147SymmetricAlgorithm();
+			_keyAlgorithm = new Gost28147SymmetricAlgorithm(ProviderType);
 		}
+
+		/// <inheritdoc />
+		[SecuritySafeCritical]
+		public Gost28147ImitHashAlgorithm(int providerType) : base(providerType)
+		{
+			_keyAlgorithm = new Gost28147SymmetricAlgorithm(ProviderType);
+		}
+
 
 		/// <summary>
 		/// Конструктор.
@@ -30,15 +33,32 @@ namespace GostCryptography.Cryptography
 		/// <exception cref="ArgumentNullException"></exception>
 		[SecuritySafeCritical]
 		public Gost28147ImitHashAlgorithm(byte[] key)
-			: this()
 		{
 			if (key == null)
 			{
-				throw ExceptionUtility.ArgumentNull("key");
+				throw ExceptionUtility.ArgumentNull(nameof(key));
 			}
 
-			_keyAlgorithm.Key = key;
+			_keyAlgorithm = new Gost28147SymmetricAlgorithm(ProviderType) { Key = key };
 		}
+
+		/// <summary>
+		/// Конструктор.
+		/// </summary>
+		/// <param name="providerType">Тип криптографического провайдера.</param>
+		/// <param name="key">Ключ симметричного шифрования для подсчета имитовставки.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		[SecuritySafeCritical]
+		public Gost28147ImitHashAlgorithm(int providerType, byte[] key) : base(providerType)
+		{
+			if (key == null)
+			{
+				throw ExceptionUtility.ArgumentNull(nameof(key));
+			}
+
+			_keyAlgorithm = new Gost28147SymmetricAlgorithm(ProviderType) { Key = key };
+		}
+
 
 		/// <summary>
 		/// Конструктор.
@@ -46,17 +66,16 @@ namespace GostCryptography.Cryptography
 		/// <param name="key">Ключ симметричного шифрования для подсчета имитовставки.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		[SecuritySafeCritical]
-		public Gost28147ImitHashAlgorithm(Gost28147SymmetricAlgorithmBase key)
+		public Gost28147ImitHashAlgorithm(Gost28147SymmetricAlgorithmBase key) : base(key.ProviderType)
 		{
 			if (key == null)
 			{
-				throw ExceptionUtility.ArgumentNull("key");
+				throw ExceptionUtility.ArgumentNull(nameof(key));
 			}
 
 			KeyValue = null;
-			HashSizeValue = DefaultHashSize;
 
-			_keyAlgorithm = DuplicateKeyAlg(key);
+			_keyAlgorithm = Gost28147SymmetricAlgorithm.CreateFromKey(key);
 		}
 
 
@@ -110,26 +129,17 @@ namespace GostCryptography.Cryptography
 			[SecuritySafeCritical]
 			get
 			{
-				return DuplicateKeyAlg(_keyAlgorithm);
+				return Gost28147SymmetricAlgorithm.CreateFromKey(_keyAlgorithm);
 			}
 			[SecuritySafeCritical]
 			set
 			{
-				_keyAlgorithm = DuplicateKeyAlg(value);
+				_keyAlgorithm = Gost28147SymmetricAlgorithm.CreateFromKey(value);
 			}
 		}
 
-		[SecurityCritical]
-		private static Gost28147SymmetricAlgorithm DuplicateKeyAlg(SymmetricAlgorithm keyAlgorithm)
-		{
-			var sessionKey = keyAlgorithm as Gost28147SymmetricAlgorithm;
 
-			return (sessionKey != null)
-				? new Gost28147SymmetricAlgorithm(sessionKey.InternalProvHandle, sessionKey.InternalKeyHandle)
-				: new Gost28147SymmetricAlgorithm { Key = keyAlgorithm.Key };
-		}
-
-
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		protected override void HashCore(byte[] data, int dataOffset, int dataLength)
 		{
@@ -141,6 +151,7 @@ namespace GostCryptography.Cryptography
 			CryptoApiHelper.HashData(_hashHandle, data, dataOffset, dataLength);
 		}
 
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		protected override byte[] HashFinal()
 		{
@@ -155,12 +166,13 @@ namespace GostCryptography.Cryptography
 		[SecurityCritical]
 		private void InitHash()
 		{
-			var hProv = CryptoApiHelper.ProviderHandle;
+			var hProv = CryptoApiHelper.GetProviderHandle(ProviderType);
 			var hHash = CryptoApiHelper.CreateHashImit(hProv, _keyAlgorithm.InternalKeyHandle);
 
 			_hashHandle = hHash;
 		}
 
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		public override void Initialize()
 		{
@@ -169,16 +181,13 @@ namespace GostCryptography.Cryptography
 		}
 
 
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
-				if (_keyAlgorithm != null)
-				{
-					_keyAlgorithm.Clear();
-				}
-
+				_keyAlgorithm?.Clear();
 				_hashHandle.TryDispose();
 			}
 

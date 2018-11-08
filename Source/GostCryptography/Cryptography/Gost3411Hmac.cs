@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Security;
-using System.Security.Cryptography;
 using System.Security.Permissions;
 
 using GostCryptography.Native;
@@ -8,42 +7,28 @@ using GostCryptography.Native;
 namespace GostCryptography.Cryptography
 {
 	/// <summary>
-	/// Реализация HMAC (Hash-based Message Authentication Code) на базе алгоритма хэширования по ГОСТ Р 34.11.
+	/// Реализация Hash-based Message Authentication Code (HMAC) на базе алгоритма хэширования ГОСТ Р 34.11.
 	/// </summary>
-	public sealed class Gost3411Hmac : HMAC
+	public class Gost3411Hmac : GostHmac
 	{
-		/// <summary>
-		/// Конструктор.
-		/// </summary>
+		public const int DefaultHashSize = 256;
+		public const string DefaultHashName = GostCryptoConfig.DefaultHashName;
+
+
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		public Gost3411Hmac()
 		{
-			HashName = DefaultHashName;
-			HashSizeValue = DefaultHashSize;
-
-			_keyAlgorithm = new Gost28147SymmetricAlgorithm();
-			_hashHandle = CryptoApiHelper.CreateHashHmac(CryptoApiHelper.ProviderHandle, _keyAlgorithm.InternalKeyHandle);
+			InitDefaults(new Gost28147SymmetricAlgorithm(ProviderType));
 		}
 
-		/// <summary>
-		/// Конструктор.
-		/// </summary>
-		/// <param name="key">Ключ для вычисления HMAC.</param>
-		/// <exception cref="ArgumentNullException"></exception>
+		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost3411Hmac(byte[] key)
+		public Gost3411Hmac(int providerType) : base(providerType)
 		{
-			if (key == null)
-			{
-				throw ExceptionUtility.ArgumentNull("key");
-			}
-
-			HashName = DefaultHashName;
-			HashSizeValue = DefaultHashSize;
-
-			_keyAlgorithm = new Gost28147SymmetricAlgorithm { Key = key };
-			_hashHandle = CryptoApiHelper.CreateHashHmac(CryptoApiHelper.ProviderHandle, _keyAlgorithm.InternalKeyHandle);
+			InitDefaults(new Gost28147SymmetricAlgorithm(ProviderType));
 		}
+
 
 		/// <summary>
 		/// Конструктор.
@@ -51,39 +36,30 @@ namespace GostCryptography.Cryptography
 		/// <param name="keyAlgorithm">Алгоритм для вычисления HMAC.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		[SecuritySafeCritical]
-		public Gost3411Hmac(Gost28147SymmetricAlgorithmBase keyAlgorithm)
+		public Gost3411Hmac(Gost28147SymmetricAlgorithmBase keyAlgorithm) : base(keyAlgorithm.ProviderType)
 		{
 			if (keyAlgorithm == null)
 			{
-				throw ExceptionUtility.ArgumentNull("keyAlgorithm");
+				throw ExceptionUtility.ArgumentNull(nameof(keyAlgorithm));
 			}
 
-			HashName = DefaultHashName;
-			HashSizeValue = DefaultHashSize;
-
-			_keyAlgorithm = DuplicateKeyAlg(keyAlgorithm);
-			_hashHandle = CryptoApiHelper.CreateHashHmac(CryptoApiHelper.ProviderHandle, _keyAlgorithm.InternalKeyHandle);
+			InitDefaults(Gost28147SymmetricAlgorithm.CreateFromKey(keyAlgorithm));
 		}
 
 
-		public const string DefaultHashName = GostCryptoConfig.DefaultHashName;
-		public const int DefaultHashSize = 256;
+		private void InitDefaults(Gost28147SymmetricAlgorithm keyAlgorithm)
+		{
+			HashName = DefaultHashName;
+			HashSizeValue = DefaultHashSize;
+
+			_keyAlgorithm = keyAlgorithm;
+			_hashHandle = CryptoApiHelper.CreateHashHmac(keyAlgorithm.ProviderType, CryptoApiHelper.GetProviderHandle(keyAlgorithm.ProviderType), keyAlgorithm.InternalKeyHandle);
+		}
 
 
 		[SecurityCritical]
 		private SafeHashHandleImpl _hashHandle;
 		private Gost28147SymmetricAlgorithm _keyAlgorithm;
-
-
-		[SecurityCritical]
-		private static Gost28147SymmetricAlgorithm DuplicateKeyAlg(Gost28147SymmetricAlgorithmBase keyAlgorithm)
-		{
-			var keySymmetricAlgorithm = keyAlgorithm as Gost28147SymmetricAlgorithm;
-
-			return (keySymmetricAlgorithm != null)
-				? new Gost28147SymmetricAlgorithm(keySymmetricAlgorithm.InternalProvHandle, keySymmetricAlgorithm.InternalKeyHandle)
-				: new Gost28147SymmetricAlgorithm { Key = keyAlgorithm.Key };
-		}
 
 
 		/// <summary>
@@ -118,13 +94,11 @@ namespace GostCryptography.Cryptography
 			[SecuritySafeCritical]
 			set
 			{
-				_keyAlgorithm = DuplicateKeyAlg(value);
+				_keyAlgorithm = Gost28147SymmetricAlgorithm.CreateFromKey(value);
 			}
 		}
 
-		/// <summary>
-		/// Ключ для вычисления HMAC.
-		/// </summary>
+		/// <inheritdoc />
 		public override byte[] Key
 		{
 			get
@@ -133,45 +107,43 @@ namespace GostCryptography.Cryptography
 			}
 			set
 			{
-				_keyAlgorithm = new Gost28147SymmetricAlgorithm { Key = value };
+				_keyAlgorithm = new Gost28147SymmetricAlgorithm(ProviderType) { Key = value };
 
 				Initialize();
 			}
 		}
 
 
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		public override void Initialize()
 		{
-			var hashHmacHandle = CryptoApiHelper.CreateHashHmac(CryptoApiHelper.ProviderHandle, _keyAlgorithm.InternalKeyHandle);
-
+			var hashHmacHandle = CryptoApiHelper.CreateHashHmac(ProviderType, CryptoApiHelper.GetProviderHandle(ProviderType), _keyAlgorithm.InternalKeyHandle);
 			_hashHandle.TryDispose();
-
 			_hashHandle = hashHmacHandle;
 		}
 
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		protected override void HashCore(byte[] data, int dataOffset, int dataLength)
 		{
 			CryptoApiHelper.HashData(_hashHandle, data, dataOffset, dataLength);
 		}
 
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		protected override byte[] HashFinal()
 		{
 			return CryptoApiHelper.EndHashData(_hashHandle);
 		}
 
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
-				if (_keyAlgorithm != null)
-				{
-					_keyAlgorithm.Clear();
-				}
-
+				_keyAlgorithm?.Clear();
 				_hashHandle.TryDispose();
 			}
 

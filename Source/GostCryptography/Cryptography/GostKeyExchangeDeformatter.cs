@@ -33,9 +33,7 @@ namespace GostCryptography.Cryptography
 		private Gost3410AsymmetricAlgorithmBase _privateKey;
 
 
-		/// <summary>
-		/// Параметры алгоритма.
-		/// </summary>
+		/// <inheritdoc />
 		public override string Parameters
 		{
 			get
@@ -58,12 +56,12 @@ namespace GostCryptography.Cryptography
 		{
 			if (privateKey == null)
 			{
-				throw ExceptionUtility.ArgumentNull("privateKey");
+				throw ExceptionUtility.ArgumentNull(nameof(privateKey));
 			}
 
 			if (!(privateKey is Gost3410AsymmetricAlgorithmBase))
 			{
-				throw ExceptionUtility.ArgumentOutOfRange("privateKey", Resources.ShouldSupportGost3410);
+				throw ExceptionUtility.ArgumentOutOfRange(nameof(privateKey), Resources.ShouldSupportGost3410);
 			}
 
 			_privateKey = (Gost3410AsymmetricAlgorithmBase)privateKey;
@@ -89,7 +87,7 @@ namespace GostCryptography.Cryptography
 		{
 			if (encryptedKeyExchangeData == null)
 			{
-				throw ExceptionUtility.ArgumentNull("encryptedKeyExchangeData");
+				throw ExceptionUtility.ArgumentNull(nameof(encryptedKeyExchangeData));
 			}
 
 			var keyExchange = new GostKeyExchange();
@@ -107,7 +105,7 @@ namespace GostCryptography.Cryptography
 		{
 			if (encryptedKeyExchangeInfo == null)
 			{
-				throw ExceptionUtility.ArgumentNull("encryptedKeyExchangeInfo");
+				throw ExceptionUtility.ArgumentNull(nameof(encryptedKeyExchangeInfo));
 			}
 
 			var keyExchangeAlg = _privateKey.CreateKeyExchange(encryptedKeyExchangeInfo.TransportParameters);

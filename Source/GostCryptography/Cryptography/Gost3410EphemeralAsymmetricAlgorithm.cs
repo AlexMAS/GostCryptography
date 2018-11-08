@@ -14,13 +14,19 @@ namespace GostCryptography.Cryptography
 	/// </summary>
 	public sealed class Gost3410EphemeralAsymmetricAlgorithm : Gost3410AsymmetricAlgorithmBase
 	{
-		/// <summary>
-		/// Конструктор.
-		/// </summary>
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		public Gost3410EphemeralAsymmetricAlgorithm()
 		{
-			_provHandle = CryptoApiHelper.ProviderHandle.DangerousAddRef();
+			_provHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
+			_keyHandle = CryptoApiHelper.GenerateKey(_provHandle, Constants.CALG_DH_EL_EPHEM, CspProviderFlags.NoFlags);
+		}
+
+		/// <inheritdoc />
+		[SecuritySafeCritical]
+		public Gost3410EphemeralAsymmetricAlgorithm(int providerType) : base(providerType)
+		{
+			_provHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
 			_keyHandle = CryptoApiHelper.GenerateKey(_provHandle, Constants.CALG_DH_EL_EPHEM, CspProviderFlags.NoFlags);
 		}
 
@@ -38,10 +44,32 @@ namespace GostCryptography.Cryptography
 		{
 			if (keyParameters == null)
 			{
-				throw ExceptionUtility.ArgumentNull("keyParameters");
+				throw ExceptionUtility.ArgumentNull(nameof(keyParameters));
 			}
 
-			_provHandle = CryptoApiHelper.ProviderHandle.DangerousAddRef();
+			_provHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
+			_keyHandle = CryptoApiHelper.GenerateDhEphemeralKey(_provHandle, keyParameters.DigestParamSet, keyParameters.PublicKeyParamSet);
+		}
+
+		/// <summary>
+		/// Конструктор.
+		/// </summary>
+		/// <param name="providerType">Тип криптографического провайдера.</param>
+		/// <param name="keyParameters">Параметры ключа, используемого для создания общего секретного ключа.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <remarks>
+		/// В параметре <paramref name="keyParameters"/> достаточно передать идентификатор OID параметров хэширования <see cref="GostKeyExchangeParameters.DigestParamSet"/>
+		/// и идентификатор OID параметров открытого ключа <see cref="GostKeyExchangeParameters.PublicKeyParamSet"/>. Остальные параметры не используются.
+		/// </remarks>
+		[SecuritySafeCritical]
+		public Gost3410EphemeralAsymmetricAlgorithm(int providerType, GostKeyExchangeParameters keyParameters) : base(providerType)
+		{
+			if (keyParameters == null)
+			{
+				throw ExceptionUtility.ArgumentNull(nameof(keyParameters));
+			}
+
+			_provHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
 			_keyHandle = CryptoApiHelper.GenerateDhEphemeralKey(_provHandle, keyParameters.DigestParamSet, keyParameters.PublicKeyParamSet);
 		}
 
@@ -119,7 +147,7 @@ namespace GostCryptography.Cryptography
 		[SecuritySafeCritical]
 		public override GostKeyExchangeAlgorithmBase CreateKeyExchange(GostKeyExchangeParameters keyParameters)
 		{
-			return new GostKeyExchangeAlgorithm(_provHandle, _keyHandle, new GostKeyExchangeParameters(keyParameters));
+			return new GostKeyExchangeAlgorithm(ProviderType, _provHandle, _keyHandle, new GostKeyExchangeParameters(keyParameters));
 		}
 
 
@@ -150,6 +178,7 @@ namespace GostCryptography.Cryptography
 		}
 
 
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		protected override void Dispose(bool disposing)
 		{

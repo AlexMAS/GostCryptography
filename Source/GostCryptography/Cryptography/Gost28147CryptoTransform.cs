@@ -9,14 +9,22 @@ using GostCryptography.Properties;
 namespace GostCryptography.Cryptography
 {
 	/// <summary>
-	/// Создание объекта криптографического преобразования для алгоритма симметричного шифрования по ГОСТ 28147.
+	/// Реализует криптографическое преобразование с использованием алгоритма симметричного шифрования ГОСТ 28147.
 	/// </summary>
 	sealed class Gost28147CryptoTransform : ICryptoTransform
 	{
 		[SecurityCritical]
-		public Gost28147CryptoTransform(SafeKeyHandleImpl hKey, Dictionary<int, object> keyParameters, PaddingMode paddingValue, CipherMode modeValue, int blockSizeValue, Gost28147CryptoTransformMode transformMode)
+		public Gost28147CryptoTransform(
+			int providerType,
+			SafeKeyHandleImpl keyHandle, 
+			Dictionary<int, object> keyParameters, 
+			PaddingMode paddingValue, 
+			CipherMode modeValue, 
+			int blockSizeValue, 
+			Gost28147CryptoTransformMode transformMode)
 		{
-			_keyHandle = hKey;
+			_providerType = providerType;
+			_keyHandle = keyHandle;
 			_paddingValue = paddingValue;
 			_isStreamModeValue = (modeValue == CipherMode.OFB) || (modeValue == CipherMode.CFB);
 			_blockSizeValue = blockSizeValue;
@@ -66,7 +74,7 @@ namespace GostCryptography.Cryptography
 						break;
 					case Constants.KP_PADDING:
 						{
-							if (GostCryptoConfig.ProviderType != ProviderTypes.VipNet)
+							if (providerType != ProviderTypes.VipNet)
 							{
 								CryptoApiHelper.SetKeyParameterInt32(_keyHandle, keyParameterId, (int)keyParameterValue);
 							}
@@ -81,6 +89,7 @@ namespace GostCryptography.Cryptography
 			}
 		}
 
+		private readonly int _providerType;
 
 		[SecurityCritical]
 		private readonly SafeKeyHandleImpl _keyHandle;
@@ -94,25 +103,13 @@ namespace GostCryptography.Cryptography
 		private byte[] _ivValue;
 
 
-		public bool CanReuseTransform
-		{
-			get { return true; }
-		}
+		public bool CanReuseTransform => true;
 
-		public bool CanTransformMultipleBlocks
-		{
-			get { return true; }
-		}
+		public bool CanTransformMultipleBlocks => true;
 
-		public int InputBlockSize
-		{
-			get { return (_blockSizeValue / 8); }
-		}
+		public int InputBlockSize => (_blockSizeValue / 8);
 
-		public int OutputBlockSize
-		{
-			get { return (_blockSizeValue / 8); }
-		}
+		public int OutputBlockSize => (_blockSizeValue / 8);
 
 
 		[SecuritySafeCritical]
@@ -120,32 +117,32 @@ namespace GostCryptography.Cryptography
 		{
 			if (inputBuffer == null)
 			{
-				throw ExceptionUtility.ArgumentNull("inputBuffer");
+				throw ExceptionUtility.ArgumentNull(nameof(inputBuffer));
 			}
 
 			if (outputBuffer == null)
 			{
-				throw ExceptionUtility.ArgumentNull("outputBuffer");
+				throw ExceptionUtility.ArgumentNull(nameof(outputBuffer));
 			}
 
 			if (inputOffset < 0)
 			{
-				throw ExceptionUtility.ArgumentOutOfRange("inputOffset");
+				throw ExceptionUtility.ArgumentOutOfRange(nameof(inputOffset));
 			}
 
 			if ((inputCount <= 0) || ((inputCount % InputBlockSize) != 0) || (inputCount > inputBuffer.Length))
 			{
-				throw ExceptionUtility.Argument("inputOffset", Resources.InvalidDataOffset);
+				throw ExceptionUtility.Argument(nameof(inputOffset), Resources.InvalidDataOffset);
 			}
 
 			if ((inputBuffer.Length - inputCount) < inputOffset)
 			{
-				throw ExceptionUtility.Argument("inputOffset", Resources.InvalidDataOffset);
+				throw ExceptionUtility.Argument(nameof(inputOffset), Resources.InvalidDataOffset);
 			}
 
 			if (_transformMode == Gost28147CryptoTransformMode.Encrypt)
 			{
-				return CryptoApiHelper.EncryptData(_keyHandle, inputBuffer, inputOffset, inputCount, ref outputBuffer, outputOffset, _paddingValue, false, _isStreamModeValue);
+				return CryptoApiHelper.EncryptData(_providerType, _keyHandle, inputBuffer, inputOffset, inputCount, ref outputBuffer, outputOffset, _paddingValue, false, _isStreamModeValue);
 			}
 
 			if ((_paddingValue == PaddingMode.Zeros) || (_paddingValue == PaddingMode.None))
@@ -184,29 +181,29 @@ namespace GostCryptography.Cryptography
 		{
 			if (inputBuffer == null)
 			{
-				throw ExceptionUtility.ArgumentNull("inputBuffer");
+				throw ExceptionUtility.ArgumentNull(nameof(inputBuffer));
 			}
 
 			if (inputOffset < 0)
 			{
-				throw ExceptionUtility.ArgumentOutOfRange("inputOffset");
+				throw ExceptionUtility.ArgumentOutOfRange(nameof(inputOffset));
 			}
 
 			if ((inputCount < 0) || (inputCount > inputBuffer.Length))
 			{
-				throw ExceptionUtility.ArgumentOutOfRange("inputOffset", Resources.InvalidDataOffset);
+				throw ExceptionUtility.ArgumentOutOfRange(nameof(inputOffset), Resources.InvalidDataOffset);
 			}
 
 			if ((inputBuffer.Length - inputCount) < inputOffset)
 			{
-				throw ExceptionUtility.ArgumentOutOfRange("inputOffset", Resources.InvalidDataOffset);
+				throw ExceptionUtility.ArgumentOutOfRange(nameof(inputOffset), Resources.InvalidDataOffset);
 			}
 
 			byte[] buffer = null;
 
 			if (_transformMode == Gost28147CryptoTransformMode.Encrypt)
 			{
-				CryptoApiHelper.EncryptData(_keyHandle, inputBuffer, inputOffset, inputCount, ref buffer, 0, _paddingValue, true, _isStreamModeValue);
+				CryptoApiHelper.EncryptData(_providerType, _keyHandle, inputBuffer, inputOffset, inputCount, ref buffer, 0, _paddingValue, true, _isStreamModeValue);
 				Reset();
 				return buffer;
 			}
@@ -245,7 +242,7 @@ namespace GostCryptography.Cryptography
 		{
 			_dataBuffer = null;
 
-			CryptoApiHelper.EndCrypt(_keyHandle, _transformMode);
+			CryptoApiHelper.EndCrypt(_providerType, _keyHandle, _transformMode);
 		}
 
 

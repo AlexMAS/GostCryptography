@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
 
 using GostCryptography.Asn1.Ber;
 using GostCryptography.Asn1.Encryption.Gost2814789;
@@ -44,16 +43,16 @@ namespace GostCryptography.Asn1.Common
 			try
 			{
 				keyWrap.EncryptedKey = new Gost2814789EncryptedKey
-									   {
-										   EncryptedKey = new Gost2814789Key(EncryptedKey),
-										   MacKey = new Gost2814789Mac(Mac)
-									   };
+				{
+					EncryptedKey = new Gost2814789Key(EncryptedKey),
+					MacKey = new Gost2814789Mac(Mac)
+				};
 
 				keyWrap.EncryptedParameters = new Gost2814789KeyWrapParameters
-											  {
-												  EncryptionParamSet = CreateEncryptionParamSet(EncryptionParamSet),
-												  Ukm = new Asn1OctetString(Ukm)
-											  };
+				{
+					EncryptionParamSet = CreateEncryptionParamSet(EncryptionParamSet),
+					Ukm = new Asn1OctetString(Ukm)
+				};
 
 				var asnEncoder = new Asn1BerEncodeBuffer();
 				keyWrap.Encode(asnEncoder);
@@ -71,7 +70,7 @@ namespace GostCryptography.Asn1.Common
 		{
 			if (data == null)
 			{
-				throw ExceptionUtility.ArgumentNull("data");
+				throw ExceptionUtility.ArgumentNull(nameof(data));
 			}
 
 			try
@@ -96,7 +95,7 @@ namespace GostCryptography.Asn1.Common
 		{
 			if (data == null)
 			{
-				throw ExceptionUtility.ArgumentNull("data");
+				throw ExceptionUtility.ArgumentNull(nameof(data));
 			}
 
 			string encryptionParamSet;
@@ -121,7 +120,7 @@ namespace GostCryptography.Asn1.Common
 		{
 			if (encryptionParamSet == null)
 			{
-				throw ExceptionUtility.ArgumentNull("encryptionParamSet");
+				throw ExceptionUtility.ArgumentNull(nameof(encryptionParamSet));
 			}
 
 			byte[] data;

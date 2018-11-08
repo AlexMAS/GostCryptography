@@ -56,7 +56,7 @@ namespace GostCryptography.Asn1.Common
 		{
 			if (data == null)
 			{
-				throw ExceptionUtility.ArgumentNull("data");
+				throw ExceptionUtility.ArgumentNull(nameof(data));
 			}
 
 			try
@@ -105,7 +105,7 @@ namespace GostCryptography.Asn1.Common
 		{
 			if (data == null)
 			{
-				throw ExceptionUtility.ArgumentNull("data");
+				throw ExceptionUtility.ArgumentNull(nameof(data));
 			}
 
 			try

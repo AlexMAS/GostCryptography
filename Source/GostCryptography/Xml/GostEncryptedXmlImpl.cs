@@ -34,12 +34,12 @@ namespace GostCryptography.Xml
 		{
 			if (string.IsNullOrEmpty(keyName))
 			{
-				throw ExceptionUtility.ArgumentNull("keyName");
+				throw ExceptionUtility.ArgumentNull(nameof(keyName));
 			}
 
 			if (keyObject == null)
 			{
-				throw ExceptionUtility.ArgumentNull("keyObject");
+				throw ExceptionUtility.ArgumentNull(nameof(keyObject));
 			}
 
 			if (keyObject is Gost3410AsymmetricAlgorithmBase)
@@ -72,21 +72,21 @@ namespace GostCryptography.Xml
 			}
 
 			var encryptedKey = new EncryptedKey
-							   {
-								   EncryptionMethod = new EncryptionMethod(GostEncryptedXml.XmlEncGostKeyTransportUrl)
-							   };
+			{
+				EncryptionMethod = new EncryptionMethod(GostEncryptedXml.XmlEncGostKeyTransportUrl)
+			};
 
 			encryptedKey.KeyInfo.AddClause(new KeyInfoX509Data(certificate));
 
-			var encriptionKey = new Gost28147SymmetricAlgorithm();
-			var publicKey = certificate.GetPublicKeyAlgorithm();
-			encryptedKey.CipherData.CipherValue = EncryptKey(encriptionKey, publicKey as Gost3410AsymmetricAlgorithmBase);
+			var publicKey = (Gost3410AsymmetricAlgorithmBase)certificate.GetPublicKeyAlgorithm();
+			var encriptionKey = new Gost28147SymmetricAlgorithm(publicKey.ProviderType);
+			encryptedKey.CipherData.CipherValue = EncryptKey(encriptionKey, publicKey);
 
 			var encryptedData = new EncryptedData
-								{
-									Type = XmlEncElementUrl,
-									EncryptionMethod = new EncryptionMethod(GostEncryptedXml.XmlEncGost28147Url)
-								};
+			{
+				Type = XmlEncElementUrl,
+				EncryptionMethod = new EncryptionMethod(GostEncryptedXml.XmlEncGost28147Url)
+			};
 
 			encryptedData.KeyInfo.AddClause(new KeyInfoEncryptedKey(encryptedKey));
 			encryptedData.CipherData.CipherValue = EncryptData(element, encriptionKey, false);
@@ -98,12 +98,12 @@ namespace GostCryptography.Xml
 		{
 			if (sessionKey == null)
 			{
-				throw ExceptionUtility.ArgumentNull("sessionKey");
+				throw ExceptionUtility.ArgumentNull(nameof(sessionKey));
 			}
 
 			if (publicKey == null)
 			{
-				throw ExceptionUtility.ArgumentNull("publicKey");
+				throw ExceptionUtility.ArgumentNull(nameof(publicKey));
 			}
 
 			var formatter = new GostKeyExchangeFormatter(publicKey);
@@ -114,12 +114,12 @@ namespace GostCryptography.Xml
 		{
 			if (sessionKey == null)
 			{
-				throw ExceptionUtility.ArgumentNull("sessionKey");
+				throw ExceptionUtility.ArgumentNull(nameof(sessionKey));
 			}
 
 			if (sharedKey == null)
 			{
-				throw ExceptionUtility.ArgumentNull("sharedKey");
+				throw ExceptionUtility.ArgumentNull(nameof(sharedKey));
 			}
 
 			return sharedKey.EncodePrivateKey(sessionKey, exportMethod);
@@ -130,7 +130,7 @@ namespace GostCryptography.Xml
 		{
 			if (encryptedData == null)
 			{
-				throw ExceptionUtility.ArgumentNull("encryptedData");
+				throw ExceptionUtility.ArgumentNull(nameof(encryptedData));
 			}
 
 			if (symmetricAlgorithmUri == null)
@@ -158,7 +158,7 @@ namespace GostCryptography.Xml
 		{
 			if (encryptedData == null)
 			{
-				throw ExceptionUtility.ArgumentNull("encryptedData");
+				throw ExceptionUtility.ArgumentNull(nameof(encryptedData));
 			}
 
 			SymmetricAlgorithm decryptionKey = null;
@@ -252,7 +252,7 @@ namespace GostCryptography.Xml
 		{
 			if (encryptedKey == null)
 			{
-				throw ExceptionUtility.ArgumentNull("encryptedKey");
+				throw ExceptionUtility.ArgumentNull(nameof(encryptedKey));
 			}
 
 			SymmetricAlgorithm decryptionKey = null;
@@ -350,12 +350,12 @@ namespace GostCryptography.Xml
 		{
 			if (keyData == null)
 			{
-				throw ExceptionUtility.ArgumentNull("keyData");
+				throw ExceptionUtility.ArgumentNull(nameof(keyData));
 			}
 
 			if (algorithm == null)
 			{
-				throw ExceptionUtility.ArgumentNull("algorithm");
+				throw ExceptionUtility.ArgumentNull(nameof(algorithm));
 			}
 
 			SymmetricAlgorithm decryptionKey = null;
@@ -397,12 +397,12 @@ namespace GostCryptography.Xml
 		{
 			if (keyData == null)
 			{
-				throw ExceptionUtility.ArgumentNull("keyData");
+				throw ExceptionUtility.ArgumentNull(nameof(keyData));
 			}
 
 			if (algorithm == null)
 			{
-				throw ExceptionUtility.ArgumentNull("algorithm");
+				throw ExceptionUtility.ArgumentNull(nameof(algorithm));
 			}
 
 			SymmetricAlgorithm decryptionKey = null;
@@ -427,12 +427,12 @@ namespace GostCryptography.Xml
 		{
 			if (keyData == null)
 			{
-				throw ExceptionUtility.ArgumentNull("keyData");
+				throw ExceptionUtility.ArgumentNull(nameof(keyData));
 			}
 
 			if (privateKey == null)
 			{
-				throw ExceptionUtility.ArgumentNull("privateKey");
+				throw ExceptionUtility.ArgumentNull(nameof(privateKey));
 			}
 
 			var deformatter = new GostKeyExchangeDeformatter(privateKey);

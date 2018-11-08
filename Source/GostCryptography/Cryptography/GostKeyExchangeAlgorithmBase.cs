@@ -23,6 +23,7 @@ namespace GostCryptography.Cryptography
 		public abstract SymmetricAlgorithm DecodeKeyExchange(byte[] encodedKeyExchangeData, GostKeyExchangeExportMethod keyExchangeExportMethod);
 
 
+		/// <inheritdoc />
 		public void Dispose()
 		{
 			Dispose(true);

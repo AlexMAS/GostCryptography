@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
 
 using GostCryptography.Asn1.Ber;
 using GostCryptography.Asn1.Encryption.Gost2814789;
@@ -30,7 +29,7 @@ namespace GostCryptography.Asn1.Common
 		{
 			if (data == null)
 			{
-				throw ExceptionUtility.ArgumentNull("data");
+				throw ExceptionUtility.ArgumentNull(nameof(data));
 			}
 
 			try
@@ -51,12 +50,12 @@ namespace GostCryptography.Asn1.Common
 		private static GostKeyExchangeInfo DecodeSessionKey(GostR3410KeyTransport keyTransport)
 		{
 			return new GostKeyExchangeInfo
-				   {
-					   EncryptionParamSet = Asn1ObjectIdentifier.ToOidString(keyTransport.TransportParameters.EncryptionParamSet),
-					   EncryptedKey = keyTransport.SessionEncryptedKey.EncryptedKey.Value,
-					   Mac = keyTransport.SessionEncryptedKey.MacKey.Value,
-					   Ukm = keyTransport.TransportParameters.Ukm.Value,
-				   };
+			{
+				EncryptionParamSet = Asn1ObjectIdentifier.ToOidString(keyTransport.TransportParameters.EncryptionParamSet),
+				EncryptedKey = keyTransport.SessionEncryptedKey.EncryptedKey.Value,
+				Mac = keyTransport.SessionEncryptedKey.MacKey.Value,
+				Ukm = keyTransport.TransportParameters.Ukm.Value,
+			};
 		}
 
 		private static GostKeyExchangeParameters DecodePublicKey(GostR3410KeyTransport keyTransport)
@@ -88,13 +87,13 @@ namespace GostCryptography.Asn1.Common
 			publicKey.Decode(asnDecoder);
 
 			return new GostKeyExchangeParameters
-				   {
-					   DigestParamSet = Asn1ObjectIdentifier.ToOidString(publicKeyParams.DigestParamSet),
-					   PublicKeyParamSet = Asn1ObjectIdentifier.ToOidString(publicKeyParams.PublicKeyParamSet),
-					   EncryptionParamSet = Asn1ObjectIdentifier.ToOidString(publicKeyParams.EncryptionParamSet),
-					   PublicKey = publicKey.Value,
-					   PrivateKey = null
-				   };
+			{
+				DigestParamSet = Asn1ObjectIdentifier.ToOidString(publicKeyParams.DigestParamSet),
+				PublicKeyParamSet = Asn1ObjectIdentifier.ToOidString(publicKeyParams.PublicKeyParamSet),
+				EncryptionParamSet = Asn1ObjectIdentifier.ToOidString(publicKeyParams.EncryptionParamSet),
+				PublicKey = publicKey.Value,
+				PrivateKey = null
+			};
 		}
 
 
@@ -106,17 +105,17 @@ namespace GostCryptography.Asn1.Common
 			try
 			{
 				keyTransport.SessionEncryptedKey = new Gost2814789EncryptedKey
-												   {
-													   EncryptedKey = new Gost2814789Key(SessionEncryptedKey.EncryptedKey),
-													   MacKey = new Gost2814789Mac(SessionEncryptedKey.Mac)
-												   };
+				{
+					EncryptedKey = new Gost2814789Key(SessionEncryptedKey.EncryptedKey),
+					MacKey = new Gost2814789Mac(SessionEncryptedKey.Mac)
+				};
 
 				keyTransport.TransportParameters = new GostR3410TransportParameters
-												   {
-													   Ukm = new Asn1OctetString(SessionEncryptedKey.Ukm),
-													   EncryptionParamSet = CreateEncryptionParamSet(SessionEncryptedKey.EncryptionParamSet),
-													   EphemeralPublicKey = EncodePublicKey(TransportParameters)
-												   };
+				{
+					Ukm = new Asn1OctetString(SessionEncryptedKey.Ukm),
+					EncryptionParamSet = CreateEncryptionParamSet(SessionEncryptedKey.EncryptionParamSet),
+					EphemeralPublicKey = EncodePublicKey(TransportParameters)
+				};
 
 				keyTransport.Encode(asnEncoder);
 			}
@@ -137,16 +136,16 @@ namespace GostCryptography.Asn1.Common
 			var publicKeyValue = asnEncoder.MsgCopy;
 
 			var publicKeyInfo = new SubjectPublicKeyInfo
-								{
-									SubjectPublicKey = new Asn1BitString(publicKeyValue.Length * 8, publicKeyValue)
-								};
+			{
+				SubjectPublicKey = new Asn1BitString(publicKeyValue.Length * 8, publicKeyValue)
+			};
 
 			var publicKeyParams = new GostR34102001PublicKeyParameters
-							 {
-								 PublicKeyParamSet = Asn1ObjectIdentifier.FromOidString(transportParameters.PublicKeyParamSet),
-								 DigestParamSet = Asn1ObjectIdentifier.FromOidString(transportParameters.DigestParamSet),
-								 EncryptionParamSet = CreateEncryptionParamSet(transportParameters.EncryptionParamSet)
-							 };
+			{
+				PublicKeyParamSet = Asn1ObjectIdentifier.FromOidString(transportParameters.PublicKeyParamSet),
+				DigestParamSet = Asn1ObjectIdentifier.FromOidString(transportParameters.DigestParamSet),
+				EncryptionParamSet = CreateEncryptionParamSet(transportParameters.EncryptionParamSet)
+			};
 
 			asnEncoder.Reset();
 			publicKeyParams.Encode(asnEncoder);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Security;
-using System.Security.Cryptography;
 using System.Security.Permissions;
 using System.Text;
 
@@ -12,8 +11,19 @@ namespace GostCryptography.Cryptography
 	/// <summary>
 	/// Базовый класс для всех реализаций алгоритма ГОСТ Р 34.10.
 	/// </summary>
-	public abstract class Gost3410AsymmetricAlgorithmBase : AsymmetricAlgorithm
+	public abstract class Gost3410AsymmetricAlgorithmBase : GostAsymmetricAlgorithm
 	{
+		/// <inheritdoc />
+		protected Gost3410AsymmetricAlgorithmBase()
+		{
+		}
+
+		/// <inheritdoc />
+		protected Gost3410AsymmetricAlgorithmBase(int providerType) : base(providerType)
+		{
+		}
+
+
 		/// <summary>
 		/// Наименование алгоритма цифровой подписи по ГОСТ Р 34.10.
 		/// </summary>
@@ -28,18 +38,12 @@ namespace GostCryptography.Cryptography
 		/// <summary>
 		/// Алгоритм цифровой подписи.
 		/// </summary>
-		public override string SignatureAlgorithm
-		{
-			get { return Gost3410SignatureAlgorithm; }
-		}
+		public override string SignatureAlgorithm => Gost3410SignatureAlgorithm;
 
 		/// <summary>
 		/// Алгоритм обмена ключами.
 		/// </summary>
-		public override string KeyExchangeAlgorithm
-		{
-			get { return Gost3410KeyExchangeAlgorithm; }
-		}
+		public override string KeyExchangeAlgorithm => Gost3410KeyExchangeAlgorithm;
 
 
 		/// <summary>

@@ -13,7 +13,7 @@ namespace GostCryptography.Asn1.PKI.Explicit88
 		{
 			get
 			{
-				switch (base.ChoiceId)
+				switch (ChoiceId)
 				{
 					case Null:
 						return "null_";
@@ -57,7 +57,7 @@ namespace GostCryptography.Asn1.PKI.Explicit88
 
 		public override int Encode(Asn1BerEncodeBuffer buffer, bool explicitTagging)
 		{
-			switch (base.ChoiceId)
+			switch (ChoiceId)
 			{
 				case Null:
 					return GetElement().Encode(buffer, true);

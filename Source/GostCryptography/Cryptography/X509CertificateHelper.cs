@@ -18,7 +18,7 @@ namespace GostCryptography.Cryptography
 		{
 			if (certificate == null)
 			{
-				throw ExceptionUtility.ArgumentNull("certificate");
+				throw ExceptionUtility.ArgumentNull(nameof(certificate));
 			}
 
 			if (certificate.HasPrivateKey)
@@ -97,7 +97,7 @@ namespace GostCryptography.Cryptography
 		{
 			if (certificate == null)
 			{
-				throw ExceptionUtility.ArgumentNull("certificate");
+				throw ExceptionUtility.ArgumentNull(nameof(certificate));
 			}
 
 			var cspParameters = GetPrivateKeyInfo(certificate);
@@ -111,7 +111,7 @@ namespace GostCryptography.Cryptography
 		{
 			if (certificate == null)
 			{
-				throw ExceptionUtility.ArgumentNull("certificate");
+				throw ExceptionUtility.ArgumentNull(nameof(certificate));
 			}
 
 			var cspObject = new GostKeyExchangeParameters();

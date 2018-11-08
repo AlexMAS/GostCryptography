@@ -23,8 +23,7 @@ namespace GostCryptography.Cryptography
 		/// <param name="privateKey">Закрытый ключ для вычисления цифровой подписи.</param>
 		/// <exception cref="ArgumentOutOfRangeException"></exception>
 		/// <exception cref="ArgumentNullException"></exception>
-		public GostSignatureFormatter(AsymmetricAlgorithm privateKey)
-			: this()
+		public GostSignatureFormatter(AsymmetricAlgorithm privateKey) : this()
 		{
 			SetKey(privateKey);
 		}
@@ -43,12 +42,12 @@ namespace GostCryptography.Cryptography
 		{
 			if (privateKey == null)
 			{
-				throw ExceptionUtility.ArgumentNull("privateKey");
+				throw ExceptionUtility.ArgumentNull(nameof(privateKey));
 			}
 
 			if (!(privateKey is Gost3410AsymmetricAlgorithmBase))
 			{
-				throw ExceptionUtility.ArgumentOutOfRange("privateKey", Resources.ShouldSupportGost3410);
+				throw ExceptionUtility.ArgumentOutOfRange(nameof(privateKey), Resources.ShouldSupportGost3410);
 			}
 
 			_privateKey = (Gost3410AsymmetricAlgorithmBase)privateKey;
@@ -72,7 +71,7 @@ namespace GostCryptography.Cryptography
 		{
 			if (hash == null)
 			{
-				throw ExceptionUtility.ArgumentNull("hash");
+				throw ExceptionUtility.ArgumentNull(nameof(hash));
 			}
 
 			var reverseSignature = _privateKey.CreateSignature(hash);

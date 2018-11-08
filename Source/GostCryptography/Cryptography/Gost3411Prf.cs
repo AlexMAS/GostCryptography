@@ -7,9 +7,9 @@ using GostCryptography.Properties;
 namespace GostCryptography.Cryptography
 {
 	/// <summary>
-	/// Реализация алгоритма генерации псевдослучайной последовательности (Pseudorandom Function, PRF) по ГОСТ Р 34.11.
+	/// Реализация алгоритма генерации псевдослучайной последовательности (Pseudorandom Function, PRF) ГОСТ Р 34.11.
 	/// </summary>
-	public sealed class Gost3411Prf : IDisposable
+	public class Gost3411Prf : GostPrf, IDisposable
 	{
 		/// <summary>
 		/// URI алгоритма для использования в протоколе WS-Trust в качестве алгоритма вычисления ключа.
@@ -25,19 +25,20 @@ namespace GostCryptography.Cryptography
 		/// <summary>
 		/// Конструктор.
 		/// </summary>
+		/// <param name="providerType">Тип криптографического провайдера.</param>
 		/// <param name="label">Метка для порождения ключей (аргумент label функции PRF).</param>
 		/// <param name="seed">Начальное число для порождения ключей (аргумент seed функции PRF).</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		private Gost3411Prf(byte[] label, byte[] seed)
+		private Gost3411Prf(int providerType, byte[] label, byte[] seed) : base(providerType)
 		{
 			if (label == null)
 			{
-				throw ExceptionUtility.ArgumentNull("label");
+				throw ExceptionUtility.ArgumentNull(nameof(label));
 			}
 
 			if (seed == null)
 			{
-				throw ExceptionUtility.ArgumentNull("seed");
+				throw ExceptionUtility.ArgumentNull(nameof(seed));
 			}
 
 			var labelAndSeed = new byte[label.Length + seed.Length];
@@ -56,52 +57,47 @@ namespace GostCryptography.Cryptography
 		/// <param name="seed">Начальное число для порождения ключей (аргумент seed функции PRF).</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		[SecuritySafeCritical]
-		public Gost3411Prf(Gost28147SymmetricAlgorithmBase key, byte[] label, byte[] seed)
-			: this(label, seed)
+		public Gost3411Prf(Gost28147SymmetricAlgorithmBase key, byte[] label, byte[] seed) : this(key.ProviderType, label, seed)
 		{
 			if (key == null)
 			{
-				throw ExceptionUtility.ArgumentNull("key");
+				throw ExceptionUtility.ArgumentNull(nameof(key));
 			}
 
 			_hashHmacHandle = SafeHashHandleImpl.InvalidHandle;
 			_buffer = new byte[_labelAndSeed.Length + 32];
 
-			var gostSymmetricAlgorithm = key as Gost28147SymmetricAlgorithm;
-
-			_key = (gostSymmetricAlgorithm != null)
-				? new Gost28147SymmetricAlgorithm(gostSymmetricAlgorithm.InternalProvHandle, gostSymmetricAlgorithm.InternalKeyHandle)
-				: new Gost28147SymmetricAlgorithm { Key = key.Key };
+			_key = Gost28147SymmetricAlgorithm.CreateFromKey(key);
 		}
 
 		/// <summary>
 		/// Конструктор.
 		/// </summary>
+		/// <param name="providerType">Тип криптографического провайдера.</param>
 		/// <param name="key">Симметричный ключ ГОСТ 28147 для вычисления HMAC на основе алгоритма ГОСТ Р 34.11.</param>
 		/// <param name="label">Метка для порождения ключей (аргумент label функции PRF).</param>
 		/// <param name="seed">Начальное число для порождения ключей (аргумент seed функции PRF).</param>
 		/// <exception cref="ArgumentException"></exception>
 		/// <exception cref="ArgumentNullException"></exception>
 		[SecuritySafeCritical]
-		public Gost3411Prf(byte[] key, byte[] label, byte[] seed)
-			: this(label, seed)
+		public Gost3411Prf(int providerType, byte[] key, byte[] label, byte[] seed) : this(providerType, label, seed)
 		{
 			if (key == null)
 			{
-				throw ExceptionUtility.ArgumentNull("key");
+				throw ExceptionUtility.ArgumentNull(nameof(key));
 			}
 
 			if (key.Length != 32)
 			{
-				throw ExceptionUtility.Argument("key", Resources.InvalidHashSize);
+				throw ExceptionUtility.Argument(nameof(key), Resources.InvalidHashSize);
 			}
 
 			_hashHmacHandle = SafeHashHandleImpl.InvalidHandle;
 			_buffer = new byte[_labelAndSeed.Length + 32];
 
-			using (var keyHandle = CryptoApiHelper.ImportBulkSessionKey(CryptoApiHelper.ProviderHandle, key, CryptoApiHelper.RandomNumberGenerator))
+			using (var keyHandle = CryptoApiHelper.ImportBulkSessionKey(CryptoApiHelper.GetProviderHandle(providerType), key, CryptoApiHelper.GetRandomNumberGenerator(providerType)))
 			{
-				_key = new Gost28147SymmetricAlgorithm(CryptoApiHelper.ProviderHandle, keyHandle);
+				_key = new Gost28147SymmetricAlgorithm(providerType, CryptoApiHelper.GetProviderHandle(providerType), keyHandle);
 			}
 		}
 
@@ -134,9 +130,9 @@ namespace GostCryptography.Cryptography
 		{
 			GenerateNextBytes();
 
-			var symKeyHandle = CryptoApiHelper.DeriveSymKey(CryptoApiHelper.ProviderHandle, _hashHmacHandle);
+			var symKeyHandle = CryptoApiHelper.DeriveSymKey(CryptoApiHelper.GetProviderHandle(ProviderType), _hashHmacHandle);
 
-			return new Gost28147SymmetricAlgorithm(CryptoApiHelper.ProviderHandle, symKeyHandle);
+			return new Gost28147SymmetricAlgorithm(ProviderType, CryptoApiHelper.GetProviderHandle(ProviderType), symKeyHandle);
 		}
 
 		/// <summary>
@@ -149,14 +145,14 @@ namespace GostCryptography.Cryptography
 		{
 			if ((position % 256) != 0)
 			{
-				throw ExceptionUtility.ArgumentOutOfRange("position");
+				throw ExceptionUtility.ArgumentOutOfRange(nameof(position));
 			}
 
 			var keyIndex = position / 256;
 
 			if (keyIndex < _keyIndex)
 			{
-				throw ExceptionUtility.ArgumentOutOfRange("position");
+				throw ExceptionUtility.ArgumentOutOfRange(nameof(position));
 			}
 
 			while (keyIndex > _keyIndex)
@@ -188,7 +184,7 @@ namespace GostCryptography.Cryptography
 		[SecurityCritical]
 		private void InitializeHmac()
 		{
-			var hashHmacHandle = CryptoApiHelper.CreateHashHmac(CryptoApiHelper.ProviderHandle, _key.InternalKeyHandle);
+			var hashHmacHandle = CryptoApiHelper.CreateHashHmac(ProviderType, CryptoApiHelper.GetProviderHandle(ProviderType), _key.InternalKeyHandle);
 
 			_hashHmacHandle.TryDispose();
 
@@ -204,6 +200,7 @@ namespace GostCryptography.Cryptography
 		}
 
 
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		public void Dispose()
 		{

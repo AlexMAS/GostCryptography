@@ -33,13 +33,8 @@ namespace GostCryptography.Cryptography
 		private Gost3410AsymmetricAlgorithmBase _publicKey;
 
 
-		/// <summary>
-		/// Параметры алгоритма.
-		/// </summary>
-		public override string Parameters
-		{
-			get { return null; }
-		}
+		/// <inheritdoc />
+		public override string Parameters => null;
 
 
 		/// <summary>
@@ -52,12 +47,12 @@ namespace GostCryptography.Cryptography
 		{
 			if (publicKey == null)
 			{
-				throw ExceptionUtility.ArgumentNull("publicKey");
+				throw ExceptionUtility.ArgumentNull(nameof(publicKey));
 			}
 
 			if (!(publicKey is Gost3410AsymmetricAlgorithmBase))
 			{
-				throw ExceptionUtility.ArgumentOutOfRange("publicKey", Resources.ShouldSupportGost3410);
+				throw ExceptionUtility.ArgumentOutOfRange(nameof(publicKey), Resources.ShouldSupportGost3410);
 			}
 
 			_publicKey = (Gost3410AsymmetricAlgorithmBase)publicKey;
@@ -73,10 +68,10 @@ namespace GostCryptography.Cryptography
 		{
 			if (keyExchangeData == null)
 			{
-				throw ExceptionUtility.ArgumentNull("keyExchangeData");
+				throw ExceptionUtility.ArgumentNull(nameof(keyExchangeData));
 			}
 
-			using (var keyExchangeAlgorithm = new Gost28147SymmetricAlgorithm())
+			using (var keyExchangeAlgorithm = new Gost28147SymmetricAlgorithm(_publicKey.ProviderType))
 			{
 				keyExchangeAlgorithm.Key = keyExchangeData;
 
@@ -95,7 +90,7 @@ namespace GostCryptography.Cryptography
 		{
 			if (keyExchangeData == null)
 			{
-				throw ExceptionUtility.ArgumentNull("keyExchangeData");
+				throw ExceptionUtility.ArgumentNull(nameof(keyExchangeData));
 			}
 
 			using (var keyExchangeAlgorithm = (SymmetricAlgorithm)Activator.CreateInstance(keyExchangeAlgorithmType))
@@ -115,7 +110,7 @@ namespace GostCryptography.Cryptography
 		{
 			if (keyExchangeAlgorithm == null)
 			{
-				throw ExceptionUtility.ArgumentNull("keyExchangeAlgorithm");
+				throw ExceptionUtility.ArgumentNull(nameof(keyExchangeAlgorithm));
 			}
 
 			var keyExchangeInfo = CreateKeyExchangeInfo(keyExchangeAlgorithm);
@@ -132,13 +127,13 @@ namespace GostCryptography.Cryptography
 		{
 			if (keyExchangeAlgorithm == null)
 			{
-				throw ExceptionUtility.ArgumentNull("keyExchangeAlgorithm");
+				throw ExceptionUtility.ArgumentNull(nameof(keyExchangeAlgorithm));
 			}
 
 			var keyExchange = new GostKeyExchange();
 			var keyExchangeParameters = _publicKey.ExportParameters(false);
 
-			using (var keyExchangeAsym = new Gost3410EphemeralAsymmetricAlgorithm(keyExchangeParameters))
+			using (var keyExchangeAsym = new Gost3410EphemeralAsymmetricAlgorithm(_publicKey.ProviderType, keyExchangeParameters))
 			{
 				byte[] encodedKeyExchangeInfo;
 

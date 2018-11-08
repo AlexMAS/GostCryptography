@@ -14,28 +14,31 @@ namespace GostCryptography.Cryptography
 	sealed class GostKeyExchangeAlgorithm : GostKeyExchangeAlgorithmBase
 	{
 		[SecurityCritical]
-		public GostKeyExchangeAlgorithm(SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, GostKeyExchangeParameters keyExchangeParameters)
+		public GostKeyExchangeAlgorithm(int providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, GostKeyExchangeParameters keyExchangeParameters)
 		{
 			if (provHandle == null)
 			{
-				throw ExceptionUtility.ArgumentNull("provHandle");
+				throw ExceptionUtility.ArgumentNull(nameof(provHandle));
 			}
 
 			if (keyHandle == null)
 			{
-				throw ExceptionUtility.ArgumentNull("keyHandle");
+				throw ExceptionUtility.ArgumentNull(nameof(keyHandle));
 			}
 
 			if (keyExchangeParameters == null)
 			{
-				throw ExceptionUtility.ArgumentNull("keyExchangeParameters");
+				throw ExceptionUtility.ArgumentNull(nameof(keyExchangeParameters));
 			}
 
+			_providerType = providerType;
 			_provHandle = provHandle.DangerousAddRef();
 			_keyHandle = keyHandle.DangerousAddRef();
 			_keyExchangeParameters = keyExchangeParameters;
 		}
 
+
+		private readonly int _providerType;
 
 		[SecurityCritical]
 		private readonly SafeProvHandleImpl _provHandle;
@@ -55,20 +58,20 @@ namespace GostCryptography.Cryptography
 		[SecuritySafeCritical]
 		public override byte[] EncodeKeyExchange(SymmetricAlgorithm keyExchangeAlgorithm, GostKeyExchangeExportMethod keyExchangeExportMethod)
 		{
-			if (keyExchangeAlgorithm is Gost28147SymmetricAlgorithm)
+			if (keyExchangeAlgorithm is Gost28147SymmetricAlgorithm symAlg)
 			{
-				return EncodeKeyExchangeInternal((Gost28147SymmetricAlgorithm)keyExchangeAlgorithm, keyExchangeExportMethod);
+				return EncodeKeyExchangeInternal(symAlg, keyExchangeExportMethod);
 			}
 
-			if (keyExchangeAlgorithm is Gost28147SymmetricAlgorithmBase)
+			if (keyExchangeAlgorithm is Gost28147SymmetricAlgorithmBase symAlgBase)
 			{
-				using (var gostKeyExchangeAlgorithm = new Gost28147SymmetricAlgorithm())
+				using (var gostKeyExchangeAlgorithm = new Gost28147SymmetricAlgorithm(symAlgBase.ProviderType))
 				{
-					return gostKeyExchangeAlgorithm.EncodePrivateKey((Gost28147SymmetricAlgorithmBase)keyExchangeAlgorithm, keyExchangeExportMethod);
+					return gostKeyExchangeAlgorithm.EncodePrivateKey(symAlgBase, keyExchangeExportMethod);
 				}
 			}
 
-			throw ExceptionUtility.Argument("keyExchangeAlgorithm", Resources.RequiredGost28147);
+			throw ExceptionUtility.Argument(nameof(keyExchangeAlgorithm), Resources.RequiredGost28147);
 		}
 
 		[SecurityCritical]
@@ -83,7 +86,7 @@ namespace GostCryptography.Cryptography
 					return EncodeKeyExchangeInternal(keyExchangeAlgorithm, Constants.CALG_PRO_EXPORT);
 			}
 
-			throw ExceptionUtility.ArgumentOutOfRange("keyExchangeExportMethod");
+			throw ExceptionUtility.ArgumentOutOfRange(nameof(keyExchangeExportMethod));
 		}
 
 		[SecurityCritical]
@@ -130,7 +133,7 @@ namespace GostCryptography.Cryptography
 					return DecodeKeyExchangeInternal(encodedKeyExchangeData, Constants.CALG_PRO_EXPORT);
 			}
 
-			throw ExceptionUtility.ArgumentOutOfRange("keyExchangeExportMethod");
+			throw ExceptionUtility.ArgumentOutOfRange(nameof(keyExchangeExportMethod));
 		}
 
 		[SecurityCritical]
@@ -154,7 +157,7 @@ namespace GostCryptography.Cryptography
 				keyExchangeHandle.TryDispose();
 			}
 
-			return new Gost28147SymmetricAlgorithm(_provHandle, symKeyHandle);
+			return new Gost28147SymmetricAlgorithm(_providerType, _provHandle, symKeyHandle);
 		}
 
 

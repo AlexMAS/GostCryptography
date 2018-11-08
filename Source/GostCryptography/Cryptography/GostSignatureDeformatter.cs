@@ -23,8 +23,7 @@ namespace GostCryptography.Cryptography
 		/// <param name="publicKey">Открытый ключ для проверки цифровой подписи.</param>
 		/// <exception cref="ArgumentOutOfRangeException"></exception>
 		/// <exception cref="ArgumentNullException"></exception>
-		public GostSignatureDeformatter(AsymmetricAlgorithm publicKey)
-			: this()
+		public GostSignatureDeformatter(AsymmetricAlgorithm publicKey) : this()
 		{
 			SetKey(publicKey);
 		}
@@ -43,12 +42,12 @@ namespace GostCryptography.Cryptography
 		{
 			if (publicKey == null)
 			{
-				throw ExceptionUtility.ArgumentNull("publicKey");
+				throw ExceptionUtility.ArgumentNull(nameof(publicKey));
 			}
 
 			if (!(publicKey is Gost3410AsymmetricAlgorithmBase))
 			{
-				throw ExceptionUtility.ArgumentOutOfRange("publicKey", Resources.ShouldSupportGost3410);
+				throw ExceptionUtility.ArgumentOutOfRange(nameof(publicKey), Resources.ShouldSupportGost3410);
 			}
 
 			_publicKey = (Gost3410AsymmetricAlgorithmBase)publicKey;
@@ -73,12 +72,12 @@ namespace GostCryptography.Cryptography
 		{
 			if (hash == null)
 			{
-				throw ExceptionUtility.ArgumentNull("hash");
+				throw ExceptionUtility.ArgumentNull(nameof(hash));
 			}
 
 			if (signature == null)
 			{
-				throw ExceptionUtility.ArgumentNull("signature");
+				throw ExceptionUtility.ArgumentNull(nameof(signature));
 			}
 
 			var reverseSignature = (byte[])signature.Clone();

@@ -13,13 +13,37 @@ namespace GostCryptography.Cryptography
 	/// <summary>
 	/// Реализация алгоритма симметричного шифрования по ГОСТ 28147.
 	/// </summary>
-	public sealed class Gost28147SymmetricAlgorithm : Gost28147SymmetricAlgorithmBase
+	public class Gost28147SymmetricAlgorithm : Gost28147SymmetricAlgorithmBase
 	{
-		/// <summary>
-		/// Конструктор.
-		/// </summary>
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		public Gost28147SymmetricAlgorithm()
+		{
+			InitDefaults();
+		}
+
+		/// <inheritdoc />
+		[SecuritySafeCritical]
+		public Gost28147SymmetricAlgorithm(int providerType) : base(providerType)
+		{
+			InitDefaults();
+		}
+
+
+		[SecurityCritical]
+		internal Gost28147SymmetricAlgorithm(int providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle) : base(providerType)
+		{
+			_provHandle = provHandle.DangerousAddRef();
+			_keyHandle = CryptoApiHelper.DuplicateKey(keyHandle);
+
+			if (CryptoApiHelper.GetKeyParameterInt32(_keyHandle, Constants.KP_ALGID) != Constants.CALG_G28147)
+			{
+				throw ExceptionUtility.Argument(nameof(keyHandle), Resources.RequiredGost28147);
+			}
+		}
+
+
+		private void InitDefaults()
 		{
 			Mode = CipherMode.CFB;
 			Padding = PaddingMode.None;
@@ -28,43 +52,42 @@ namespace GostCryptography.Cryptography
 			_keyHandle = SafeKeyHandleImpl.InvalidHandle;
 		}
 
-		/// <summary>
-		/// Конструктор.
-		/// </summary>
-		/// <param name="provHandle">Дескриптор криптографического провайдера.</param>
-		/// <param name="keyHandle">Дескриптор ключа симметричного шифрования.</param>
-		/// <exception cref="ArgumentException"></exception>
-		[SecurityCritical]
-		[SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
-		public Gost28147SymmetricAlgorithm(IntPtr provHandle, IntPtr keyHandle)
-			: this()
-		{
-			_provHandle = new SafeProvHandleImpl(provHandle, true);
-			_keyHandle = CryptoApiHelper.DuplicateKey(keyHandle);
 
-			if (CryptoApiHelper.GetKeyParameterInt32(_keyHandle, Constants.KP_ALGID) != Constants.CALG_G28147)
+		/// <summary>
+		/// Создает экземпляр <see cref="Gost28147SymmetricAlgorithm"/> на основе указанного алгоритма шифрования.
+		/// </summary>
+		/// <param name="keyAlgorithm">Алгоритм симметричного шифрования ключа.</param>
+		[SecurityCritical]
+		public static Gost28147SymmetricAlgorithm CreateFromKey(Gost28147SymmetricAlgorithmBase keyAlgorithm)
+		{
+			if (keyAlgorithm == null)
 			{
-				throw ExceptionUtility.Argument("keyHandle", Resources.RequiredGost28147);
+				throw ExceptionUtility.ArgumentNull(nameof(keyAlgorithm));
 			}
+
+			return (keyAlgorithm is Gost28147SymmetricAlgorithm sessionKey)
+				? new Gost28147SymmetricAlgorithm(keyAlgorithm.ProviderType, sessionKey.InternalProvHandle, sessionKey.InternalKeyHandle)
+				: new Gost28147SymmetricAlgorithm(keyAlgorithm.ProviderType) { Key = keyAlgorithm.Key };
 		}
 
 		/// <summary>
-		/// Конструктор.
+		/// Создает экземпляр <see cref="Gost28147SymmetricAlgorithm"/> на основе указанного пароля.
 		/// </summary>
-		/// <param name="provHandle">Дескриптор криптографического провайдера.</param>
-		/// <param name="keyHandle">Дескриптор ключа симметричного шифрования.</param>
-		/// <exception cref="ArgumentException"></exception>
-		[SecurityCritical]
-		internal Gost28147SymmetricAlgorithm(SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle)
-			: this()
+		[SecuritySafeCritical]
+		public static Gost28147SymmetricAlgorithm CreateFromPassword(int providerType, byte[] password)
 		{
-			_provHandle = provHandle.DangerousAddRef();
-			_keyHandle = CryptoApiHelper.DuplicateKey(keyHandle);
-
-			if (CryptoApiHelper.GetKeyParameterInt32(_keyHandle, Constants.KP_ALGID) != Constants.CALG_G28147)
+			if (password == null)
 			{
-				throw ExceptionUtility.Argument("keyHandle", Resources.RequiredGost28147);
+				throw ExceptionUtility.ArgumentNull(nameof(password));
 			}
+
+			var providerHandle = CryptoApiHelper.GetProviderHandle(providerType);
+
+			var hashHandle = CryptoApiHelper.CreateHash_3411_94(providerHandle);
+			CryptoApiHelper.HashData(hashHandle, password, 0, password.Length);
+
+			var symKeyHandle = CryptoApiHelper.DeriveSymKey(providerHandle, hashHandle);
+			return new Gost28147SymmetricAlgorithm(providerType, providerHandle, symKeyHandle);
 		}
 
 
@@ -181,7 +204,7 @@ namespace GostCryptography.Cryptography
 		[SecuritySafeCritical]
 		public void DeriveFromPassword(byte[] password)
 		{
-			var provider = CreateFromPassword(password);
+			var provider = CreateFromPassword(ProviderType, password);
 
 			_keyHandle.TryDispose();
 			_provHandle.TryDispose();
@@ -191,26 +214,6 @@ namespace GostCryptography.Cryptography
 
 			provider._keyHandle = SafeKeyHandleImpl.InvalidHandle;
 			provider._provHandle = SafeProvHandleImpl.InvalidHandle;
-		}
-
-		/// <summary>
-		/// Создает симметричный ключ на основе пароля.
-		/// </summary>
-		[SecuritySafeCritical]
-		public static Gost28147SymmetricAlgorithm CreateFromPassword(byte[] password)
-		{
-			if (password == null)
-			{
-				throw ExceptionUtility.ArgumentNull("password");
-			}
-
-			var providerHandle = CryptoApiHelper.ProviderHandle;
-
-			var hashHandle = CryptoApiHelper.CreateHash_3411_94(providerHandle);
-			CryptoApiHelper.HashData(hashHandle, password, 0, password.Length);
-
-			var symKeyHandle = CryptoApiHelper.DeriveSymKey(providerHandle, hashHandle);
-			return new Gost28147SymmetricAlgorithm(providerHandle, symKeyHandle);
 		}
 
 
@@ -223,21 +226,19 @@ namespace GostCryptography.Cryptography
 		{
 			SafeHashHandleImpl hashHandle;
 
-			if (hash is Gost3411HashAlgorithm)
+			switch (hash)
 			{
-				hashHandle = ((Gost3411HashAlgorithm)hash).InternalHashHandle;
-			}
-			else if (hash is Gost3411Hmac)
-			{
-				hashHandle = ((Gost3411Hmac)hash).InternalHashHandle;
-			}
-			else if (hash is Gost28147ImitHashAlgorithm)
-			{
-				hashHandle = ((Gost28147ImitHashAlgorithm)hash).InternalHashHandle;
-			}
-			else
-			{
-				throw ExceptionUtility.Argument("hash", Resources.RequiredGostHash);
+				case Gost3411HashAlgorithm hashAlgorithm:
+					hashHandle = hashAlgorithm.InternalHashHandle;
+					break;
+				case Gost3411Hmac hmacHashAlgorithm:
+					hashHandle = hmacHashAlgorithm.InternalHashHandle;
+					break;
+				case Gost28147ImitHashAlgorithm imitHashAlgorithm:
+					hashHandle = imitHashAlgorithm.InternalHashHandle;
+					break;
+				default:
+					throw ExceptionUtility.Argument(nameof(hash), Resources.RequiredGostHash);
 			}
 
 			CryptoApiHelper.HashKeyExchange(hashHandle, InternalKeyHandle);
@@ -253,7 +254,7 @@ namespace GostCryptography.Cryptography
 		public override void GenerateIV()
 		{
 			IVValue = new byte[DefaultIvSize];
-			CryptoApiHelper.RandomNumberGenerator.GetBytes(IVValue);
+			CryptoApiHelper.GetRandomNumberGenerator(ProviderType).GetBytes(IVValue);
 		}
 
 		/// <summary>
@@ -262,7 +263,7 @@ namespace GostCryptography.Cryptography
 		[SecuritySafeCritical]
 		public override void GenerateKey()
 		{
-			_provHandle = CryptoApiHelper.ProviderHandle.DangerousAddRef();
+			_provHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
 			_keyHandle = CryptoApiHelper.GenerateKey(_provHandle, Constants.CALG_G28147, CspProviderFlags.NoFlags);
 
 			KeyValue = null;
@@ -319,7 +320,7 @@ namespace GostCryptography.Cryptography
 		{
 			if (hKey == null)
 			{
-				hKey = CryptoApiHelper.GenerateKey(CryptoApiHelper.ProviderHandle, Constants.CALG_G28147, CspProviderFlags.NoFlags);
+				hKey = CryptoApiHelper.GenerateKey(CryptoApiHelper.GetProviderHandle(ProviderType), Constants.CALG_G28147, CspProviderFlags.NoFlags);
 			}
 
 			var keyParameters = new Dictionary<int, object>();
@@ -351,7 +352,7 @@ namespace GostCryptography.Cryptography
 				if (iv == null)
 				{
 					iv = new byte[DefaultIvSize];
-					CryptoApiHelper.RandomNumberGenerator.GetBytes(iv);
+					CryptoApiHelper.GetRandomNumberGenerator(ProviderType).GetBytes(iv);
 				}
 
 				if (iv.Length < DefaultIvSize)
@@ -362,7 +363,7 @@ namespace GostCryptography.Cryptography
 				keyParameters.Add(Constants.KP_IV, iv);
 			}
 
-			return new Gost28147CryptoTransform(hKey, keyParameters, PaddingValue, ModeValue, BlockSizeValue, transformMode);
+			return new Gost28147CryptoTransform(ProviderType, hKey, keyParameters, PaddingValue, ModeValue, BlockSizeValue, transformMode);
 		}
 
 
@@ -377,7 +378,7 @@ namespace GostCryptography.Cryptography
 		{
 			if (encodedKeyExchangeData == null)
 			{
-				throw ExceptionUtility.ArgumentNull("encodedKeyExchangeData");
+				throw ExceptionUtility.ArgumentNull(nameof(encodedKeyExchangeData));
 			}
 
 			int keyExchangeExportAlgId;
@@ -392,10 +393,10 @@ namespace GostCryptography.Cryptography
 			}
 			else
 			{
-				throw ExceptionUtility.ArgumentOutOfRange("keyExchangeExportMethod");
+				throw ExceptionUtility.ArgumentOutOfRange(nameof(keyExchangeExportMethod));
 			}
 
-			var providerHandle = CryptoApiHelper.ProviderHandle;
+			var providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType);
 
 			var keyExchangeInfo = new GostKeyExchangeInfo();
 			keyExchangeInfo.Decode(encodedKeyExchangeData);
@@ -406,7 +407,7 @@ namespace GostCryptography.Cryptography
 
 				var keyExchangeHandle = CryptoApiHelper.ImportKeyExchange(providerHandle, keyExchangeInfo, keyHandle);
 
-				return new Gost28147SymmetricAlgorithm(providerHandle, keyExchangeHandle);
+				return new Gost28147SymmetricAlgorithm(ProviderType, providerHandle, keyExchangeHandle);
 			}
 		}
 
@@ -421,7 +422,7 @@ namespace GostCryptography.Cryptography
 		{
 			if (keyExchangeAlgorithm == null)
 			{
-				throw ExceptionUtility.ArgumentNull("keyExchangeAlgorithm");
+				throw ExceptionUtility.ArgumentNull(nameof(keyExchangeAlgorithm));
 			}
 
 			int keyExchangeExportAlgId;
@@ -436,14 +437,14 @@ namespace GostCryptography.Cryptography
 			}
 			else
 			{
-				throw ExceptionUtility.ArgumentOutOfRange("keyExchangeExportMethod");
+				throw ExceptionUtility.ArgumentOutOfRange(nameof(keyExchangeExportMethod));
 			}
 
 			var currentSessionKey = keyExchangeAlgorithm as Gost28147SymmetricAlgorithm;
 
 			if (currentSessionKey == null)
 			{
-				using (var derivedSessinKey = new Gost28147SymmetricAlgorithm())
+				using (var derivedSessinKey = new Gost28147SymmetricAlgorithm(ProviderType))
 				{
 					derivedSessinKey.Key = keyExchangeAlgorithm.Key;
 
@@ -471,6 +472,7 @@ namespace GostCryptography.Cryptography
 		}
 
 
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		protected override void Dispose(bool disposing)
 		{

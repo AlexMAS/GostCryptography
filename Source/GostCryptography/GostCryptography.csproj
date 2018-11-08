@@ -137,8 +137,12 @@
     <Compile Include="Cryptography\Gost34112012512HashAlgorithm.cs" />
     <Compile Include="Cryptography\Gost3411Prf.cs" />
     <Compile Include="Cryptography\Gost34112012256HashAlgorithm.cs" />
+    <Compile Include="Cryptography\GostAsymmetricAlgorithm.cs" />
+    <Compile Include="Cryptography\GostHashAlgorithm.cs" />
+    <Compile Include="Cryptography\GostKeyedHashAlgorithm.cs" />
     <Compile Include="Cryptography\GostKeyValue.cs" />
     <Compile Include="Cryptography\GostSignatureDescription.cs" />
+    <Compile Include="Cryptography\GostSymmetricAlgorithm.cs" />
     <Compile Include="Cryptography\ProviderTypes.cs" />
     <Compile Include="ExceptionUtility.cs" />
     <Compile Include="Native\CryptoApiHelper.cs" />
