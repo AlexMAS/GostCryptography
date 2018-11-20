@@ -5,7 +5,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Xml;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Base;
+using GostCryptography.Gost_28147_89;
 using GostCryptography.Tests.Properties;
 using GostCryptography.Xml;
 
@@ -67,18 +68,19 @@ namespace GostCryptography.Tests.Xml.Encrypt
 					var elementEncryptedData = new EncryptedData();
 					elementEncryptedData.Id = "EncryptedElement" + elementIndex++;
 					elementEncryptedData.Type = EncryptedXml.XmlEncElementUrl;
-					elementEncryptedData.EncryptionMethod = new EncryptionMethod(GostEncryptedXml.XmlEncGost28147Url);
 					elementEncryptedData.KeyInfo = new KeyInfo();
 
-					using (var sessionKey = new Gost28147SymmetricAlgorithm())
+					using (var sessionKey = new Gost_28147_89_SymmetricAlgorithm())
 					{
+						elementEncryptedData.EncryptionMethod = new EncryptionMethod(sessionKey.AlgorithmName);
+
 						// Шифрация элемента с использованием симметричного ключа
 						var encryptedElement = encryptedXml.EncryptData(element, sessionKey, false);
 
 						foreach (var certificate in certificates)
 						{
 							// Шифрация сессионного ключа с использованием открытого ключа сертификата
-							var encryptedSessionKeyData = GostEncryptedXml.EncryptKey(sessionKey, (Gost3410AsymmetricAlgorithmBase)certificate.GetPublicKeyAlgorithm());
+							var encryptedSessionKeyData = GostEncryptedXml.EncryptKey(sessionKey, (GostAsymmetricAlgorithm)certificate.GetPublicKeyAlgorithm());
 
 							// Формирование информации о зашифрованном сессионном ключе
 							var encryptedSessionKey = new EncryptedKey();
@@ -175,11 +177,11 @@ namespace GostCryptography.Tests.Xml.Encrypt
 			return sessionKey;
 		}
 
-		private static Gost3410AsymmetricAlgorithmBase FindPrivateKey(IEnumerable certificates)
+		private static GostAsymmetricAlgorithm FindPrivateKey(IEnumerable certificates)
 		{
 			// Какая-то логика поиска закрытого ключа
 
-			Gost3410AsymmetricAlgorithmBase privateKey = null;
+			GostAsymmetricAlgorithm privateKey = null;
 
 			var store = new X509Store(TestCertificates.CertStoreName, TestCertificates.CertStoreLocation);
 			store.Open(OpenFlags.OpenExistingOnly | OpenFlags.ReadOnly);
@@ -192,7 +194,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 
 				if (index >= 0)
 				{
-					privateKey = storeCertificates[index].GetPrivateKeyAlgorithm() as Gost3410AsymmetricAlgorithmBase;
+					privateKey = storeCertificates[index].GetPrivateKeyAlgorithm() as GostAsymmetricAlgorithm;
 
 					if (privateKey != null)
 					{

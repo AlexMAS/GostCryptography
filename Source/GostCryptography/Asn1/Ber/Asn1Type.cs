@@ -6,7 +6,7 @@ using GostCryptography.Properties;
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	abstract class Asn1Type : IAsn1Type
+	public abstract class Asn1Type : IAsn1Type
 	{
 		public const short EocTypeCode = 0;
 		public const short BooleanTypeCode = 1;

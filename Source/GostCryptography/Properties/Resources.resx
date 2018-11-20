@@ -175,7 +175,7 @@
     <value>Input string does not contain a valid encoding of the '{0}' parameter.</value>
   </data>
   <data name="InvalidHashSize" xml:space="preserve">
-    <value>GOST R 34.11-94 algorithm hash size is 32 bytes.</value>
+    <value>GOST R 34.11-94 algorithm hash size is 32 terms.</value>
   </data>
   <data name="InvalidIvSize" xml:space="preserve">
     <value>Specified initialization vector (IV) does not match the block size for this algorithm.</value>

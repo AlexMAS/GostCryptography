@@ -2,7 +2,8 @@
 using System.Linq;
 using System.Text;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Gost_28147_89;
+using GostCryptography.Gost_R3411;
 
 using NUnit.Framework;
 
@@ -18,12 +19,12 @@ namespace GostCryptography.Tests.Hash
 	[TestFixture(Description = "Вычисление HMAC (Hash-based Message Authentication Code) и его проверка на базе общего симметричного ключа")]
 	public sealed class HmacTest
 	{
-		private Gost28147SymmetricAlgorithmBase _sharedKey;
+		private Gost_28147_89_SymmetricAlgorithmBase _sharedKey;
 
 		[SetUp]
 		public void SetUp()
 		{
-			_sharedKey = new Gost28147SymmetricAlgorithm();
+			_sharedKey = new Gost_28147_89_SymmetricAlgorithm();
 		}
 
 		[TearDown]
@@ -60,10 +61,10 @@ namespace GostCryptography.Tests.Hash
 			return new MemoryStream(Encoding.UTF8.GetBytes("Some data for hash..."));
 		}
 
-		private static Stream CreateHmacDataStream(Gost28147SymmetricAlgorithmBase sharedKey, Stream dataStream)
+		private static Stream CreateHmacDataStream(Gost_28147_89_SymmetricAlgorithmBase sharedKey, Stream dataStream)
 		{
 			// Создание объекта для вычисления HMAC
-			using (var imitHash = new Gost3411Hmac(sharedKey))
+			using (var imitHash = new Gost_R3411_HMAC(sharedKey))
 			{
 				// Вычисление HMAC для потока данных
 				var imitHashValue = imitHash.ComputeHash(dataStream);
@@ -82,10 +83,10 @@ namespace GostCryptography.Tests.Hash
 			}
 		}
 
-		private static bool VerifyHmacDataStream(Gost28147SymmetricAlgorithmBase sharedKey, Stream imitDataStream)
+		private static bool VerifyHmacDataStream(Gost_28147_89_SymmetricAlgorithmBase sharedKey, Stream imitDataStream)
 		{
 			// Создание объекта для вычисления HMAC
-			using (var imitHash = new Gost3411Hmac(sharedKey))
+			using (var imitHash = new Gost_R3411_HMAC(sharedKey))
 			{
 				// Считывание HMAC из потока данных
 				var imitHashValue = new byte[imitHash.HashSize / 8];

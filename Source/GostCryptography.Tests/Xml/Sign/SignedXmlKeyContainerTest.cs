@@ -1,7 +1,9 @@
 ﻿using System.Security.Cryptography.Xml;
 using System.Xml;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Base;
+using GostCryptography.Gost_R3410;
+using GostCryptography.Gost_R3411;
 using GostCryptography.Tests.Properties;
 using GostCryptography.Xml;
 
@@ -24,7 +26,7 @@ namespace GostCryptography.Tests.Xml.Sign
 		{
 			// Given
 			var keyContainer = TestCertificates.GetKeyContainer();
-			var signingKey = new Gost3410AsymmetricAlgorithm(keyContainer);
+			var signingKey = new Gost_R3410_2001_AsymmetricAlgorithm(keyContainer);
 			var xmlDocument = CreateXmlDocument();
 
 			// When
@@ -41,7 +43,7 @@ namespace GostCryptography.Tests.Xml.Sign
 			return document;
 		}
 
-		private static XmlDocument SignXmlDocument(XmlDocument xmlDocument, Gost3410AsymmetricAlgorithmBase signingKey)
+		private static XmlDocument SignXmlDocument(XmlDocument xmlDocument, GostAsymmetricAlgorithm signingKey)
 		{
 			// Создание подписчика XML-документа
 			var signedXml = new GostSignedXml(xmlDocument);
@@ -50,7 +52,7 @@ namespace GostCryptography.Tests.Xml.Sign
 			signedXml.SigningKey = signingKey;
 
 			// Ссылка на узел, который нужно подписать, с указанием алгоритма хэширования
-			var dataReference = new Reference { Uri = "#Id1", DigestMethod = GostSignedXml.XmlDsigGost3411Url };
+			var dataReference = new Reference { Uri = "#Id1", DigestMethod = Gost_R3411_94_HashAlgorithm.AlgorithmNameValue };
 
 			// Установка ссылки на узел
 			signedXml.AddReference(dataReference);

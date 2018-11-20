@@ -5,7 +5,7 @@ using GostCryptography.Properties;
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	class Asn1Boolean : Asn1Type
+	public class Asn1Boolean : Asn1Type
 	{
 		public static readonly Asn1Tag Tag = new Asn1Tag(0, 0, BooleanTypeCode);
 		public static readonly Asn1Boolean FalseValue = new Asn1Boolean(false);

@@ -1,9 +1,11 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Gost_28147_89;
+using GostCryptography.Gost_R3410;
 
 using NUnit.Framework;
 
@@ -88,13 +90,13 @@ namespace GostCryptography.Tests.Encrypt
 			var encryptedDataStream = new MemoryStream();
 
 			// Отправитель создает случайный сессионный ключ для шифрации данных
-			using (var senderSessionKey = new Gost28147SymmetricAlgorithm())
+			using (var senderSessionKey = new Gost_28147_89_SymmetricAlgorithm())
 			{
 				// Отправитель передает получателю вектор инициализации
 				iv = senderSessionKey.IV;
 
 				// Отправитель шифрует сессионный ключ и передает его получателю
-				var formatter = new GostKeyExchangeFormatter(publicKey);
+				var formatter = new Gost_R3410_2001_KeyExchangeFormatter(publicKey);
 				sessionKey = formatter.CreateKeyExchangeData(senderSessionKey);
 
 				// Отправитель шифрует данные с использованием сессионного ключа
@@ -114,7 +116,7 @@ namespace GostCryptography.Tests.Encrypt
 		{
 			var decryptedDataStream = new MemoryStream();
 
-			var deformatter = new GostKeyExchangeDeformatter(privateKey);
+			var deformatter = new Gost_R3410_2001_KeyExchangeDeformatter(privateKey);
 
 			// Получатель принимает от отправителя зашифрованный сессионный ключ и дешифрует его
 			using (var receiverSessionKey = deformatter.DecryptKeyExchangeAlgorithm(sessionKey))

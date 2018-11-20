@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GostCryptography.Asn1.Ber
 {
-	class Asn1BerMessageDumpHandler : IAsn1TaggedEventHandler
+	public class Asn1BerMessageDumpHandler : IAsn1TaggedEventHandler
 	{
 		private const int MaxBytesPerLine = 12;
 

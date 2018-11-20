@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Gost_R3411;
 
 using NUnit.Framework;
 
@@ -26,7 +26,7 @@ namespace GostCryptography.Tests.Hash
 
             byte[] hashValue;
 
-            using (var hash = new Gost3411HashAlgorithm())
+            using (var hash = new Gost_R3411_94_HashAlgorithm())
             {
                 hashValue = hash.ComputeHash(dataStream);
             }
@@ -46,7 +46,7 @@ namespace GostCryptography.Tests.Hash
 
             byte[] hashValue;
 
-            using (var hash = new Gost34112012256HashAlgorithm())
+            using (var hash = new Gost_R3411_2012_256_HashAlgorithm())
             {
                 hashValue = hash.ComputeHash(dataStream);
             }
@@ -66,7 +66,7 @@ namespace GostCryptography.Tests.Hash
 
             byte[] hashValue;
 
-            using (var hash = new Gost34112012512HashAlgorithm())
+            using (var hash = new Gost_R3411_2012_512_HashAlgorithm())
             {
                 hashValue = hash.ComputeHash(dataStream);
             }

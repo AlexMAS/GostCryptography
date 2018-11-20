@@ -5,7 +5,7 @@ using GostCryptography.Properties;
 
 namespace GostCryptography.Asn1.Ber
 {
-	static class Asn1Value
+	public static class Asn1Value
 	{
 		private static byte[] AllocBitArray(int numbits)
 		{

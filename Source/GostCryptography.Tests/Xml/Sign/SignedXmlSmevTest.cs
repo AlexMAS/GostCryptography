@@ -3,7 +3,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Xml;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Gost_R3411;
 using GostCryptography.Tests.Properties;
 using GostCryptography.Xml;
 
@@ -54,7 +54,7 @@ namespace GostCryptography.Tests.Xml.Sign
 			signedXml.SetSigningCertificate(signingCertificate);
 
 			// Ссылка на узел, который нужно подписать, с указанием алгоритма хэширования ГОСТ Р 34.11-94 (в соответствии с методическими рекомендациями СМЭВ)
-			var dataReference = new Reference { Uri = "#body", DigestMethod = GostSignedXml.XmlDsigGost3411ObsoleteUrl };
+			var dataReference = new Reference { Uri = "#body", DigestMethod = Gost_R3411_94_HashAlgorithm.ObsoleteAlgorithmNameValue };
 
 			// Метод преобразования, применяемый к данным перед их подписью (в соответствии с методическими рекомендациями СМЭВ)
 			var dataTransform = new XmlDsigExcC14NTransform();
@@ -66,8 +66,8 @@ namespace GostCryptography.Tests.Xml.Sign
 			// Установка алгоритма нормализации узла SignedInfo (в соответствии с методическими рекомендациями СМЭВ)
 			signedXml.SignedInfo.CanonicalizationMethod = SignedXml.XmlDsigExcC14NTransformUrl;
 
-			// Установка алгоритма подписи ГОСТ Р 34.10-2001 (в соответствии с методическими рекомендациями СМЭВ)
-			signedXml.SignedInfo.SignatureMethod = GostSignedXml.XmlDsigGost3410ObsoleteUrl;
+			// Установка алгоритма хэширования (в соответствии с методическими рекомендациями СМЭВ)
+			signedXml.SignedInfo.SignatureMethod = Gost_R3411_94_HashAlgorithm.ObsoleteAlgorithmNameValue;
 
 			// Вычисление подписи
 			signedXml.ComputeSignature();

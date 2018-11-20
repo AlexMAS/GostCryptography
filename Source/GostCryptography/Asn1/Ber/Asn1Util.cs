@@ -7,7 +7,7 @@ using GostCryptography.Properties;
 
 namespace GostCryptography.Asn1.Ber
 {
-	static class Asn1Util
+	public static class Asn1Util
 	{
 		private static readonly byte[] Base64DecodeTable =
 		{

@@ -6,7 +6,7 @@ using GostCryptography.Properties;
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	abstract class Asn1Time : Asn18BitCharString, IComparable
+	public abstract class Asn1Time : Asn18BitCharString, IComparable
 	{
 		public const int January = 1;
 		public const int February = 2;

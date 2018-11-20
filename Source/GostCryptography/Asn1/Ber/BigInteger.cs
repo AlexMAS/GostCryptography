@@ -5,7 +5,7 @@ using GostCryptography.Properties;
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	class BigInteger
+	public class BigInteger
 	{
 		private const int AddressBits = 3;
 		private const int BitIndexMask = 7;

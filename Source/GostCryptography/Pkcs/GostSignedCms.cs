@@ -1,9 +1,11 @@
-﻿using System;
-using System.Security.Cryptography;
-using System.Security.Cryptography.Pkcs;
+﻿using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Asn1.Gost.Gost_R3410_2001;
+using GostCryptography.Asn1.Gost.Gost_R3410_2012_256;
+using GostCryptography.Asn1.Gost.Gost_R3410_2012_512;
+using GostCryptography.Asn1.Gost.Gost_R3410_94;
+using GostCryptography.Config;
 
 namespace GostCryptography.Pkcs
 {
@@ -26,36 +28,42 @@ namespace GostCryptography.Pkcs
 			GostCryptoConfig.Initialize();
 		}
 
+		/// <inheritdoc cref="SignedCms()"/>
 		public GostSignedCms()
 		{
 			_signedCms = new SignedCms();
 			_signerIdentifierType = InitSubjectIdentifierType(SubjectIdentifierType.IssuerAndSerialNumber);
 		}
 
+		/// <inheritdoc cref="SignedCms(SubjectIdentifierType)"/>
 		public GostSignedCms(SubjectIdentifierType signerIdentifierType)
 		{
 			_signedCms = new SignedCms(signerIdentifierType);
 			_signerIdentifierType = InitSubjectIdentifierType(signerIdentifierType);
 		}
 
+		/// <inheritdoc cref="SignedCms(System.Security.Cryptography.Pkcs.ContentInfo)"/>
 		public GostSignedCms(ContentInfo contentInfo)
 		{
 			_signedCms = new SignedCms(contentInfo);
 			_signerIdentifierType = InitSubjectIdentifierType(SubjectIdentifierType.IssuerAndSerialNumber);
 		}
 
+		/// <inheritdoc cref="SignedCms(SubjectIdentifierType,System.Security.Cryptography.Pkcs.ContentInfo)"/>
 		public GostSignedCms(SubjectIdentifierType signerIdentifierType, ContentInfo contentInfo)
 		{
 			_signedCms = new SignedCms(signerIdentifierType, contentInfo);
 			_signerIdentifierType = InitSubjectIdentifierType(signerIdentifierType);
 		}
 
+		/// <inheritdoc cref="SignedCms(System.Security.Cryptography.Pkcs.ContentInfo,bool)"/>
 		public GostSignedCms(ContentInfo contentInfo, bool detached)
 		{
 			_signedCms = new SignedCms(contentInfo, detached);
 			_signerIdentifierType = InitSubjectIdentifierType(SubjectIdentifierType.IssuerAndSerialNumber);
 		}
 
+		/// <inheritdoc cref="SignedCms(SubjectIdentifierType,System.Security.Cryptography.Pkcs.ContentInfo,bool)"/>
 		public GostSignedCms(SubjectIdentifierType signerIdentifierType, ContentInfo contentInfo, bool detached)
 		{
 			_signedCms = new SignedCms(signerIdentifierType, contentInfo, detached);
@@ -67,51 +75,48 @@ namespace GostCryptography.Pkcs
 		private readonly SubjectIdentifierType _signerIdentifierType;
 
 
-		public int Version
-		{
-			get { return _signedCms.Version; }
-		}
+		/// <inheritdoc cref="SignedCms.Version"/>
+		public int Version => _signedCms.Version;
 
-		public ContentInfo ContentInfo
-		{
-			get { return _signedCms.ContentInfo; }
-		}
+		/// <inheritdoc cref="SignedCms.ContentInfo"/>
+		public ContentInfo ContentInfo => _signedCms.ContentInfo;
 
-		public bool Detached
-		{
-			get { return _signedCms.Detached; }
-		}
+		/// <inheritdoc cref="SignedCms.Detached"/>
+		public bool Detached => _signedCms.Detached;
 
-		public X509Certificate2Collection Certificates
-		{
-			get { return _signedCms.Certificates; }
-		}
+		/// <inheritdoc cref="SignedCms.Certificates"/>
+		public X509Certificate2Collection Certificates => _signedCms.Certificates;
 
-		public SignerInfoCollection SignerInfos
-		{
-			get { return _signedCms.SignerInfos; }
-		}
+		/// <inheritdoc cref="SignedCms.SignerInfos"/>
+		public SignerInfoCollection SignerInfos => _signedCms.SignerInfos;
 
+
+		/// <inheritdoc cref="SignedCms.Encode"/>
 		public byte[] Encode()
 		{
 			return _signedCms.Encode();
 		}
 
+		/// <inheritdoc cref="SignedCms.Decode"/>
 		public void Decode(byte[] encodedMessage)
 		{
 			_signedCms.Decode(encodedMessage);
 		}
 
+
+		/// <inheritdoc cref="SignedCms.ComputeSignature()"/>
 		public void ComputeSignature()
 		{
 			ComputeSignature(new CmsSigner(_signerIdentifierType), true);
 		}
 
+		/// <inheritdoc cref="SignedCms.ComputeSignature(CmsSigner)"/>
 		public void ComputeSignature(CmsSigner signer)
 		{
 			ComputeSignature(signer, true);
 		}
 
+		/// <inheritdoc cref="SignedCms.ComputeSignature(CmsSigner,bool)"/>
 		public void ComputeSignature(CmsSigner signer, bool silent)
 		{
 			signer = InitCmsSigner(signer);
@@ -119,26 +124,34 @@ namespace GostCryptography.Pkcs
 			_signedCms.ComputeSignature(signer, silent);
 		}
 
+
+		/// <inheritdoc cref="SignedCms.RemoveSignature(int)"/>
 		public void RemoveSignature(int index)
 		{
 			_signedCms.RemoveSignature(index);
 		}
 
+		/// <inheritdoc cref="SignedCms.RemoveSignature(SignerInfo)"/>
 		public void RemoveSignature(SignerInfo signerInfo)
 		{
 			_signedCms.RemoveSignature(signerInfo);
 		}
 
+
+		/// <inheritdoc cref="SignedCms.CheckSignature(bool)"/>
 		public void CheckSignature(bool verifySignatureOnly)
 		{
 			_signedCms.CheckSignature(verifySignatureOnly);
 		}
 
+		/// <inheritdoc cref="SignedCms.CheckSignature(X509Certificate2Collection,bool)"/>
 		public void CheckSignature(X509Certificate2Collection extraStore, bool verifySignatureOnly)
 		{
 			_signedCms.CheckSignature(extraStore, verifySignatureOnly);
 		}
 
+
+		/// <inheritdoc cref="SignedCms.CheckHash()"/>
 		public void CheckHash()
 		{
 			_signedCms.CheckHash();
@@ -161,14 +174,11 @@ namespace GostCryptography.Pkcs
 		{
 			var certificate = cmsSigner.Certificate;
 
-			if (certificate != null)
-			{
-				var keyAlgorithm = certificate.GetKeyAlgorithm();
+			var hashAlgorithm = certificate?.GetHashAlgorithm();
 
-				if (string.Equals(keyAlgorithm, GostCryptoConfig.DefaultSignOid, StringComparison.OrdinalIgnoreCase))
-				{
-					cmsSigner.DigestAlgorithm = new Oid(GostCryptoConfig.DefaultHashOid);
-				}
+			if (hashAlgorithm != null)
+			{
+				cmsSigner.DigestAlgorithm = hashAlgorithm;
 			}
 
 			return cmsSigner;

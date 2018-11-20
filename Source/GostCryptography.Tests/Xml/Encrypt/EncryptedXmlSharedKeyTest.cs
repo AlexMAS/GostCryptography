@@ -2,7 +2,7 @@
 using System.Security.Cryptography.Xml;
 using System.Xml;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Gost_28147_89;
 using GostCryptography.Tests.Properties;
 using GostCryptography.Xml;
 
@@ -20,12 +20,12 @@ namespace GostCryptography.Tests.Xml.Encrypt
 	[TestFixture(Description = "Шифрация и дешифрация XML с использованием общего симметричного ключа")]
 	public sealed class EncryptedXmlSharedKeyTest
 	{
-		private Gost28147SymmetricAlgorithm _sharedKey;
+		private Gost_28147_89_SymmetricAlgorithm _sharedKey;
 
 		[SetUp]
 		public void SetUp()
 		{
-			_sharedKey = new Gost28147SymmetricAlgorithm();
+			_sharedKey = new Gost_28147_89_SymmetricAlgorithm();
 		}
 
 		[TearDown]
@@ -65,7 +65,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 			return document;
 		}
 
-		private static XmlDocument EncryptXmlDocument(XmlDocument xmlDocument, SymmetricAlgorithm sharedKey)
+		private static XmlDocument EncryptXmlDocument(XmlDocument xmlDocument, Gost_28147_89_SymmetricAlgorithm sharedKey)
 		{
 			// Создание объекта для шифрации XML
 			var encryptedXml = new GostEncryptedXml();
@@ -83,7 +83,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 					// Формирование элемента EncryptedData
 					var elementEncryptedData = new EncryptedData();
 					elementEncryptedData.Type = EncryptedXml.XmlEncElementUrl;
-					elementEncryptedData.EncryptionMethod = new EncryptionMethod(GostEncryptedXml.XmlEncGost28147Url);
+					elementEncryptedData.EncryptionMethod = new EncryptionMethod(sharedKey.AlgorithmName);
 					elementEncryptedData.CipherData.CipherValue = encryptedData;
 
 					// Замена элемента его зашифрованным представлением
@@ -94,7 +94,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 			return xmlDocument;
 		}
 
-		private static XmlDocument DecryptXmlDocument(XmlDocument encryptedXmlDocument, SymmetricAlgorithm sharedKey)
+		private static XmlDocument DecryptXmlDocument(XmlDocument encryptedXmlDocument, Gost_28147_89_SymmetricAlgorithm sharedKey)
 		{
 			// Создание объекта для дешифрации XML
 			var encryptedXml = new GostEncryptedXml(encryptedXmlDocument);

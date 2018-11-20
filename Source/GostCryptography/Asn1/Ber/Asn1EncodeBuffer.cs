@@ -3,7 +3,7 @@ using System.IO;
 
 namespace GostCryptography.Asn1.Ber
 {
-	abstract class Asn1EncodeBuffer : Asn1MessageBuffer
+	public abstract class Asn1EncodeBuffer : Asn1MessageBuffer
 	{
 		public const int DefaultSizeIncrement = 0x400;
 

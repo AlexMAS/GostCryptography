@@ -3,7 +3,7 @@ using System.IO;
 
 namespace GostCryptography.Asn1.Ber
 {
-	class Asn1TraceHandler : IAsn1NamedEventHandler
+	public class Asn1TraceHandler : IAsn1NamedEventHandler
 	{
 		internal StreamWriter mPrintStream;
 

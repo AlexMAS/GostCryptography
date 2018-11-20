@@ -5,7 +5,7 @@ using System.Text;
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	class Asn1Utf8String : Asn1CharString
+	public class Asn1Utf8String : Asn1CharString
 	{
 		public static readonly Asn1Tag Tag = new Asn1Tag(0, 0, Utf8StringTypeCode);
 

@@ -1,6 +1,6 @@
 ﻿namespace GostCryptography.Asn1.Ber
 {
-	sealed class IntHolder
+	public class IntHolder
 	{
 		public int Value;
 

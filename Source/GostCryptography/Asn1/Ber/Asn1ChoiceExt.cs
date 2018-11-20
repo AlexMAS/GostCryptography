@@ -3,7 +3,7 @@
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	class Asn1ChoiceExt : Asn1OpenType
+	public class Asn1ChoiceExt : Asn1OpenType
 	{
 		public override void Decode(Asn1BerDecodeBuffer buffer, bool explicitTagging, int implicitLength)
 		{

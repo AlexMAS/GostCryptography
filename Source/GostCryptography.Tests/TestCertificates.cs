@@ -1,7 +1,8 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Reflection;
 
 namespace GostCryptography.Tests
 {
@@ -19,14 +20,19 @@ namespace GostCryptography.Tests
 		/// Местоположение для поиска тестового сертификата.
 		/// </summary>
 		/// <remarks>
-		/// Значение равно <see cref="StoreLocation.LocalMachine"/>.
+		/// Значение равно <see cref="StoreLocation.CurrentUser"/>.
 		/// </remarks>
-		public const StoreLocation CertStoreLocation = StoreLocation.LocalMachine;
+		public const StoreLocation CertStoreLocation = StoreLocation.CurrentUser;
 
 		/// <summary>
 		/// Сертификат ГОСТ Р 34.10-2001 с закрытым ключем.
 		/// </summary>
-		private static readonly X509Certificate2 GostCetificate = FindGostCertificate();
+		private static readonly X509Certificate2 GostCetificate2001 = FindGostCertificate("1.2.643.2.2.3");
+
+		/// <summary>
+		/// Сертификат ГОСТ Р 34.10-2012 с закрытым ключем.
+		/// </summary>
+		private static readonly X509Certificate2 GostCetificate = FindGostCertificate("1.2.643.7.1.1.3.2");
 
 
 		/// <summary>
@@ -53,7 +59,7 @@ namespace GostCryptography.Tests
 		}
 
 
-		private static X509Certificate2 FindGostCertificate()
+		private static X509Certificate2 FindGostCertificate(string signatureAlgorithm)
 		{
 			// Для тестирования берется первый найденный сертификат ГОСТ с закрытым ключем.
 
@@ -64,7 +70,7 @@ namespace GostCryptography.Tests
 			{
 				foreach (var certificate in store.Certificates)
 				{
-					if (certificate.HasPrivateKey && certificate.SignatureAlgorithm.Value == "1.2.643.2.2.3")
+					if (certificate.HasPrivateKey && certificate.SignatureAlgorithm.Value == signatureAlgorithm)
 					{
 						return certificate;
 					}

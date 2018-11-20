@@ -1,11 +1,10 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 using GostCryptography.Properties;
 
 namespace GostCryptography.Asn1.Ber
 {
-	abstract class Asn1OutputStream : Stream
+	public abstract class Asn1OutputStream : Stream
 	{
 		protected readonly Stream OutputStream;
 

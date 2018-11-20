@@ -1,7 +1,9 @@
 ﻿using System.Security.Cryptography.Xml;
 using System.Xml;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Base;
+using GostCryptography.Gost_28147_89;
+using GostCryptography.Gost_R3410;
 using GostCryptography.Tests.Properties;
 using GostCryptography.Xml;
 
@@ -29,8 +31,8 @@ namespace GostCryptography.Tests.Xml.Encrypt
 	[TestFixture(Description = "Шифрация и дешифрация XML с использованием контейнера ключей")]
 	public sealed class EncryptedXmlKeyContainerTest
 	{
-		private Gost3410AsymmetricAlgorithm _privateKey;
-		private Gost3410AsymmetricAlgorithm _publicKey;
+		private Gost_R3410_2001_AsymmetricAlgorithm _privateKey;
+		private Gost_R3410_2001_AsymmetricAlgorithm _publicKey;
 
 		[SetUp]
 		public void SetUp()
@@ -39,13 +41,13 @@ namespace GostCryptography.Tests.Xml.Encrypt
 			var keyContainer = TestCertificates.GetKeyContainer();
 
 			// Получатель формирует закрытый ключ для дешифрации XML
-			var privateKey = new Gost3410AsymmetricAlgorithm(keyContainer);
+			var privateKey = new Gost_R3410_2001_AsymmetricAlgorithm(keyContainer);
 
 			// Получатель экспортирует отправителю информацию о своем открытом ключе
 			var publicKeyInfo = privateKey.ExportParameters(false);
 
 			// Отправитель импортирует от получателя информацию о его открытом ключе
-			var publicKey = new Gost3410AsymmetricAlgorithm();
+			var publicKey = new Gost_R3410_2001_AsymmetricAlgorithm();
 
 			// Отправитель формирует открытый ключ для шифрации XML
 			publicKey.ImportParameters(publicKeyInfo);
@@ -101,7 +103,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 			return document;
 		}
 
-		private static XmlDocument EncryptXmlDocument(XmlDocument xmlDocument, Gost3410AsymmetricAlgorithmBase publicKey)
+		private static XmlDocument EncryptXmlDocument(XmlDocument xmlDocument, GostAsymmetricAlgorithm publicKey)
 		{
 			// Создание объекта для шифрации XML
 			var encryptedXml = new GostEncryptedXml();
@@ -116,7 +118,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 				foreach (XmlElement element in elements)
 				{
 					// Создание случайного сессионного ключа
-					using (var sessionKey = new Gost28147SymmetricAlgorithm())
+					using (var sessionKey = new Gost_28147_89_SymmetricAlgorithm())
 					{
 						// Шифрация элемента
 						var encryptedData = encryptedXml.EncryptData(element, sessionKey, false);
@@ -128,14 +130,14 @@ namespace GostCryptography.Tests.Xml.Encrypt
 						var elementEncryptedData = new EncryptedData();
 						elementEncryptedData.Id = "EncryptedElement" + elementIndex++;
 						elementEncryptedData.Type = EncryptedXml.XmlEncElementUrl;
-						elementEncryptedData.EncryptionMethod = new EncryptionMethod(GostEncryptedXml.XmlEncGost28147Url);
+						elementEncryptedData.EncryptionMethod = new EncryptionMethod(sessionKey.AlgorithmName);
 						elementEncryptedData.CipherData.CipherValue = encryptedData;
 						elementEncryptedData.KeyInfo = new KeyInfo();
 
 						// Формирование информации о зашифрованном сессионном ключе
 						var encryptedSessionKey = new EncryptedKey();
 						encryptedSessionKey.CipherData = new CipherData(encryptedSessionKeyData);
-						encryptedSessionKey.EncryptionMethod = new EncryptionMethod(GostEncryptedXml.XmlEncGostKeyTransportUrl);
+						encryptedSessionKey.EncryptionMethod = new EncryptionMethod(publicKey.KeyExchangeAlgorithm);
 						encryptedSessionKey.AddReference(new DataReference { Uri = "#" + elementEncryptedData.Id });
 						encryptedSessionKey.KeyInfo.AddClause(new KeyInfoName { Value = "KeyName1" });
 
@@ -151,7 +153,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 			return xmlDocument;
 		}
 
-		private static XmlDocument DecryptXmlDocument(XmlDocument encryptedXmlDocument, Gost3410AsymmetricAlgorithmBase privateKey)
+		private static XmlDocument DecryptXmlDocument(XmlDocument encryptedXmlDocument, GostAsymmetricAlgorithm privateKey)
 		{
 			// Создание объекта для дешифрации XML
 			var encryptedXml = new GostEncryptedXml(encryptedXmlDocument);

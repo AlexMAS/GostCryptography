@@ -7,7 +7,7 @@ using GostCryptography.Properties;
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	class Asn1BitString : Asn1Type
+	public class Asn1BitString : Asn1Type
 	{
 		public static readonly Asn1Tag Tag = new Asn1Tag(0, 0, BitStringTypeCode);
 

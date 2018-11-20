@@ -4,7 +4,7 @@ using System.Text;
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	class Asn1Tag
+	public class Asn1Tag
 	{
 		public const short Universal = 0;
 		public const short Private = 0xc0;

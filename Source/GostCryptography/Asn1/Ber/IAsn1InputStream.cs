@@ -1,6 +1,6 @@
 ﻿namespace GostCryptography.Asn1.Ber
 {
-	interface IAsn1InputStream
+	public interface IAsn1InputStream
 	{
 		int Available();
 		void Close();

@@ -2,6 +2,7 @@
 using System.Security.Cryptography.Xml;
 using System.Xml;
 
+using GostCryptography.Gost_R3411;
 using GostCryptography.Tests.Properties;
 using GostCryptography.Xml;
 
@@ -49,7 +50,7 @@ namespace GostCryptography.Tests.Xml.Sign
 			signedXml.SetSigningCertificate(signingCertificate);
 
 			// Ссылка на весь документ и указание алгоритма хэширования
-			var dataReference = new Reference { Uri = "", DigestMethod = GostSignedXml.XmlDsigGost3411Url };
+			var dataReference = new Reference { Uri = "", DigestMethod = Gost_R3411_94_HashAlgorithm.AlgorithmNameValue };
 
 			// Метод преобразования для подписи всего документа
 			dataReference.AddTransform(new XmlDsigEnvelopedSignatureTransform());

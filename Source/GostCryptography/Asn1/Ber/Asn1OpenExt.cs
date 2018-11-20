@@ -5,7 +5,7 @@ using System.Text;
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	class Asn1OpenExt : Asn1Type
+	public class Asn1OpenExt : Asn1Type
 	{
 		[NonSerialized]
 		public ArrayList Value = new ArrayList();

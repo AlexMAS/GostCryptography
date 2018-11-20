@@ -3,7 +3,7 @@
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	class Asn1Ia5String : Asn18BitCharString
+	public class Asn1Ia5String : Asn18BitCharString
 	{
 		public static readonly Asn1Tag Tag = new Asn1Tag(0, 0, Ia5StringTypeCode);
 

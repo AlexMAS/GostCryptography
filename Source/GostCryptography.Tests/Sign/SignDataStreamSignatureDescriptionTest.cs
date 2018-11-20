@@ -1,8 +1,10 @@
 ﻿using System.IO;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Config;
+using GostCryptography.Gost_R3410;
 
 using NUnit.Framework;
 
@@ -15,7 +17,7 @@ namespace GostCryptography.Tests.Sign
 	/// Тест создает поток байт, вычисляет цифровую подпись потока байт с использованием закрытого ключа сертификата,
 	/// а затем с помощью открытого ключа сертификата проверяет полученную подпись. Для вычисления цифровой подписи
 	/// и ее проверки используется информация об алгоритме цифровой подписи <see cref="SignatureDescription"/> 
-	/// (<see cref="GostSignatureDescription"/>), получаемая с помощью метода <see cref="GostCryptoConfig.CreateFromName"/>.
+	/// (<see cref="Gost_R3410_2001_SignatureDescription"/>), получаемая с помощью метода <see cref="GostCryptoConfig.CreateFromName"/>.
 	/// </remarks>
 	[TestFixture(Description = "Подпись и проверка подписи потока байт с помощью сертификата и информации об алгоритме цифровой подписи")]
 	public sealed class SignDataStreamSignatureDescriptionTest

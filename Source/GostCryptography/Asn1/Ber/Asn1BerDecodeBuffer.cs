@@ -5,7 +5,7 @@ using GostCryptography.Properties;
 
 namespace GostCryptography.Asn1.Ber
 {
-	class Asn1BerDecodeBuffer : Asn1DecodeBuffer
+	public class Asn1BerDecodeBuffer : Asn1DecodeBuffer
 	{
 		private readonly IntHolder _lenHolder;
 		private readonly Asn1Tag _tagHolder;

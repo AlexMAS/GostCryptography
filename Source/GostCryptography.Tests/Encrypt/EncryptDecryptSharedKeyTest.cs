@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Gost_28147_89;
 
 using NUnit.Framework;
 
@@ -19,12 +19,12 @@ namespace GostCryptography.Tests.Encrypt
 	[TestFixture(Description = "Шифрование и дешифрование данных с использованием общего симметричного ключа")]
 	public sealed class EncryptDecryptSharedKeyTest
 	{
-		private Gost28147SymmetricAlgorithmBase _sharedKey;
+		private Gost_28147_89_SymmetricAlgorithmBase _sharedKey;
 
 		[SetUp]
 		public void SetUp()
 		{
-			_sharedKey = new Gost28147SymmetricAlgorithm();
+			_sharedKey = new Gost_28147_89_SymmetricAlgorithm();
 		}
 
 		[TearDown]

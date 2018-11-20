@@ -1,7 +1,9 @@
 ﻿using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Base;
+using GostCryptography.Gost_R3411;
 
 using NUnit.Framework;
 
@@ -24,8 +26,8 @@ namespace GostCryptography.Tests.Sign
 		{
 			// Given
 			var certificate = TestCertificates.GetCertificate();
-			var privateKey = (Gost3410AsymmetricAlgorithmBase)certificate.GetPrivateKeyAlgorithm();
-			var publicKey = (Gost3410AsymmetricAlgorithmBase)certificate.GetPrivateKeyAlgorithm();
+			var privateKey = (GostAsymmetricAlgorithm)certificate.GetPrivateKeyAlgorithm();
+			var publicKey = (GostAsymmetricAlgorithm)certificate.GetPrivateKeyAlgorithm();
 			var dataStream = CreateDataStream();
 
 			// When
@@ -47,11 +49,11 @@ namespace GostCryptography.Tests.Sign
 			return new MemoryStream(Encoding.UTF8.GetBytes("Some data for sign..."));
 		}
 
-		private static byte[] CreateSignature(Gost3410AsymmetricAlgorithmBase privateKey, Stream dataStream)
+		private static byte[] CreateSignature(GostAsymmetricAlgorithm privateKey, Stream dataStream)
 		{
 			byte[] hash;
 
-			using (var hashAlg = new Gost3411HashAlgorithm())
+			using (var hashAlg = new Gost_R3411_94_HashAlgorithm())
 			{
 				hash = hashAlg.ComputeHash(dataStream);
 			}
@@ -61,11 +63,11 @@ namespace GostCryptography.Tests.Sign
 			return formatter.CreateSignature(hash);
 		}
 
-		private static bool VerifySignature(Gost3410AsymmetricAlgorithmBase publicKey, Stream dataStream, byte[] signature)
+		private static bool VerifySignature(GostAsymmetricAlgorithm publicKey, Stream dataStream, byte[] signature)
 		{
 			byte[] hash;
 
-			using (var hashAlg = new Gost3411HashAlgorithm())
+			using (var hashAlg = new Gost_R3411_94_HashAlgorithm())
 			{
 				hash = hashAlg.ComputeHash(dataStream);
 			}

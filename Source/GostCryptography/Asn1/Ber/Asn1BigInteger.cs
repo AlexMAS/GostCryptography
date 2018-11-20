@@ -5,7 +5,7 @@ using GostCryptography.Properties;
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	class Asn1BigInteger : Asn1Type
+	public class Asn1BigInteger : Asn1Type
 	{
 		private const int MaxBigIntLen = 0x186a0;
 
