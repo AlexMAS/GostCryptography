@@ -30,7 +30,7 @@ namespace GostCryptography.Gost_R3410
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3410_2012_512_EphemeralAsymmetricAlgorithm(int providerType) : base(providerType)
+		public Gost_R3410_2012_512_EphemeralAsymmetricAlgorithm(ProviderTypes providerType) : base(providerType)
 		{
 		}
 
@@ -42,7 +42,7 @@ namespace GostCryptography.Gost_R3410
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3410_2012_512_EphemeralAsymmetricAlgorithm(int providerType, Gost_R3410_2012_512_KeyExchangeParams keyParameters) : base(providerType, keyParameters)
+		public Gost_R3410_2012_512_EphemeralAsymmetricAlgorithm(ProviderTypes providerType, Gost_R3410_2012_512_KeyExchangeParams keyParameters) : base(providerType, keyParameters)
 		{
 		}
 
@@ -68,14 +68,14 @@ namespace GostCryptography.Gost_R3410
 		}
 
 		/// <inheritdoc />
-		protected override Gost_R3410_2012_512_KeyExchangeAlgorithm CreateKeyExchangeAlgorithm(int providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, Gost_R3410_2012_512_KeyExchangeParams keyExchangeParameters)
+		protected override Gost_R3410_2012_512_KeyExchangeAlgorithm CreateKeyExchangeAlgorithm(ProviderTypes providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, Gost_R3410_2012_512_KeyExchangeParams keyExchangeParameters)
 		{
 			return new Gost_R3410_2012_512_KeyExchangeAlgorithm(providerType, provHandle, keyHandle, keyExchangeParameters);
 		}
 
 
 		/// <inheritdoc />
-		public override GostKeyExchangeFormatter CreatExchangeFormatter()
+		public override GostKeyExchangeFormatter CreatKeyExchangeFormatter()
 		{
 			return new Gost_R3410_2012_512_KeyExchangeFormatter(this);
 		}

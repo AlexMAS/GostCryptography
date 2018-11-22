@@ -100,7 +100,7 @@ namespace GostCryptography.Gost_R3410
 
 			if (_publicKey != null)
 			{
-				var constructorInfo = keyExchangeAlgorithmType.GetConstructor(new[] { typeof(int) });
+				var constructorInfo = keyExchangeAlgorithmType.GetConstructor(new[] { typeof(ProviderTypes) });
 				keyExchangeAlgorithm = (GostSymmetricAlgorithm)constructorInfo.Invoke(new object[] { _publicKey.ProviderType });
 			}
 			else
@@ -162,6 +162,6 @@ namespace GostCryptography.Gost_R3410
 		/// <summary>
 		/// Созадает экземпляр алгоритма шифрования общего секретного ключа.
 		/// </summary>
-		protected abstract Gost_R3410_EphemeralAsymmetricAlgorithm<TKeyParams, TKeyAlgorithm> CreateEphemeralAlgorithm(int providerType, TKeyParams keyExchangeParameters);
+		protected abstract Gost_R3410_EphemeralAsymmetricAlgorithm<TKeyParams, TKeyAlgorithm> CreateEphemeralAlgorithm(ProviderTypes providerType, TKeyParams keyExchangeParameters);
 	}
 }

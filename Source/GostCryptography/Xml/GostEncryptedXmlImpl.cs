@@ -16,23 +16,23 @@ namespace GostCryptography.Xml
 {
 	sealed class GostEncryptedXmlImpl : EncryptedXml
 	{
-		public GostEncryptedXmlImpl(int providerType)
+		public GostEncryptedXmlImpl(ProviderTypes providerType)
 		{
 			ProviderType = providerType;
 		}
 
-		public GostEncryptedXmlImpl(int providerType, XmlDocument document) : base(document)
+		public GostEncryptedXmlImpl(ProviderTypes providerType, XmlDocument document) : base(document)
 		{
 			ProviderType = providerType;
 		}
 
-		public GostEncryptedXmlImpl(int providerType, XmlDocument document, Evidence evidence) : base(document, evidence)
+		public GostEncryptedXmlImpl(ProviderTypes providerType, XmlDocument document, Evidence evidence) : base(document, evidence)
 		{
 			ProviderType = providerType;
 		}
 
 
-		public int ProviderType { get; }
+		public ProviderTypes ProviderType { get; }
 
 
 		public new void AddKeyNameMapping(string keyName, object keyObject)
@@ -98,7 +98,7 @@ namespace GostCryptography.Xml
 				throw ExceptionUtility.ArgumentNull(nameof(publicKey));
 			}
 
-			var formatter = publicKey.CreatExchangeFormatter();
+			var formatter = publicKey.CreatKeyExchangeFormatter();
 			return formatter.CreateKeyExchangeData(sessionKey);
 		}
 

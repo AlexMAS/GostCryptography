@@ -6,6 +6,7 @@ using GostCryptography.Asn1.Gost.Gost_R3410_2001;
 using GostCryptography.Asn1.Gost.Gost_R3410_2012_256;
 using GostCryptography.Asn1.Gost.Gost_R3410_2012_512;
 using GostCryptography.Asn1.Gost.Gost_R3410_94;
+using GostCryptography.Base;
 using GostCryptography.Config;
 using GostCryptography.Gost_R3410;
 using GostCryptography.Native;
@@ -218,7 +219,7 @@ namespace System.Security.Cryptography.X509Certificates
 		/// <summary>
 		/// Возвращает открытый ключ сертификата с использованием заданного типа криптографического провайдера.
 		/// </summary>
-		public static AsymmetricAlgorithm GetPublicKeyAlgorithm(this X509Certificate2 certificate, int providerType)
+		public static AsymmetricAlgorithm GetPublicKeyAlgorithm(this X509Certificate2 certificate, ProviderTypes providerType)
 		{
 			if (certificate.IsGost_R3410_2012_512())
 			{

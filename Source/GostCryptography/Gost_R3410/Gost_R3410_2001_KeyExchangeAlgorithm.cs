@@ -1,6 +1,7 @@
 ﻿using System.Security;
 
 using GostCryptography.Asn1.Gost.Gost_R3410_2001;
+using GostCryptography.Base;
 using GostCryptography.Native;
 
 namespace GostCryptography.Gost_R3410
@@ -10,7 +11,7 @@ namespace GostCryptography.Gost_R3410
 	{
 		/// <inheritdoc />
 		[SecurityCritical]
-		public Gost_R3410_2001_KeyExchangeAlgorithm(int providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, Gost_R3410_2001_KeyExchangeParams keyExchangeParameters)
+		public Gost_R3410_2001_KeyExchangeAlgorithm(ProviderTypes providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, Gost_R3410_2001_KeyExchangeParams keyExchangeParameters)
 			: base(providerType, provHandle, keyHandle, keyExchangeParameters)
 		{
 		}

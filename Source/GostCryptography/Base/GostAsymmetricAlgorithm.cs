@@ -26,7 +26,7 @@ namespace GostCryptography.Base
 		/// </summary>
 		/// <param name="providerType">Тип криптографического провайдера.</param>
 		[SecuritySafeCritical]
-		protected GostAsymmetricAlgorithm(int providerType)
+		protected GostAsymmetricAlgorithm(ProviderTypes providerType)
 		{
 			ProviderType = providerType;
 		}
@@ -35,7 +35,7 @@ namespace GostCryptography.Base
 		/// <summary>
 		/// Тип криптографического провайдера.
 		/// </summary>
-		public int ProviderType { get; }
+		public ProviderTypes ProviderType { get; }
 
 
 		/// <summary>
@@ -53,7 +53,7 @@ namespace GostCryptography.Base
 		/// Создает экземпляр <see cref="GostKeyExchangeFormatter"/>.
 		/// </summary>
 		/// <returns></returns>
-		public abstract GostKeyExchangeFormatter CreatExchangeFormatter();
+		public abstract GostKeyExchangeFormatter CreatKeyExchangeFormatter();
 
 		/// <summary>
 		/// Создает экземпляр <see cref="GostKeyExchangeDeformatter"/>.

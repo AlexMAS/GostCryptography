@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Security.Permissions;
 
 using GostCryptography.Asn1.Gost.Gost_R3410;
+using GostCryptography.Base;
 using GostCryptography.Native;
 using GostCryptography.Properties;
 
@@ -26,7 +27,7 @@ namespace GostCryptography.Gost_R3410
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3410_EphemeralAsymmetricAlgorithm(int providerType) : base(providerType)
+		public Gost_R3410_EphemeralAsymmetricAlgorithm(ProviderTypes providerType) : base(providerType)
 		{
 			_provHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
 			_keyHandle = CryptoApiHelper.GenerateKey(_provHandle, ExchangeAlgId, CspProviderFlags.NoFlags);
@@ -52,7 +53,7 @@ namespace GostCryptography.Gost_R3410
 			}
 
 			_provHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
-			_keyHandle = CryptoApiHelper.GenerateDhEphemeralKey(_provHandle, keyParameters.DigestParamSet, keyParameters.PublicKeyParamSet);
+			_keyHandle = CryptoApiHelper.GenerateDhEphemeralKey(_provHandle, ExchangeAlgId, keyParameters.DigestParamSet, keyParameters.PublicKeyParamSet);
 		}
 
 		/// <summary>
@@ -67,7 +68,7 @@ namespace GostCryptography.Gost_R3410
 		/// <see cref="Gost_R3410_KeyExchangeParams.PublicKeyParamSet"/>. Остальные параметры не используются.
 		/// </remarks>
 		[SecuritySafeCritical]
-		public Gost_R3410_EphemeralAsymmetricAlgorithm(int providerType, TKeyParams keyParameters) : base(providerType)
+		public Gost_R3410_EphemeralAsymmetricAlgorithm(ProviderTypes providerType, TKeyParams keyParameters) : base(providerType)
 		{
 			if (keyParameters == null)
 			{
@@ -75,7 +76,7 @@ namespace GostCryptography.Gost_R3410
 			}
 
 			_provHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
-			_keyHandle = CryptoApiHelper.GenerateDhEphemeralKey(_provHandle, keyParameters.DigestParamSet, keyParameters.PublicKeyParamSet);
+			_keyHandle = CryptoApiHelper.GenerateDhEphemeralKey(_provHandle, ExchangeAlgId, keyParameters.DigestParamSet, keyParameters.PublicKeyParamSet);
 		}
 
 

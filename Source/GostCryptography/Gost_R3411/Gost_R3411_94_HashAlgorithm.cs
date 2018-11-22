@@ -1,5 +1,6 @@
 ﻿using System.Security;
 
+using GostCryptography.Base;
 using GostCryptography.Native;
 
 namespace GostCryptography.Gost_R3411
@@ -33,7 +34,7 @@ namespace GostCryptography.Gost_R3411
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3411_94_HashAlgorithm(int providerType) : base(providerType, 256)
+		public Gost_R3411_94_HashAlgorithm(ProviderTypes providerType) : base(providerType, 256)
 		{
 		}
 

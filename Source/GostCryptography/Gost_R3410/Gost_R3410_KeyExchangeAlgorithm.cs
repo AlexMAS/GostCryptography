@@ -17,7 +17,7 @@ namespace GostCryptography.Gost_R3410
 	{
 		/// <inheritdoc />
 		[SecurityCritical]
-		protected Gost_R3410_KeyExchangeAlgorithm(int providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, Gost_R3410_KeyExchangeParams keyExchangeParameters) : base(providerType)
+		protected Gost_R3410_KeyExchangeAlgorithm(ProviderTypes providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, Gost_R3410_KeyExchangeParams keyExchangeParameters) : base(providerType)
 		{
 			if (provHandle == null)
 			{

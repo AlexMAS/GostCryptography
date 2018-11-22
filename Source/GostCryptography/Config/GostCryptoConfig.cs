@@ -35,7 +35,7 @@ namespace GostCryptography.Config
 		/// <summary>
 		/// Идентификатор типа криптографического провайдера по умолчанию.
 		/// </summary>
-		public static int ProviderType { get; set; }
+		public static ProviderTypes ProviderType { get; set; }
 
 
 		/// <summary>

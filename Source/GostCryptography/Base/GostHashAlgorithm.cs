@@ -28,7 +28,7 @@ namespace GostCryptography.Base
 		/// <param name="providerType">Тип криптографического провайдера.</param>
 		/// <param name="hashSize">Размер хэш-кода в битах.</param>
 		[SecuritySafeCritical]
-		protected GostHashAlgorithm(int providerType, int hashSize)
+		protected GostHashAlgorithm(ProviderTypes providerType, int hashSize)
 		{
 			ProviderType = providerType;
 			HashSizeValue = hashSize;
@@ -38,7 +38,7 @@ namespace GostCryptography.Base
 		/// <summary>
 		/// Тип криптографического провайдера.
 		/// </summary>
-		public int ProviderType { get; }
+		public ProviderTypes ProviderType { get; }
 
 
 		/// <summary>

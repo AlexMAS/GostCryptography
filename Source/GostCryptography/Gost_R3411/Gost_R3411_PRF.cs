@@ -20,7 +20,7 @@ namespace GostCryptography.Gost_R3411
 		/// <param name="label">Метка для порождения ключей (аргумент label функции PRF).</param>
 		/// <param name="seed">Начальное число для порождения ключей (аргумент seed функции PRF).</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		private Gost_R3411_PRF(int providerType, byte[] label, byte[] seed) : base(providerType)
+		private Gost_R3411_PRF(ProviderTypes providerType, byte[] label, byte[] seed) : base(providerType)
 		{
 			if (label == null)
 			{
@@ -71,7 +71,7 @@ namespace GostCryptography.Gost_R3411
 		/// <exception cref="ArgumentException"></exception>
 		/// <exception cref="ArgumentNullException"></exception>
 		[SecuritySafeCritical]
-		public Gost_R3411_PRF(int providerType, byte[] key, byte[] label, byte[] seed) : this(providerType, label, seed)
+		public Gost_R3411_PRF(ProviderTypes providerType, byte[] key, byte[] label, byte[] seed) : this(providerType, label, seed)
 		{
 			if (key == null)
 			{

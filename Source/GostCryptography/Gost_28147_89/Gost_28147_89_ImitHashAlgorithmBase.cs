@@ -20,7 +20,7 @@ namespace GostCryptography.Gost_28147_89
 		}
 
 		/// <inheritdoc />
-		protected Gost_28147_89_ImitHashAlgorithmBase(int providerType) : base(providerType)
+		protected Gost_28147_89_ImitHashAlgorithmBase(ProviderTypes providerType) : base(providerType)
 		{
 			HashSizeValue = DefaultHashSize;
 		}

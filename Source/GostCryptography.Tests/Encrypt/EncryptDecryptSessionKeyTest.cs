@@ -4,8 +4,8 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
+using GostCryptography.Base;
 using GostCryptography.Gost_28147_89;
-using GostCryptography.Gost_R3410;
 
 using NUnit.Framework;
 
@@ -23,19 +23,19 @@ namespace GostCryptography.Tests.Encrypt
 	[TestFixture(Description = "Шифрование и дешифрование данных с использованием случайного сессионного ключа")]
 	public sealed class EncryptDecryptSessionKeyTest
 	{
-		private AsymmetricAlgorithm _publicKey;
-		private AsymmetricAlgorithm _privateKey;
+		private GostAsymmetricAlgorithm _publicKey;
+		private GostAsymmetricAlgorithm _privateKey;
 
 		[SetUp]
 		public void SetUp()
 		{
-			var certificate = TestCertificates.GetCertificate();
+			var certificate = TestCertificates.FindGostCertificate(c => c.IsGost_R3410_2012_256());
 
 			// Отправитель имеет открытый асимметричный ключ для шифрации сессионного ключа
-			_publicKey = certificate.GetPublicKeyAlgorithm();
+			_publicKey = (GostAsymmetricAlgorithm)certificate.GetPublicKeyAlgorithm();
 
 			// Получатель имеет закрытый асимметричный ключ для дешифрации сессионного ключа
-			_privateKey = certificate.GetPrivateKeyAlgorithm();
+			_privateKey = (GostAsymmetricAlgorithm)certificate.GetPrivateKeyAlgorithm();
 		}
 
 		[TearDown]
@@ -69,9 +69,7 @@ namespace GostCryptography.Tests.Encrypt
 			var dataStream = CreateDataStream();
 
 			// When
-			byte[] iv;
-			byte[] sessionKey;
-			var encryptedDataStream = SendEncryptedDataStream(publicKey, dataStream, out iv, out sessionKey);
+			var encryptedDataStream = SendEncryptedDataStream(publicKey, dataStream, out var iv, out var sessionKey);
 			var decryptedDataStream = ReceiveEncryptedDataStream(privateKey, encryptedDataStream, iv, sessionKey);
 
 			// Then
@@ -85,7 +83,7 @@ namespace GostCryptography.Tests.Encrypt
 			return new MemoryStream(Encoding.UTF8.GetBytes("Some data for encrypt..."));
 		}
 
-		private static Stream SendEncryptedDataStream(AsymmetricAlgorithm publicKey, Stream dataStream, out byte[] iv, out byte[] sessionKey)
+		private static Stream SendEncryptedDataStream(GostAsymmetricAlgorithm publicKey, Stream dataStream, out byte[] iv, out byte[] sessionKey)
 		{
 			var encryptedDataStream = new MemoryStream();
 
@@ -96,7 +94,7 @@ namespace GostCryptography.Tests.Encrypt
 				iv = senderSessionKey.IV;
 
 				// Отправитель шифрует сессионный ключ и передает его получателю
-				var formatter = new Gost_R3410_2001_KeyExchangeFormatter(publicKey);
+				var formatter = publicKey.CreatKeyExchangeFormatter();
 				sessionKey = formatter.CreateKeyExchangeData(senderSessionKey);
 
 				// Отправитель шифрует данные с использованием сессионного ключа
@@ -112,11 +110,11 @@ namespace GostCryptography.Tests.Encrypt
 			return encryptedDataStream;
 		}
 
-		private static Stream ReceiveEncryptedDataStream(AsymmetricAlgorithm privateKey, Stream encryptedDataStream, byte[] iv, byte[] sessionKey)
+		private static Stream ReceiveEncryptedDataStream(GostAsymmetricAlgorithm privateKey, Stream encryptedDataStream, byte[] iv, byte[] sessionKey)
 		{
 			var decryptedDataStream = new MemoryStream();
 
-			var deformatter = new Gost_R3410_2001_KeyExchangeDeformatter(privateKey);
+			var deformatter = privateKey.CreateKeyExchangeDeformatter();
 
 			// Получатель принимает от отправителя зашифрованный сессионный ключ и дешифрует его
 			using (var receiverSessionKey = deformatter.DecryptKeyExchangeAlgorithm(sessionKey))

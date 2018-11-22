@@ -16,7 +16,7 @@ namespace GostCryptography.Gost_28147_89
 	{
 		[SecurityCritical]
 		public Gost_28147_89_CryptoTransform(
-			int providerType,
+			ProviderTypes providerType,
 			SafeKeyHandleImpl keyHandle,
 			Dictionary<int, object> keyParameters,
 			PaddingMode paddingValue,
@@ -75,7 +75,7 @@ namespace GostCryptography.Gost_28147_89
 						break;
 					case Constants.KP_PADDING:
 						{
-							if (providerType != ProviderTypes.VipNet)
+							if (providerType.IsVipNet())
 							{
 								CryptoApiHelper.SetKeyParameterInt32(_keyHandle, keyParameterId, (int)keyParameterValue);
 							}
@@ -90,7 +90,7 @@ namespace GostCryptography.Gost_28147_89
 			}
 		}
 
-		private readonly int _providerType;
+		private readonly ProviderTypes _providerType;
 
 		[SecurityCritical]
 		private readonly SafeKeyHandleImpl _keyHandle;

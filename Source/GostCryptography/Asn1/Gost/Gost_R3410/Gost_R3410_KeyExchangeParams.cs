@@ -78,7 +78,7 @@ namespace GostCryptography.Asn1.Gost.Gost_R3410
 
 				DigestParamSet = publicKeyParams.DigestParamSet.Oid.Value;
 				PublicKeyParamSet = publicKeyParams.PublicKeyParamSet.Oid.Value;
-				EncryptionParamSet = publicKeyParams.EncryptionParamSet.Oid.Value;
+				EncryptionParamSet = publicKeyParams.EncryptionParamSet?.Oid.Value;
 			}
 			catch (Exception exception)
 			{

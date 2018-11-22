@@ -35,7 +35,7 @@ namespace GostCryptography.Gost_R3410
 		/// <inheritdoc />
 		[SecuritySafeCritical]
 		[ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
-		public Gost_R3410_2012_512_AsymmetricAlgorithm(int providerType) : base(providerType)
+		public Gost_R3410_2012_512_AsymmetricAlgorithm(ProviderTypes providerType) : base(providerType)
 		{
 		}
 
@@ -67,14 +67,14 @@ namespace GostCryptography.Gost_R3410
 		}
 
 		/// <inheritdoc />
-		protected override Gost_R3410_2012_512_KeyExchangeAlgorithm CreateKeyExchangeAlgorithm(int providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, Gost_R3410_2012_512_KeyExchangeParams keyExchangeParameters)
+		protected override Gost_R3410_2012_512_KeyExchangeAlgorithm CreateKeyExchangeAlgorithm(ProviderTypes providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, Gost_R3410_2012_512_KeyExchangeParams keyExchangeParameters)
 		{
 			return new Gost_R3410_2012_512_KeyExchangeAlgorithm(providerType, provHandle, keyHandle, keyExchangeParameters);
 		}
 
 
 		/// <inheritdoc />
-		public override GostKeyExchangeFormatter CreatExchangeFormatter()
+		public override GostKeyExchangeFormatter CreatKeyExchangeFormatter()
 		{
 			return new Gost_R3410_2012_512_KeyExchangeFormatter(this);
 		}

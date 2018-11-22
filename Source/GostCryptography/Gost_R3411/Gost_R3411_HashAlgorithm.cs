@@ -21,7 +21,7 @@ namespace GostCryptography.Gost_R3411
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		protected Gost_R3411_HashAlgorithm(int providerType, int hashSize) : base(providerType, hashSize)
+		protected Gost_R3411_HashAlgorithm(ProviderTypes providerType, int hashSize) : base(providerType, hashSize)
 		{
 			_hashHandle = CreateHashHandle();
 		}

@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 
 using GostCryptography.Asn1.Gost.Gost_R3410_2012_256;
+using GostCryptography.Base;
 
 namespace GostCryptography.Gost_R3410
 {
@@ -23,7 +24,7 @@ namespace GostCryptography.Gost_R3410
 		}
 
 		/// <inheritdoc />
-		protected override Gost_R3410_EphemeralAsymmetricAlgorithm<Gost_R3410_2012_256_KeyExchangeParams, Gost_R3410_2012_256_KeyExchangeAlgorithm> CreateEphemeralAlgorithm(int providerType, Gost_R3410_2012_256_KeyExchangeParams keyExchangeParameters)
+		protected override Gost_R3410_EphemeralAsymmetricAlgorithm<Gost_R3410_2012_256_KeyExchangeParams, Gost_R3410_2012_256_KeyExchangeAlgorithm> CreateEphemeralAlgorithm(ProviderTypes providerType, Gost_R3410_2012_256_KeyExchangeParams keyExchangeParameters)
 		{
 			return new Gost_R3410_2012_256_EphemeralAsymmetricAlgorithm(providerType, keyExchangeParameters);
 		}

@@ -37,14 +37,14 @@ namespace GostCryptography.Gost_28147_89
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_28147_89_SymmetricAlgorithm(int providerType) : base(providerType)
+		public Gost_28147_89_SymmetricAlgorithm(ProviderTypes providerType) : base(providerType)
 		{
 			InitDefaults();
 		}
 
 
 		[SecurityCritical]
-		internal Gost_28147_89_SymmetricAlgorithm(int providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle) : base(providerType)
+		internal Gost_28147_89_SymmetricAlgorithm(ProviderTypes providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle) : base(providerType)
 		{
 			_provHandle = provHandle.DangerousAddRef();
 			_keyHandle = CryptoApiHelper.DuplicateKey(keyHandle);

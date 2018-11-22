@@ -22,9 +22,9 @@ namespace GostCryptography.Native
 		#region Общие объекты
 
 		private static readonly object ProviderHandleSync = new object();
-		private static volatile Dictionary<int, SafeProvHandleImpl> _providerHandles = new Dictionary<int, SafeProvHandleImpl>();
+		private static volatile Dictionary<ProviderTypes, SafeProvHandleImpl> _providerHandles = new Dictionary<ProviderTypes, SafeProvHandleImpl>();
 
-		public static SafeProvHandleImpl GetProviderHandle(int providerType)
+		public static SafeProvHandleImpl GetProviderHandle(ProviderTypes providerType)
 		{
 			if (!_providerHandles.ContainsKey(providerType))
 			{
@@ -32,7 +32,7 @@ namespace GostCryptography.Native
 				{
 					if (!_providerHandles.ContainsKey(providerType))
 					{
-						var providerParams = new CspParameters(providerType);
+						var providerParams = new CspParameters(providerType.ToInt());
 						var providerHandle = AcquireProvider(providerParams);
 
 						Thread.MemoryBarrier();
@@ -47,9 +47,9 @@ namespace GostCryptography.Native
 
 
 		private static readonly object RandomNumberGeneratorSync = new object();
-		private static volatile Dictionary<int, RNGCryptoServiceProvider> _randomNumberGenerators = new Dictionary<int, RNGCryptoServiceProvider>();
+		private static volatile Dictionary<ProviderTypes, RNGCryptoServiceProvider> _randomNumberGenerators = new Dictionary<ProviderTypes, RNGCryptoServiceProvider>();
 
-		public static RNGCryptoServiceProvider GetRandomNumberGenerator(int providerType)
+		public static RNGCryptoServiceProvider GetRandomNumberGenerator(ProviderTypes providerType)
 		{
 			if (!_randomNumberGenerators.ContainsKey(providerType))
 			{
@@ -57,7 +57,7 @@ namespace GostCryptography.Native
 				{
 					if (!_randomNumberGenerators.ContainsKey(providerType))
 					{
-						var providerParams = new CspParameters(providerType);
+						var providerParams = new CspParameters(providerType.ToInt());
 						var randomNumberGenerator = new RNGCryptoServiceProvider(providerParams);
 
 						Thread.MemoryBarrier();
@@ -204,11 +204,11 @@ namespace GostCryptography.Native
 			return hashImitHandle;
 		}
 
-		public static SafeHashHandleImpl CreateHashHmac(int providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle)
+		public static SafeHashHandleImpl CreateHashHmac(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle)
 		{
 			var hashHmacHandle = SafeHashHandleImpl.InvalidHandle;
 
-			var hmacAlgId = (providerType == ProviderTypes.VipNet) ? Constants.CALG_GR3411_HMAC34 : Constants.CALG_GR3411_HMAC;
+			var hmacAlgId = providerType.IsVipNet() ? Constants.CALG_GR3411_HMAC34 : Constants.CALG_GR3411_HMAC;
 
 			if (!CryptoApi.CryptCreateHash(providerHandle, (uint)hmacAlgId, symKeyHandle, 0, ref hashHmacHandle))
 			{
@@ -293,7 +293,7 @@ namespace GostCryptography.Native
 
 		#region Для работы с функцией шифрования криптографического провайдера
 
-		public static int EncryptData(int providerType, SafeKeyHandleImpl symKeyHandle, byte[] data, int dataOffset, int dataLength, ref byte[] encryptedData, int encryptedDataOffset, PaddingMode paddingMode, bool isDone, bool isStream)
+		public static int EncryptData(ProviderTypes providerType, SafeKeyHandleImpl symKeyHandle, byte[] data, int dataOffset, int dataLength, ref byte[] encryptedData, int encryptedDataOffset, PaddingMode paddingMode, bool isDone, bool isStream)
 		{
 			if (dataOffset < 0)
 			{
@@ -518,7 +518,7 @@ namespace GostCryptography.Native
 			return length;
 		}
 
-		public static void EndEncrypt(int providerType, SafeKeyHandleImpl symKeyHandle)
+		public static void EndEncrypt(ProviderTypes providerType, SafeKeyHandleImpl symKeyHandle)
 		{
 			uint dataLength = 0;
 			var data = new byte[32];
@@ -530,11 +530,11 @@ namespace GostCryptography.Native
 			}
 		}
 
-		public static void EndDecrypt(int providerType, SafeKeyHandleImpl symKeyHandle)
+		public static void EndDecrypt(ProviderTypes providerType, SafeKeyHandleImpl symKeyHandle)
 		{
 			uint dataLength = 0;
 			var data = new byte[0];
-			var success = CryptoApi.CryptDecrypt(symKeyHandle, SafeHashHandleImpl.InvalidHandle, true, 0, data, ref dataLength) || (providerType == ProviderTypes.VipNet);
+			var success = CryptoApi.CryptDecrypt(symKeyHandle, SafeHashHandleImpl.InvalidHandle, true, 0, data, ref dataLength) || providerType.IsVipNet();
 
 			if (!success)
 			{
@@ -560,12 +560,12 @@ namespace GostCryptography.Native
 			return keyHandle;
 		}
 
-		public static SafeKeyHandleImpl GenerateDhEphemeralKey(SafeProvHandleImpl providerHandle, string digestParamSet, string publicKeyParamSet)
+		public static SafeKeyHandleImpl GenerateDhEphemeralKey(SafeProvHandleImpl providerHandle, int algId, string digestParamSet, string publicKeyParamSet)
 		{
 			var keyHandle = SafeKeyHandleImpl.InvalidHandle;
 			var dwFlags = MapCspKeyFlags(CspProviderFlags.NoFlags) | Constants.CRYPT_PREGEN;
 
-			if (!CryptoApi.CryptGenKey(providerHandle, Constants.CALG_DH_EL_EPHEM, dwFlags, ref keyHandle))
+			if (!CryptoApi.CryptGenKey(providerHandle, (uint)algId, dwFlags, ref keyHandle))
 			{
 				throw CreateWin32Error();
 			}

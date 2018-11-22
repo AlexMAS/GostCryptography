@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Security.Permissions;
 
 using GostCryptography.Asn1.Gost.Gost_R3410;
+using GostCryptography.Base;
 using GostCryptography.Native;
 using GostCryptography.Properties;
 using GostCryptography.Reflection;
@@ -35,7 +36,7 @@ namespace GostCryptography.Gost_R3410
 		/// <inheritdoc />
 		[SecuritySafeCritical]
 		[ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
-		protected Gost_R3410_AsymmetricAlgorithm(int providerType) : base(providerType)
+		protected Gost_R3410_AsymmetricAlgorithm(ProviderTypes providerType) : base(providerType)
 		{
 			LegalKeySizesValue = DefaultLegalKeySizes;
 			_providerParameters = CreateDefaultProviderParameters();
@@ -47,7 +48,7 @@ namespace GostCryptography.Gost_R3410
 		/// </summary>
 		/// <param name="providerParameters">Параметры криптографического провайдера.</param>
 		[SecuritySafeCritical]
-		protected Gost_R3410_AsymmetricAlgorithm(CspParameters providerParameters) : base(providerParameters.ProviderType)
+		protected Gost_R3410_AsymmetricAlgorithm(CspParameters providerParameters) : base((ProviderTypes)providerParameters.ProviderType)
 		{
 			LegalKeySizesValue = DefaultLegalKeySizes;
 			_providerParameters = CopyExistingProviderParameters(providerParameters);
@@ -605,7 +606,7 @@ namespace GostCryptography.Gost_R3410
 
 		private CspParameters CreateDefaultProviderParameters(CspProviderFlags defaultFlags = CspProviderFlags.UseMachineKeyStore)
 		{
-			return new CspParameters(ProviderType)
+			return new CspParameters(ProviderType.ToInt())
 			{
 				Flags = defaultFlags
 			};

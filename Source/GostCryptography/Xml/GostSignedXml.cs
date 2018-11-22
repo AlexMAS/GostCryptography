@@ -4,6 +4,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Xml;
 
+using GostCryptography.Base;
 using GostCryptography.Config;
 
 namespace GostCryptography.Xml
@@ -33,7 +34,7 @@ namespace GostCryptography.Xml
 		}
 
 		/// <inheritdoc cref="SignedXml()"/>
-		public GostSignedXml(int providerType)
+		public GostSignedXml(ProviderTypes providerType)
 		{
 			_signedXml = new GostSignedXmlImpl(providerType);
 		}
@@ -44,7 +45,7 @@ namespace GostCryptography.Xml
 		}
 
 		/// <inheritdoc cref="SignedXml(XmlElement)"/>
-		public GostSignedXml(int providerType, XmlElement element)
+		public GostSignedXml(ProviderTypes providerType, XmlElement element)
 		{
 			if (element == null)
 			{
@@ -60,7 +61,7 @@ namespace GostCryptography.Xml
 		}
 
 		/// <inheritdoc cref="SignedXml(XmlDocument)"/>
-		public GostSignedXml(int providerType, XmlDocument document)
+		public GostSignedXml(ProviderTypes providerType, XmlDocument document)
 		{
 			if (document == null)
 			{

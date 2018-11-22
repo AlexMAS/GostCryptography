@@ -2,6 +2,7 @@
 using System.Security;
 using System.Security.Permissions;
 
+using GostCryptography.Base;
 using GostCryptography.Native;
 
 namespace GostCryptography.Gost_28147_89
@@ -20,7 +21,7 @@ namespace GostCryptography.Gost_28147_89
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_28147_89_ImitHashAlgorithm(int providerType) : base(providerType)
+		public Gost_28147_89_ImitHashAlgorithm(ProviderTypes providerType) : base(providerType)
 		{
 			_keyAlgorithm = new Gost_28147_89_SymmetricAlgorithm(ProviderType);
 		}
@@ -49,7 +50,7 @@ namespace GostCryptography.Gost_28147_89
 		/// <param name="key">Ключ симметричного шифрования для подсчета имитовставки.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		[SecuritySafeCritical]
-		public Gost_28147_89_ImitHashAlgorithm(int providerType, byte[] key) : base(providerType)
+		public Gost_28147_89_ImitHashAlgorithm(ProviderTypes providerType, byte[] key) : base(providerType)
 		{
 			if (key == null)
 			{

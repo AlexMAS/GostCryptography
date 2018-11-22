@@ -20,19 +20,19 @@ namespace GostCryptography.Tests
 		/// Местоположение для поиска тестового сертификата.
 		/// </summary>
 		/// <remarks>
-		/// Значение равно <see cref="StoreLocation.CurrentUser"/>.
+		/// Значение равно <see cref="StoreLocation.LocalMachine"/>.
 		/// </remarks>
-		public const StoreLocation CertStoreLocation = StoreLocation.CurrentUser;
+		public const StoreLocation CertStoreLocation = StoreLocation.LocalMachine;
 
 		/// <summary>
 		/// Сертификат ГОСТ Р 34.10-2001 с закрытым ключем.
 		/// </summary>
-		private static readonly X509Certificate2 GostCetificate2001 = FindGostCertificate("1.2.643.2.2.3");
+		private static readonly X509Certificate2 GostCetificate2001 = FindGostCertificate(c => c.IsGost_R3410_2001());
 
 		/// <summary>
 		/// Сертификат ГОСТ Р 34.10-2012 с закрытым ключем.
 		/// </summary>
-		private static readonly X509Certificate2 GostCetificate = FindGostCertificate("1.2.643.7.1.1.3.2");
+		private static readonly X509Certificate2 GostCetificate = FindGostCertificate(c => c.IsGost_R3410_2012_256());
 
 
 		/// <summary>
@@ -59,10 +59,8 @@ namespace GostCryptography.Tests
 		}
 
 
-		private static X509Certificate2 FindGostCertificate(string signatureAlgorithm)
+		public static X509Certificate2 FindGostCertificate(Predicate<X509Certificate2> filter)
 		{
-			// Для тестирования берется первый найденный сертификат ГОСТ с закрытым ключем.
-
 			var store = new X509Store(CertStoreName, CertStoreLocation);
 			store.Open(OpenFlags.ReadOnly);
 
@@ -70,7 +68,7 @@ namespace GostCryptography.Tests
 			{
 				foreach (var certificate in store.Certificates)
 				{
-					if (certificate.HasPrivateKey && certificate.SignatureAlgorithm.Value == signatureAlgorithm)
+					if (certificate.HasPrivateKey && certificate.IsGost() && filter(certificate))
 					{
 						return certificate;
 					}

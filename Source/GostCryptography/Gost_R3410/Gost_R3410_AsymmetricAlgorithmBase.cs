@@ -30,12 +30,14 @@ namespace GostCryptography.Gost_R3410
 
 
 		/// <inheritdoc />
+		[SecuritySafeCritical]
 		protected Gost_R3410_AsymmetricAlgorithmBase()
 		{
 		}
 
 		/// <inheritdoc />
-		protected Gost_R3410_AsymmetricAlgorithmBase(int providerType) : base(providerType)
+		[SecuritySafeCritical]
+		protected Gost_R3410_AsymmetricAlgorithmBase(ProviderTypes providerType) : base(providerType)
 		{
 		}
 
@@ -58,7 +60,7 @@ namespace GostCryptography.Gost_R3410
 		/// <summary>
 		/// Создает экземпляр <typeparamref name="TKeyAlgorithm"/>.
 		/// </summary>
-		protected abstract TKeyAlgorithm CreateKeyExchangeAlgorithm(int providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, TKeyParams keyExchangeParameters);
+		protected abstract TKeyAlgorithm CreateKeyExchangeAlgorithm(ProviderTypes providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, TKeyParams keyExchangeParameters);
 
 
 		/// <summary>

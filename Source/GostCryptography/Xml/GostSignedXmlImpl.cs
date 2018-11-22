@@ -13,23 +13,23 @@ namespace GostCryptography.Xml
 {
 	sealed class GostSignedXmlImpl : SignedXml
 	{
-		public GostSignedXmlImpl(int providerType)
+		public GostSignedXmlImpl(ProviderTypes providerType)
 		{
 			ProviderType = providerType;
 		}
 
-		public GostSignedXmlImpl(int providerType, XmlElement element) : base(element)
+		public GostSignedXmlImpl(ProviderTypes providerType, XmlElement element) : base(element)
 		{
 			ProviderType = providerType;
 		}
 
-		public GostSignedXmlImpl(int providerType, XmlDocument document) : base(document)
+		public GostSignedXmlImpl(ProviderTypes providerType, XmlDocument document) : base(document)
 		{
 			ProviderType = providerType;
 		}
 
 
-		public int ProviderType { get; }
+		public ProviderTypes ProviderType { get; }
 
 		public GetIdElementDelegate GetIdElementHandler { get; set; }
 

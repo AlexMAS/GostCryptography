@@ -43,7 +43,7 @@ namespace GostCryptography.Gost_R3411
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3411_HMAC(int providerType) : base(providerType)
+		public Gost_R3411_HMAC(ProviderTypes providerType) : base(providerType)
 		{
 			InitDefaults(new Gost_28147_89_SymmetricAlgorithm(ProviderType));
 		}
