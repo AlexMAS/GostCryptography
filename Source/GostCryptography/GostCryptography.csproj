@@ -185,13 +185,17 @@
     <Compile Include="Gost_R3410\Gost_R3410_2012_512_KeyExchangeAlgorithm.cs" />
     <Compile Include="Gost_R3410\Gost_R3410_AsymmetricAlgorithm.cs" />
     <Compile Include="Gost_R3410\Gost_R3410_EphemeralAsymmetricAlgorithm.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_2012_256_HMAC.cs" />
     <Compile Include="Gost_R3411\Gost_R3411_2012_512_HashAlgorithm.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_2012_512_HMAC.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_HMAC.cs" />
     <Compile Include="Gost_R3411\Gost_R3411_PRF.cs" />
     <Compile Include="Gost_R3411\Gost_R3411_2012_256_HashAlgorithm.cs" />
     <Compile Include="Base\GostAsymmetricAlgorithm.cs" />
     <Compile Include="Base\GostHashAlgorithm.cs" />
     <Compile Include="Base\GostHMAC.cs" />
     <Compile Include="Base\GostKeyedHashAlgorithm.cs" />
+    <Compile Include="Native\ISafeHandleProvider.cs" />
     <Compile Include="Reflection\EncryptedXmlHelper.cs" />
     <Compile Include="Reflection\SignedXmlHelper.cs" />
     <Compile Include="Xml\GostKeyValue.cs" />
@@ -216,7 +220,7 @@
     <Compile Include="Gost_R3410\Gost_R3410_2001_EphemeralAsymmetricAlgorithm.cs" />
     <Compile Include="Gost_R3411\Gost_R3411_HashAlgorithm.cs" />
     <Compile Include="Gost_R3411\Gost_R3411_94_HashAlgorithm.cs" />
-    <Compile Include="Gost_R3411\Gost_R3411_HMAC.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_94_HMAC.cs" />
     <Compile Include="Gost_R3410\Gost_R3410_2001_KeyExchangeDeformatter.cs" />
     <Compile Include="Gost_R3410\Gost_R3410_2001_KeyExchangeFormatter.cs" />
     <Compile Include="Asn1\Gost\Gost_R3410_2001\Gost_R3410_2001_KeyExchange.cs" />

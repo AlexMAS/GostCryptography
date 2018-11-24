@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Security;
-using System.Security.Permissions;
 
 using GostCryptography.Base;
 using GostCryptography.Gost_28147_89;
@@ -9,45 +8,29 @@ using GostCryptography.Native;
 namespace GostCryptography.Gost_R3411
 {
 	/// <summary>
-	/// Реализация Hash-based Message Authentication Code (HMAC) на базе алгоритма хэширования ГОСТ Р 34.11.
+	/// Базовый класс для всех реализаций Hash-based Message Authentication Code (HMAC) на базе алгоритма хэширования ГОСТ Р 34.11.
 	/// </summary>
-	public class Gost_R3411_HMAC : GostHMAC
+	public abstract class Gost_R3411_HMAC<THash> : GostHMAC where THash : GostHashAlgorithm, ISafeHandleProvider<SafeHashHandleImpl>
 	{
 		/// <summary>
 		/// Размер хэша.
 		/// </summary>
 		public const int DefaultHashSize = 256;
 
-		/// <summary>
-		/// Наименование алгоритма HMAC на базе ГОСТ Р 34.11.
-		/// </summary>
-		public const string AlgorithmNameValue = "urn:ietf:params:xml:ns:cpxmlsec:algorithms:hmac-gostr3411";
-
-		/// <summary>
-		/// Устаревшее наименование алгоритма HMAC на базе ГОСТ Р 34.11.
-		/// </summary>
-		public const string ObsoleteAlgorithmNameValue = "http://www.w3.org/2001/04/xmldsig-more#hmac-gostr3411";
-
-		/// <summary>
-		/// Известные наименования алгоритма HMAC на базе ГОСТ Р 34.11.
-		/// </summary>
-		public static readonly string[] KnownAlgorithmNames = { AlgorithmNameValue, ObsoleteAlgorithmNameValue };
-
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3411_HMAC()
+		protected Gost_R3411_HMAC()
 		{
 			InitDefaults(new Gost_28147_89_SymmetricAlgorithm(ProviderType));
 		}
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3411_HMAC(ProviderTypes providerType) : base(providerType)
+		protected Gost_R3411_HMAC(ProviderTypes providerType) : base(providerType)
 		{
 			InitDefaults(new Gost_28147_89_SymmetricAlgorithm(ProviderType));
 		}
-
 
 		/// <summary>
 		/// Конструктор.
@@ -55,7 +38,7 @@ namespace GostCryptography.Gost_R3411
 		/// <param name="keyAlgorithm">Алгоритм для вычисления HMAC.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		[SecuritySafeCritical]
-		public Gost_R3411_HMAC(Gost_28147_89_SymmetricAlgorithmBase keyAlgorithm) : base(keyAlgorithm.ProviderType)
+		protected Gost_R3411_HMAC(Gost_28147_89_SymmetricAlgorithmBase keyAlgorithm) : base(keyAlgorithm.ProviderType)
 		{
 			if (keyAlgorithm == null)
 			{
@@ -66,14 +49,22 @@ namespace GostCryptography.Gost_R3411
 		}
 
 
+		[SecuritySafeCritical]
 		private void InitDefaults(Gost_28147_89_SymmetricAlgorithm keyAlgorithm)
 		{
-			HashName = GetType().Name;
+			HashName = typeof(THash).Name;
 			HashSizeValue = DefaultHashSize;
 
 			_keyAlgorithm = keyAlgorithm;
-			_hashHandle = CryptoApiHelper.CreateHashHmac(keyAlgorithm.ProviderType, CryptoApiHelper.GetProviderHandle(keyAlgorithm.ProviderType), keyAlgorithm.InternalKeyHandle);
+			_hashHandle = CreateHashHMAC(keyAlgorithm.ProviderType, CryptoApiHelper.GetProviderHandle(keyAlgorithm.ProviderType), keyAlgorithm.InternalKeyHandle);
 		}
+
+
+		/// <summary>
+		/// Создает дескриптор функции хэширования HMAC криптографического провайдера.
+		/// </summary>
+		[SecuritySafeCritical]
+		protected abstract SafeHashHandleImpl CreateHashHMAC(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle);
 
 
 		[SecurityCritical]
@@ -82,22 +73,12 @@ namespace GostCryptography.Gost_R3411
 
 
 		/// <summary>
-		/// Приватный дескриптор функции хэширования.
+		/// Дескриптор функции хэширования.
 		/// </summary>
-		internal SafeHashHandleImpl InternalHashHandle
+		public SafeHashHandleImpl SafeHandle
 		{
 			[SecurityCritical]
 			get { return _hashHandle; }
-		}
-
-		/// <summary>
-		/// Дескриптор функции хэширования.
-		/// </summary>
-		public IntPtr HashHandle
-		{
-			[SecurityCritical]
-			[SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
-			get { return InternalHashHandle.DangerousGetHandle(); }
 		}
 
 
@@ -137,7 +118,7 @@ namespace GostCryptography.Gost_R3411
 		[SecuritySafeCritical]
 		public override void Initialize()
 		{
-			var hashHmacHandle = CryptoApiHelper.CreateHashHmac(ProviderType, CryptoApiHelper.GetProviderHandle(ProviderType), _keyAlgorithm.InternalKeyHandle);
+			var hashHmacHandle = CreateHashHMAC(ProviderType, CryptoApiHelper.GetProviderHandle(ProviderType), _keyAlgorithm.InternalKeyHandle);
 			_hashHandle.TryDispose();
 			_hashHandle = hashHmacHandle;
 		}

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Security;
-using System.Security.Permissions;
 
 using GostCryptography.Base;
 using GostCryptography.Native;
@@ -10,7 +9,7 @@ namespace GostCryptography.Gost_28147_89
 	/// <summary>
 	/// Реализация функции вычисления имитовставки по ГОСТ 28147-89.
 	/// </summary>
-	public class Gost_28147_89_ImitHashAlgorithm : Gost_28147_89_ImitHashAlgorithmBase
+	public class Gost_28147_89_ImitHashAlgorithm : Gost_28147_89_ImitHashAlgorithmBase, ISafeHandleProvider<SafeHashHandleImpl>
 	{
 		/// <inheritdoc />
 		[SecuritySafeCritical]
@@ -88,22 +87,12 @@ namespace GostCryptography.Gost_28147_89
 
 
 		/// <summary>
-		/// Приватный дескриптор функции хэширования.
+		/// Дескриптор функции хэширования.
 		/// </summary>
-		internal SafeHashHandleImpl InternalHashHandle
+		public SafeHashHandleImpl SafeHandle
 		{
 			[SecurityCritical]
 			get { return _hashHandle; }
-		}
-
-		/// <summary>
-		/// Дескриптор функции хэширования.
-		/// </summary>
-		public IntPtr HashHandle
-		{
-			[SecurityCritical]
-			[SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
-			get { return InternalHashHandle.DangerousGetHandle(); }
 		}
 
 

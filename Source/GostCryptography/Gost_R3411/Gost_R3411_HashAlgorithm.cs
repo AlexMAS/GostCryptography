@@ -1,6 +1,4 @@
-﻿using System;
-using System.Security;
-using System.Security.Permissions;
+﻿using System.Security;
 
 using GostCryptography.Base;
 using GostCryptography.Native;
@@ -10,7 +8,7 @@ namespace GostCryptography.Gost_R3411
 	/// <summary>
 	/// Базовый класс для всех реализаций алгоритма хэширования ГОСТ Р 34.11.
 	/// </summary>
-	public abstract class Gost_R3411_HashAlgorithm : GostHashAlgorithm
+	public abstract class Gost_R3411_HashAlgorithm : GostHashAlgorithm, ISafeHandleProvider<SafeHashHandleImpl>
 	{
 		/// <inheritdoc />
 		[SecuritySafeCritical]
@@ -47,22 +45,12 @@ namespace GostCryptography.Gost_R3411
 		private SafeHashHandleImpl _hashHandle;
 
 		/// <summary>
-		/// Приватный дескриптор функции хэширования.
+		/// Дескриптор функции хэширования.
 		/// </summary>
-		internal SafeHashHandleImpl InternalHashHandle
+		public SafeHashHandleImpl SafeHandle
 		{
 			[SecurityCritical]
 			get { return _hashHandle; }
-		}
-
-		/// <summary>
-		/// Дескриптор функции хэширования.
-		/// </summary>
-		public IntPtr HashHandle
-		{
-			[SecurityCritical]
-			[SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
-			get { return InternalHashHandle.DangerousGetHandle(); }
 		}
 
 

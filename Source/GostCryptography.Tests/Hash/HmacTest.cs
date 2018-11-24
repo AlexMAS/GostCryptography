@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 
+using GostCryptography.Base;
 using GostCryptography.Gost_28147_89;
 using GostCryptography.Gost_R3411;
 
@@ -24,7 +25,7 @@ namespace GostCryptography.Tests.Hash
 		[SetUp]
 		public void SetUp()
 		{
-			_sharedKey = new Gost_28147_89_SymmetricAlgorithm();
+			_sharedKey = new Gost_28147_89_SymmetricAlgorithm(ProviderTypes.VipNet_2012_512);
 		}
 
 		[TearDown]
@@ -64,7 +65,7 @@ namespace GostCryptography.Tests.Hash
 		private static Stream CreateHmacDataStream(Gost_28147_89_SymmetricAlgorithmBase sharedKey, Stream dataStream)
 		{
 			// Создание объекта для вычисления HMAC
-			using (var imitHash = new Gost_R3411_HMAC(sharedKey))
+			using (var imitHash = new Gost_R3411_2012_256_HMAC(sharedKey))
 			{
 				// Вычисление HMAC для потока данных
 				var imitHashValue = imitHash.ComputeHash(dataStream);
@@ -86,7 +87,7 @@ namespace GostCryptography.Tests.Hash
 		private static bool VerifyHmacDataStream(Gost_28147_89_SymmetricAlgorithmBase sharedKey, Stream imitDataStream)
 		{
 			// Создание объекта для вычисления HMAC
-			using (var imitHash = new Gost_R3411_HMAC(sharedKey))
+			using (var imitHash = new Gost_R3411_2012_256_HMAC(sharedKey))
 			{
 				// Считывание HMAC из потока данных
 				var imitHashValue = new byte[imitHash.HashSize / 8];

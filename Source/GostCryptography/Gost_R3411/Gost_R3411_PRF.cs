@@ -175,7 +175,7 @@ namespace GostCryptography.Gost_R3411
 		[SecurityCritical]
 		private void InitializeHmac()
 		{
-			var hashHmacHandle = CryptoApiHelper.CreateHashHmac(ProviderType, CryptoApiHelper.GetProviderHandle(ProviderType), _key.InternalKeyHandle);
+			var hashHmacHandle = CryptoApiHelper.CreateHashHMAC_94(ProviderType, CryptoApiHelper.GetProviderHandle(ProviderType), _key.InternalKeyHandle);
 
 			_hashHmacHandle.TryDispose();
 

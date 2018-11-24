@@ -195,7 +195,7 @@ namespace GostCryptography.Native
 			return CreateHash_3411(providerHandle, Constants.CALG_GR3411_2012_512);
 		}
 
-		public static SafeHashHandleImpl CreateHash_3411(SafeProvHandleImpl providerHandle, int hashAlgId)
+		private static SafeHashHandleImpl CreateHash_3411(SafeProvHandleImpl providerHandle, int hashAlgId)
 		{
 			var hashHandle = SafeHashHandleImpl.InvalidHandle;
 
@@ -219,11 +219,27 @@ namespace GostCryptography.Native
 			return hashImitHandle;
 		}
 
-		public static SafeHashHandleImpl CreateHashHmac(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle)
+		public static SafeHashHandleImpl CreateHashHMAC_94(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle)
+		{
+			var hmacAlgId = providerType.IsVipNet() ? Constants.CALG_GR3411_HMAC34 : Constants.CALG_GR3411_HMAC;
+			return CreateHashHMAC(providerType, providerHandle, symKeyHandle, hmacAlgId);
+		}
+
+		public static SafeHashHandleImpl CreateHashHMAC_2012_256(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle)
+		{
+			var hmacAlgId = providerType.IsVipNet() ? Constants.CALG_GR3411_HMAC34 : Constants.CALG_GR3411_2012_256_HMAC;
+			return CreateHashHMAC(providerType, providerHandle, symKeyHandle, hmacAlgId);
+		}
+
+		public static SafeHashHandleImpl CreateHashHMAC_2012_512(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle)
+		{
+			var hmacAlgId = providerType.IsVipNet() ? Constants.CALG_GR3411_HMAC34 : Constants.CALG_GR3411_2012_512_HMAC;
+			return CreateHashHMAC(providerType, providerHandle, symKeyHandle, hmacAlgId);
+		}
+
+		private static SafeHashHandleImpl CreateHashHMAC(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle, int hmacAlgId)
 		{
 			var hashHmacHandle = SafeHashHandleImpl.InvalidHandle;
-
-			var hmacAlgId = providerType.IsVipNet() ? Constants.CALG_GR3411_HMAC34 : Constants.CALG_GR3411_HMAC;
 
 			if (!CryptoApi.CryptCreateHash(providerHandle, (uint)hmacAlgId, symKeyHandle, 0, ref hashHmacHandle))
 			{

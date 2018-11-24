@@ -114,7 +114,7 @@ namespace GostCryptography.Gost_28147_89
 
 			var providerType = gostHashAlgorithm.ProviderType;
 			var providerHandle = CryptoApiHelper.GetProviderHandle(providerType);
-			var symKeyHandle = CryptoApiHelper.DeriveSymKey(providerHandle, gostHashAlgorithm.InternalHashHandle);
+			var symKeyHandle = CryptoApiHelper.DeriveSymKey(providerHandle, gostHashAlgorithm.SafeHandle);
 
 			return new Gost_28147_89_SymmetricAlgorithm(providerType, providerHandle, symKeyHandle);
 		}
@@ -244,22 +244,12 @@ namespace GostCryptography.Gost_28147_89
 		[SecuritySafeCritical]
 		public override byte[] ComputeHash(HashAlgorithm hash)
 		{
-			SafeHashHandleImpl hashHandle;
-
-			switch (hash)
+			if (!(hash is ISafeHandleProvider<SafeHashHandleImpl> hashHadnleProvider))
 			{
-				case Gost_R3411_94_HashAlgorithm hashAlgorithm:
-					hashHandle = hashAlgorithm.InternalHashHandle;
-					break;
-				case Gost_R3411_HMAC hmacHashAlgorithm:
-					hashHandle = hmacHashAlgorithm.InternalHashHandle;
-					break;
-				case Gost_28147_89_ImitHashAlgorithm imitHashAlgorithm:
-					hashHandle = imitHashAlgorithm.InternalHashHandle;
-					break;
-				default:
-					throw ExceptionUtility.Argument(nameof(hash), Resources.RequiredGostHash);
+				throw ExceptionUtility.Argument(nameof(hash), Resources.RequiredGostHash);
 			}
+
+			var hashHandle = hashHadnleProvider.SafeHandle;
 
 			CryptoApiHelper.HashKeyExchange(hashHandle, InternalKeyHandle);
 

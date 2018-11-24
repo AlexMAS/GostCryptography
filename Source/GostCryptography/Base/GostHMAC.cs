@@ -36,5 +36,10 @@ namespace GostCryptography.Base
 		/// Тип криптографического провайдера.
 		/// </summary>
 		public ProviderTypes ProviderType { get; }
+
+		/// <summary>
+		/// Наименование алгоритма хэширования.
+		/// </summary>
+		public abstract string AlgorithmName { get; }
 	}
 }

@@ -59,7 +59,9 @@ namespace GostCryptography.Config
 			AddAlgorithm<Gost_R3411_94_HashAlgorithm>(Gost_R3411_94_HashAlgorithm.KnownAlgorithmNames);
 			AddAlgorithm<Gost_R3411_2012_256_HashAlgorithm>(Gost_R3411_2012_256_HashAlgorithm.KnownAlgorithmNames);
 			AddAlgorithm<Gost_R3411_2012_512_HashAlgorithm>(Gost_R3411_2012_512_HashAlgorithm.KnownAlgorithmNames);
-			AddAlgorithm<Gost_R3411_HMAC>(Gost_R3411_HMAC.KnownAlgorithmNames);
+			AddAlgorithm<Gost_R3411_94_HMAC>(Gost_R3411_94_HMAC.KnownAlgorithmNames);
+			AddAlgorithm<Gost_R3411_2012_256_HMAC>(Gost_R3411_2012_256_HMAC.KnownAlgorithmNames);
+			AddAlgorithm<Gost_R3411_2012_512_HMAC>(Gost_R3411_2012_512_HMAC.KnownAlgorithmNames);
 			AddAlgorithm<Gost_R3411_PRF>();
 
 			AddAlgorithm<Gost_28147_89_SymmetricAlgorithm>(Gost_28147_89_SymmetricAlgorithm.KnownAlgorithmNames);

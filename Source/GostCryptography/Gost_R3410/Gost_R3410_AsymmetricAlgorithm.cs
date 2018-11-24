@@ -319,7 +319,7 @@ namespace GostCryptography.Gost_R3410
 
 			using (var hashAlgorithm = (Gost_R3411_HashAlgorithm)CreateHashAlgorithm())
 			{
-				return CryptoApiHelper.SignValue(_providerHandle, hashAlgorithm.InternalHashHandle, _providerParameters.KeyNumber, hash);
+				return CryptoApiHelper.SignValue(_providerHandle, hashAlgorithm.SafeHandle, _providerParameters.KeyNumber, hash);
 			}
 		}
 
@@ -383,7 +383,7 @@ namespace GostCryptography.Gost_R3410
 
 			using (var hashAlgorithm = (Gost_R3411_HashAlgorithm)CreateHashAlgorithm())
 			{
-				return CryptoApiHelper.VerifySign(_providerHandle, hashAlgorithm.InternalHashHandle, _keyHandle, hash, signature);
+				return CryptoApiHelper.VerifySign(_providerHandle, hashAlgorithm.SafeHandle, _keyHandle, hash, signature);
 			}
 		}
 
