@@ -13,11 +13,14 @@ namespace GostCryptography.Gost_R3410
 	/// <summary>
 	/// Реализация алгоритма формирования общих ключей на основе алгоритма ГОСТ Р 34.10 и эфимерного ключа.
 	/// </summary>
+	[SecurityCritical]
+	[SecuritySafeCritical]
 	public abstract class Gost_R3410_EphemeralAsymmetricAlgorithm<TKeyParams, TKeyAlgorithm> : Gost_R3410_AsymmetricAlgorithmBase<TKeyParams, TKeyAlgorithm>
 		where TKeyParams : Gost_R3410_KeyExchangeParams
 		where TKeyAlgorithm : Gost_R3410_KeyExchangeAlgorithm
 	{
 		/// <inheritdoc />
+		[SecurityCritical]
 		[SecuritySafeCritical]
 		public Gost_R3410_EphemeralAsymmetricAlgorithm()
 		{
@@ -26,6 +29,7 @@ namespace GostCryptography.Gost_R3410
 		}
 
 		/// <inheritdoc />
+		[SecurityCritical]
 		[SecuritySafeCritical]
 		public Gost_R3410_EphemeralAsymmetricAlgorithm(ProviderTypes providerType) : base(providerType)
 		{
@@ -44,6 +48,7 @@ namespace GostCryptography.Gost_R3410
 		/// <see cref="Gost_R3410_KeyExchangeParams.DigestParamSet"/> и идентификатор OID параметров открытого ключа
 		/// <see cref="Gost_R3410_KeyExchangeParams.PublicKeyParamSet"/>. Остальные параметры не используются.
 		/// </remarks>
+		[SecurityCritical]
 		[SecuritySafeCritical]
 		public Gost_R3410_EphemeralAsymmetricAlgorithm(TKeyParams keyParameters)
 		{
@@ -67,6 +72,7 @@ namespace GostCryptography.Gost_R3410
 		/// <see cref="Gost_R3410_KeyExchangeParams.DigestParamSet"/> и идентификатор OID параметров открытого ключа
 		/// <see cref="Gost_R3410_KeyExchangeParams.PublicKeyParamSet"/>. Остальные параметры не используются.
 		/// </remarks>
+		[SecurityCritical]
 		[SecuritySafeCritical]
 		public Gost_R3410_EphemeralAsymmetricAlgorithm(ProviderTypes providerType, TKeyParams keyParameters) : base(providerType)
 		{

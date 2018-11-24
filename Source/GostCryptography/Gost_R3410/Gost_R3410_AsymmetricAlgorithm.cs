@@ -26,6 +26,7 @@ namespace GostCryptography.Gost_R3410
 
 
 		/// <inheritdoc />
+		[SecurityCritical]
 		[SecuritySafeCritical]
 		protected Gost_R3410_AsymmetricAlgorithm()
 		{
@@ -35,6 +36,7 @@ namespace GostCryptography.Gost_R3410
 		}
 
 		/// <inheritdoc />
+		[SecurityCritical]
 		[SecuritySafeCritical]
 		[ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
 		protected Gost_R3410_AsymmetricAlgorithm(ProviderTypes providerType) : base(providerType)
@@ -48,6 +50,7 @@ namespace GostCryptography.Gost_R3410
 		/// Конструктор.
 		/// </summary>
 		/// <param name="providerParameters">Параметры криптографического провайдера.</param>
+		[SecurityCritical]
 		[SecuritySafeCritical]
 		protected Gost_R3410_AsymmetricAlgorithm(CspParameters providerParameters) : base((ProviderTypes)providerParameters.ProviderType)
 		{

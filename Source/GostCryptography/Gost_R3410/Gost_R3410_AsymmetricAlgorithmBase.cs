@@ -15,6 +15,8 @@ namespace GostCryptography.Gost_R3410
 	/// </summary>
 	/// <typeparam name="TKeyParams">Параметры ключа цифровой подписи ГОСТ Р 34.10.</typeparam>
 	/// <typeparam name="TKeyAlgorithm">Алгоритм общего секретного ключа ГОСТ Р 34.10.</typeparam>
+	[SecurityCritical]
+	[SecuritySafeCritical]
 	public abstract class Gost_R3410_AsymmetricAlgorithmBase<TKeyParams, TKeyAlgorithm> : GostAsymmetricAlgorithm
 		where TKeyParams : Gost_R3410_KeyExchangeParams
 		where TKeyAlgorithm : Gost_R3410_KeyExchangeAlgorithm
@@ -30,12 +32,14 @@ namespace GostCryptography.Gost_R3410
 
 
 		/// <inheritdoc />
+		[SecurityCritical]
 		[SecuritySafeCritical]
 		protected Gost_R3410_AsymmetricAlgorithmBase()
 		{
 		}
 
 		/// <inheritdoc />
+		[SecurityCritical]
 		[SecuritySafeCritical]
 		protected Gost_R3410_AsymmetricAlgorithmBase(ProviderTypes providerType) : base(providerType)
 		{

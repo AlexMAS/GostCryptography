@@ -28,12 +28,14 @@ namespace GostCryptography.Gost_R3410
 
 
 		/// <inheritdoc />
+		[SecurityCritical]
 		[SecuritySafeCritical]
 		public Gost_R3410_2012_512_AsymmetricAlgorithm()
 		{
 		}
 
 		/// <inheritdoc />
+		[SecurityCritical]
 		[SecuritySafeCritical]
 		[ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
 		public Gost_R3410_2012_512_AsymmetricAlgorithm(ProviderTypes providerType) : base(providerType)
@@ -41,6 +43,7 @@ namespace GostCryptography.Gost_R3410
 		}
 
 		/// <inheritdoc />
+		[SecurityCritical]
 		[SecuritySafeCritical]
 		public Gost_R3410_2012_512_AsymmetricAlgorithm(CspParameters providerParameters) : base(providerParameters)
 		{

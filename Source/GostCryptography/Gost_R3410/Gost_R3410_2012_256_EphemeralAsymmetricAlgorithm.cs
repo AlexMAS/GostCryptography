@@ -10,6 +10,8 @@ namespace GostCryptography.Gost_R3410
 	/// <summary>
 	/// Реализация алгоритма ГОСТ Р 34.10-2012/256 на основе эфимерного ключа.
 	/// </summary>
+	[SecurityCritical]
+	[SecuritySafeCritical]
 	public sealed class Gost_R3410_2012_256_EphemeralAsymmetricAlgorithm : Gost_R3410_EphemeralAsymmetricAlgorithm<Gost_R3410_2012_256_KeyExchangeParams, Gost_R3410_2012_256_KeyExchangeAlgorithm>
 	{
 		/// <summary>
@@ -24,24 +26,28 @@ namespace GostCryptography.Gost_R3410
 
 
 		/// <inheritdoc />
+		[SecurityCritical]
 		[SecuritySafeCritical]
 		public Gost_R3410_2012_256_EphemeralAsymmetricAlgorithm()
 		{
 		}
 
 		/// <inheritdoc />
+		[SecurityCritical]
 		[SecuritySafeCritical]
 		public Gost_R3410_2012_256_EphemeralAsymmetricAlgorithm(ProviderTypes providerType) : base(providerType)
 		{
 		}
 
 		/// <inheritdoc />
+		[SecurityCritical]
 		[SecuritySafeCritical]
 		public Gost_R3410_2012_256_EphemeralAsymmetricAlgorithm(Gost_R3410_2012_256_KeyExchangeParams keyParameters) : base(keyParameters)
 		{
 		}
 
 		/// <inheritdoc />
+		[SecurityCritical]
 		[SecuritySafeCritical]
 		public Gost_R3410_2012_256_EphemeralAsymmetricAlgorithm(ProviderTypes providerType, Gost_R3410_2012_256_KeyExchangeParams keyParameters) : base(providerType, keyParameters)
 		{

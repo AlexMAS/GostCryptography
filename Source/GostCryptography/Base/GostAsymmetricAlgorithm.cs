@@ -8,6 +8,8 @@ namespace GostCryptography.Base
 	/// <summary>
 	/// Базовый класс для всех ассиметричных алгоритмов ГОСТ.
 	/// </summary>
+	[SecurityCritical]
+	[SecuritySafeCritical]
 	public abstract class GostAsymmetricAlgorithm : AsymmetricAlgorithm
 	{
 		/// <summary>
@@ -16,6 +18,7 @@ namespace GostCryptography.Base
 		/// <remarks>
 		/// По умолчанию использует криптографический провайдер, установленный в <see cref="GostCryptoConfig.ProviderType"/>.
 		/// </remarks>
+		[SecurityCritical]
 		[SecuritySafeCritical]
 		protected GostAsymmetricAlgorithm() : this(GostCryptoConfig.ProviderType)
 		{
@@ -25,6 +28,7 @@ namespace GostCryptography.Base
 		/// Конструктор.
 		/// </summary>
 		/// <param name="providerType">Тип криптографического провайдера.</param>
+		[SecurityCritical]
 		[SecuritySafeCritical]
 		protected GostAsymmetricAlgorithm(ProviderTypes providerType)
 		{
