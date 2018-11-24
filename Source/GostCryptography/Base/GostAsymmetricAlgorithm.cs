@@ -50,6 +50,12 @@ namespace GostCryptography.Base
 
 
 		/// <summary>
+		/// Создает экземпляр <see cref="GostHashAlgorithm"/>.
+		/// </summary>
+		public abstract GostHashAlgorithm CreateHashAlgorithm();
+
+
+		/// <summary>
 		/// Создает экземпляр <see cref="GostKeyExchangeFormatter"/>.
 		/// </summary>
 		/// <returns></returns>

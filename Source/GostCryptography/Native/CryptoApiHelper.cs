@@ -160,6 +160,21 @@ namespace GostCryptography.Native
 			}
 		}
 
+		public static ProviderTypes GetProviderType(SafeProvHandleImpl providerHandle)
+		{
+			uint providerTypeLen = sizeof(uint);
+			byte[] dwData = new byte[sizeof(uint)];
+
+			if (!CryptoApi.CryptGetProvParam(providerHandle, Constants.PP_PROVTYPE, dwData, ref providerTypeLen, 0))
+			{
+				throw CreateWin32Error();
+			}
+
+			var providerType = BitConverter.ToUInt32(dwData, 0);
+
+			return (ProviderTypes)providerType;
+		}
+
 		#endregion
 
 
@@ -1066,42 +1081,38 @@ namespace GostCryptography.Native
 
 		#region Для работы с цифровой подписью
 
-		public static byte[] SignValue(SafeProvHandleImpl hProv, int keyNumber, byte[] hashValue)
+		public static byte[] SignValue(SafeProvHandleImpl providerHandle, SafeHashHandleImpl hashHandle, int keyNumber, byte[] hashValue)
 		{
-			using (var hashHandle = SetupHashAlgorithm(hProv, hashValue))
+			SetHashValue(hashHandle, hashValue);
+
+			uint signatureLength = 0;
+
+			// Вычисление размера подписи
+			if (!CryptoApi.CryptSignHash(hashHandle, (uint)keyNumber, null, 0, null, ref signatureLength))
 			{
-				uint signatureLength = 0;
-
-				// Вычисление размера подписи
-				if (!CryptoApi.CryptSignHash(hashHandle, (uint)keyNumber, null, 0, null, ref signatureLength))
-				{
-					throw CreateWin32Error();
-				}
-
-				var signatureValue = new byte[signatureLength];
-
-				// Вычисление значения подписи
-				if (!CryptoApi.CryptSignHash(hashHandle, (uint)keyNumber, null, 0, signatureValue, ref signatureLength))
-				{
-					throw CreateWin32Error();
-				}
-
-				return signatureValue;
+				throw CreateWin32Error();
 			}
+
+			var signatureValue = new byte[signatureLength];
+
+			// Вычисление значения подписи
+			if (!CryptoApi.CryptSignHash(hashHandle, (uint)keyNumber, null, 0, signatureValue, ref signatureLength))
+			{
+				throw CreateWin32Error();
+			}
+
+			return signatureValue;
 		}
 
-		public static bool VerifySign(SafeProvHandleImpl providerHandle, SafeKeyHandleImpl keyHandle, byte[] hashValue, byte[] signatureValue)
+		public static bool VerifySign(SafeProvHandleImpl providerHandle, SafeHashHandleImpl hashHandle, SafeKeyHandleImpl keyHandle, byte[] hashValue, byte[] signatureValue)
 		{
-			using (var hashHandle = SetupHashAlgorithm(providerHandle, hashValue))
-			{
-				return CryptoApi.CryptVerifySignature(hashHandle, signatureValue, (uint)signatureValue.Length, keyHandle, null, 0);
-			}
+			SetHashValue(hashHandle, hashValue);
+
+			return CryptoApi.CryptVerifySignature(hashHandle, signatureValue, (uint)signatureValue.Length, keyHandle, null, 0);
 		}
 
-		private static SafeHashHandleImpl SetupHashAlgorithm(SafeProvHandleImpl providerHandle, byte[] hashValue)
+		private static void SetHashValue(SafeHashHandleImpl hashHandle, byte[] hashValue)
 		{
-			var hashHandle = CreateHash_3411_94(providerHandle);
-
 			uint hashLength = 0;
 
 			if (!CryptoApi.CryptGetHashParam(hashHandle, Constants.HP_HASHVAL, null, ref hashLength, 0))
@@ -1118,8 +1129,6 @@ namespace GostCryptography.Native
 			{
 				throw CreateWin32Error();
 			}
-
-			return hashHandle;
 		}
 
 		#endregion
