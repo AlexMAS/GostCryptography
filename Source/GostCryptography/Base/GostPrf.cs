@@ -1,11 +1,12 @@
-﻿using System.Security;
+﻿using System;
+using System.Security;
 
 namespace GostCryptography.Base
 {
 	/// <summary>
 	/// Базовый класс для всех алгоритмов генерации псевдослучайной последовательности (Pseudorandom Function, PRF) ГОСТ.
 	/// </summary>
-	public abstract class GostPRF
+	public abstract class GostPRF : IDisposable
 	{
 		/// <summary>
 		/// Конструктор.
@@ -22,5 +23,26 @@ namespace GostCryptography.Base
 		/// Тип криптографического провайдера.
 		/// </summary>
 		public ProviderTypes ProviderType { get; }
+
+
+		/// <summary>
+		/// Освобождает неуправляемые ресурсы.
+		/// </summary>
+		protected virtual void Dispose(bool disposing)
+		{
+		}
+
+		/// <inheritdoc />
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		/// <inheritdoc />
+		~GostPRF()
+		{
+			Dispose(false);
+		}
 	}
 }

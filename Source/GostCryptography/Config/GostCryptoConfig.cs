@@ -62,7 +62,7 @@ namespace GostCryptography.Config
 			AddAlgorithm<Gost_R3411_94_HMAC>(Gost_R3411_94_HMAC.KnownAlgorithmNames);
 			AddAlgorithm<Gost_R3411_2012_256_HMAC>(Gost_R3411_2012_256_HMAC.KnownAlgorithmNames);
 			AddAlgorithm<Gost_R3411_2012_512_HMAC>(Gost_R3411_2012_512_HMAC.KnownAlgorithmNames);
-			AddAlgorithm<Gost_R3411_PRF>();
+			AddAlgorithm<Gost_R3411_94_PRF>();
 
 			AddAlgorithm<Gost_28147_89_SymmetricAlgorithm>(Gost_28147_89_SymmetricAlgorithm.KnownAlgorithmNames);
 			AddAlgorithm<Gost_28147_89_ImitHashAlgorithm>();

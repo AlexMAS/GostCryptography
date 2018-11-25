@@ -99,7 +99,7 @@ namespace GostCryptography.Gost_28147_89
 				throw ExceptionUtility.ArgumentNull(nameof(hashAlgorithm));
 			}
 
-			if (!(hashAlgorithm is Gost_R3411_HashAlgorithm))
+			if (!(hashAlgorithm is Gost_R3411_HashAlgorithm gostHashAlgorithm))
 			{
 				throw ExceptionUtility.ArgumentOutOfRange(nameof(hashAlgorithm));
 			}
@@ -109,14 +109,38 @@ namespace GostCryptography.Gost_28147_89
 				throw ExceptionUtility.ArgumentNull(nameof(password));
 			}
 
-			var gostHashAlgorithm = (Gost_R3411_HashAlgorithm)hashAlgorithm;
-			gostHashAlgorithm.TransformBlock(password, 0, password.Length, password, 0);
+			hashAlgorithm.TransformBlock(password, 0, password.Length, password, 0);
 
 			var providerType = gostHashAlgorithm.ProviderType;
 			var providerHandle = CryptoApiHelper.GetProviderHandle(providerType);
 			var symKeyHandle = CryptoApiHelper.DeriveSymKey(providerHandle, gostHashAlgorithm.SafeHandle);
 
 			return new Gost_28147_89_SymmetricAlgorithm(providerType, providerHandle, symKeyHandle);
+		}
+
+		/// <summary>
+		/// Создает экземпляр <see cref="Gost_28147_89_SymmetricAlgorithm"/> на основе сессионного ключа.
+		/// </summary>
+		[SecuritySafeCritical]
+		public static Gost_28147_89_SymmetricAlgorithm CreateFromSessionKey(ProviderTypes providerType, byte[] sessionKey)
+		{
+			if (sessionKey == null)
+			{
+				throw ExceptionUtility.ArgumentNull(nameof(sessionKey));
+			}
+
+			if (sessionKey.Length != 32)
+			{
+				throw ExceptionUtility.Argument(nameof(sessionKey), Resources.InvalidHashSize);
+			}
+
+			var providerHandle = CryptoApiHelper.GetProviderHandle(providerType);
+			var randomNumberGenerator = CryptoApiHelper.GetRandomNumberGenerator(providerType);
+
+			using (var keyHandle = CryptoApiHelper.ImportBulkSessionKey(providerHandle, sessionKey, randomNumberGenerator))
+			{
+				return new Gost_28147_89_SymmetricAlgorithm(providerType, providerHandle, keyHandle);
+			}
 		}
 
 

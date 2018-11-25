@@ -189,12 +189,13 @@
     <Compile Include="Gost_R3411\Gost_R3411_2012_512_HashAlgorithm.cs" />
     <Compile Include="Gost_R3411\Gost_R3411_2012_512_HMAC.cs" />
     <Compile Include="Gost_R3411\Gost_R3411_HMAC.cs" />
-    <Compile Include="Gost_R3411\Gost_R3411_PRF.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_94_PRF.cs" />
     <Compile Include="Gost_R3411\Gost_R3411_2012_256_HashAlgorithm.cs" />
     <Compile Include="Base\GostAsymmetricAlgorithm.cs" />
     <Compile Include="Base\GostHashAlgorithm.cs" />
     <Compile Include="Base\GostHMAC.cs" />
     <Compile Include="Base\GostKeyedHashAlgorithm.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_PRF.cs" />
     <Compile Include="Native\ISafeHandleProvider.cs" />
     <Compile Include="Reflection\EncryptedXmlHelper.cs" />
     <Compile Include="Reflection\SignedXmlHelper.cs" />
