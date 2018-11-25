@@ -169,6 +169,7 @@
     <Compile Include="Base\GostKeyExchangeDeformatter.cs" />
     <Compile Include="Base\GostKeyExchangeFormatter.cs" />
     <Compile Include="Base\GostSignatureDescription.cs" />
+    <Compile Include="Base\IGostAlgorithm.cs" />
     <Compile Include="Gost_R3410\Gost_R3410_2012_256_KeyExchangeDeformatter.cs" />
     <Compile Include="Gost_R3410\Gost_R3410_2012_256_SignatureDescription.cs" />
     <Compile Include="Gost_R3410\Gost_R3410_2012_512_KeyExchangeDeformatter.cs" />
@@ -186,8 +187,10 @@
     <Compile Include="Gost_R3410\Gost_R3410_AsymmetricAlgorithm.cs" />
     <Compile Include="Gost_R3410\Gost_R3410_EphemeralAsymmetricAlgorithm.cs" />
     <Compile Include="Gost_R3411\Gost_R3411_2012_256_HMAC.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_2012_256_PRF.cs" />
     <Compile Include="Gost_R3411\Gost_R3411_2012_512_HashAlgorithm.cs" />
     <Compile Include="Gost_R3411\Gost_R3411_2012_512_HMAC.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_2012_512_PRF.cs" />
     <Compile Include="Gost_R3411\Gost_R3411_HMAC.cs" />
     <Compile Include="Gost_R3411\Gost_R3411_94_PRF.cs" />
     <Compile Include="Gost_R3411\Gost_R3411_2012_256_HashAlgorithm.cs" />

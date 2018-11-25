@@ -11,62 +11,43 @@ namespace GostCryptography.Gost_28147_89
 	/// </summary>
 	public class Gost_28147_89_ImitHashAlgorithm : Gost_28147_89_ImitHashAlgorithmBase, ISafeHandleProvider<SafeHashHandleImpl>
 	{
+		/// <summary>
+		/// Размер имитовставки ГОСТ 28147-89.
+		/// </summary>
+		public const int DefaultHashSize = 32;
+
+		/// <summary>
+		/// Наименование алгоритма вычисления имитовставки ГОСТ 28147-89.
+		/// </summary>
+		public const string AlgorithmNameValue = "urn:ietf:params:xml:ns:cpxmlsec:algorithms:gost28147imit";
+
+		/// <summary>
+		/// Известные наименования алгоритма вычисления имитовставки ГОСТ 28147-89.
+		/// </summary>
+		public static readonly string[] KnownAlgorithmNames = { AlgorithmNameValue };
+
+
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_28147_89_ImitHashAlgorithm()
+		public Gost_28147_89_ImitHashAlgorithm() : base(DefaultHashSize)
 		{
 			_keyAlgorithm = new Gost_28147_89_SymmetricAlgorithm(ProviderType);
 		}
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_28147_89_ImitHashAlgorithm(ProviderTypes providerType) : base(providerType)
+		public Gost_28147_89_ImitHashAlgorithm(ProviderTypes providerType) : base(providerType, DefaultHashSize)
 		{
 			_keyAlgorithm = new Gost_28147_89_SymmetricAlgorithm(ProviderType);
 		}
 
-
 		/// <summary>
 		/// Конструктор.
 		/// </summary>
 		/// <param name="key">Ключ симметричного шифрования для подсчета имитовставки.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		[SecuritySafeCritical]
-		public Gost_28147_89_ImitHashAlgorithm(byte[] key)
-		{
-			if (key == null)
-			{
-				throw ExceptionUtility.ArgumentNull(nameof(key));
-			}
-
-			_keyAlgorithm = new Gost_28147_89_SymmetricAlgorithm(ProviderType) { Key = key };
-		}
-
-		/// <summary>
-		/// Конструктор.
-		/// </summary>
-		/// <param name="providerType">Тип криптографического провайдера.</param>
-		/// <param name="key">Ключ симметричного шифрования для подсчета имитовставки.</param>
-		/// <exception cref="ArgumentNullException"></exception>
-		[SecuritySafeCritical]
-		public Gost_28147_89_ImitHashAlgorithm(ProviderTypes providerType, byte[] key) : base(providerType)
-		{
-			if (key == null)
-			{
-				throw ExceptionUtility.ArgumentNull(nameof(key));
-			}
-
-			_keyAlgorithm = new Gost_28147_89_SymmetricAlgorithm(ProviderType) { Key = key };
-		}
-
-
-		/// <summary>
-		/// Конструктор.
-		/// </summary>
-		/// <param name="key">Ключ симметричного шифрования для подсчета имитовставки.</param>
-		/// <exception cref="ArgumentNullException"></exception>
-		[SecuritySafeCritical]
-		public Gost_28147_89_ImitHashAlgorithm(Gost_28147_89_SymmetricAlgorithmBase key) : base(key.ProviderType)
+		public Gost_28147_89_ImitHashAlgorithm(Gost_28147_89_SymmetricAlgorithmBase key) : base(key.ProviderType, DefaultHashSize)
 		{
 			if (key == null)
 			{
@@ -84,6 +65,10 @@ namespace GostCryptography.Gost_28147_89
 
 		[SecurityCritical]
 		private SafeHashHandleImpl _hashHandle;
+
+
+		/// <inheritdoc />
+		public override string AlgorithmName => AlgorithmNameValue;
 
 
 		/// <summary>

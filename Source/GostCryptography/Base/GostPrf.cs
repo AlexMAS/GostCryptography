@@ -6,7 +6,7 @@ namespace GostCryptography.Base
 	/// <summary>
 	/// Базовый класс для всех алгоритмов генерации псевдослучайной последовательности (Pseudorandom Function, PRF) ГОСТ.
 	/// </summary>
-	public abstract class GostPRF : IDisposable
+	public abstract class GostPRF : IDisposable, IGostAlgorithm
 	{
 		/// <summary>
 		/// Конструктор.
@@ -19,10 +19,11 @@ namespace GostCryptography.Base
 		}
 
 
-		/// <summary>
-		/// Тип криптографического провайдера.
-		/// </summary>
+		/// <inheritdoc />
 		public ProviderTypes ProviderType { get; }
+
+		/// <inheritdoc />
+		public abstract string AlgorithmName { get; }
 
 
 		/// <summary>

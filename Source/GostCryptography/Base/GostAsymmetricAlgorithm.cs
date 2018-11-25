@@ -10,7 +10,7 @@ namespace GostCryptography.Base
 	/// </summary>
 	[SecurityCritical]
 	[SecuritySafeCritical]
-	public abstract class GostAsymmetricAlgorithm : AsymmetricAlgorithm
+	public abstract class GostAsymmetricAlgorithm : AsymmetricAlgorithm, IGostAlgorithm
 	{
 		/// <summary>
 		/// Конструктор.
@@ -36,10 +36,11 @@ namespace GostCryptography.Base
 		}
 
 
-		/// <summary>
-		/// Тип криптографического провайдера.
-		/// </summary>
+		/// <inheritdoc />
 		public ProviderTypes ProviderType { get; }
+
+		/// <inheritdoc />
+		public abstract string AlgorithmName { get; }
 
 
 		/// <summary>

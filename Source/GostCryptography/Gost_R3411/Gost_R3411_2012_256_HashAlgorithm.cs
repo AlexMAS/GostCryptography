@@ -8,8 +8,13 @@ namespace GostCryptography.Gost_R3411
 	/// <summary>
 	/// Реализация алгоритма хэширования ГОСТ Р 34.11-2012/256.
 	/// </summary>
-	public class Gost_R3411_2012_256_HashAlgorithm : Gost_R3411_HashAlgorithm
+	public sealed class Gost_R3411_2012_256_HashAlgorithm : Gost_R3411_HashAlgorithm
 	{
+		/// <summary>
+		/// Размер хэша ГОСТ Р 34.11-2012/256.
+		/// </summary>
+		public const int DefaultHashSizeValue = 256;
+
 		/// <summary>
 		/// Наименование алгоритма хэширования ГОСТ Р 34.11-2012/256.
 		/// </summary>
@@ -23,13 +28,13 @@ namespace GostCryptography.Gost_R3411
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3411_2012_256_HashAlgorithm() : base(256)
+		public Gost_R3411_2012_256_HashAlgorithm() : base(DefaultHashSizeValue)
 		{
 		}
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3411_2012_256_HashAlgorithm(ProviderTypes providerType) : base(providerType, 256)
+		public Gost_R3411_2012_256_HashAlgorithm(ProviderTypes providerType) : base(providerType, DefaultHashSizeValue)
 		{
 		}
 

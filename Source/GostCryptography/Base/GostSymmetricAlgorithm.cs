@@ -8,7 +8,7 @@ namespace GostCryptography.Base
 	/// <summary>
 	/// Базовый класс для всех алгоритмов симметричного шифрования ГОСТ.
 	/// </summary>
-	public abstract class GostSymmetricAlgorithm : SymmetricAlgorithm
+	public abstract class GostSymmetricAlgorithm : SymmetricAlgorithm, IGostAlgorithm
 	{
 		/// <summary>
 		/// Конструктор.
@@ -32,15 +32,10 @@ namespace GostCryptography.Base
 		}
 
 
-		/// <summary>
-		/// Тип криптографического провайдера.
-		/// </summary>
+		/// <inheritdoc />
 		public ProviderTypes ProviderType { get; }
 
-
-		/// <summary>
-		/// Наименование алгоритма шифрования.
-		/// </summary>
+		/// <inheritdoc />
 		public abstract string AlgorithmName { get; }
 	}
 }

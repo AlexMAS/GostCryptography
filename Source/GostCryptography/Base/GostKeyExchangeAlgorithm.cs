@@ -9,7 +9,7 @@ namespace GostCryptography.Base
 	/// <summary>
 	/// Базовый класс всех реализаций общего секретного ключа ГОСТ.
 	/// </summary>
-	public abstract class GostKeyExchangeAlgorithm : IDisposable
+	public abstract class GostKeyExchangeAlgorithm : IDisposable, IGostAlgorithm
 	{
 		/// <summary>
 		/// Конструктор.
@@ -33,10 +33,11 @@ namespace GostCryptography.Base
 		}
 
 
-		/// <summary>
-		/// Тип криптографического провайдера.
-		/// </summary>
+		/// <inheritdoc />
 		public ProviderTypes ProviderType { get; }
+
+		/// <inheritdoc />
+		public virtual string AlgorithmName => GetType().Name;
 
 
 		/// <summary>

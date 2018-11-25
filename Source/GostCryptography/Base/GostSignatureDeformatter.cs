@@ -23,7 +23,7 @@ namespace GostCryptography.Base
 		/// <param name="publicKey">Открытый ключ для проверки цифровой подписи.</param>
 		/// <exception cref="ArgumentOutOfRangeException"></exception>
 		/// <exception cref="ArgumentNullException"></exception>
-		public GostSignatureDeformatter(AsymmetricAlgorithm publicKey)
+		public GostSignatureDeformatter(AsymmetricAlgorithm publicKey) : this()
 		{
 			SetKey(publicKey);
 		}

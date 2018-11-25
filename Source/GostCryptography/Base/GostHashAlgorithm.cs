@@ -8,7 +8,7 @@ namespace GostCryptography.Base
 	/// <summary>
 	/// Базовый класс для всех алгоритмов хэширования ГОСТ.
 	/// </summary>
-	public abstract class GostHashAlgorithm : HashAlgorithm
+	public abstract class GostHashAlgorithm : HashAlgorithm, IGostAlgorithm
 	{
 		/// <summary>
 		/// Конструктор.
@@ -35,14 +35,10 @@ namespace GostCryptography.Base
 		}
 
 
-		/// <summary>
-		/// Тип криптографического провайдера.
-		/// </summary>
+		/// <inheritdoc />
 		public ProviderTypes ProviderType { get; }
 
-		/// <summary>
-		/// Наименование алгоритма хэширования.
-		/// </summary>
+		/// <inheritdoc />
 		public abstract string AlgorithmName { get; }
 	}
 }

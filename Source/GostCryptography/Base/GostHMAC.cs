@@ -8,16 +8,17 @@ namespace GostCryptography.Base
 	/// <summary>
 	/// Базовый класс для всех реализаций Hash-based Message Authentication Code (HMAC) на базе алгоритмов ГОСТ.
 	/// </summary>
-	public abstract class GostHMAC : HMAC
+	public abstract class GostHMAC : HMAC, IGostAlgorithm
 	{
 		/// <summary>
 		/// Конструктор.
 		/// </summary>
+		/// <param name="hashSize">Размер хэш-кода в битах.</param>
 		/// <remarks>
 		/// По умолчанию использует криптографический провайдер, установленный в <see cref="GostCryptoConfig.ProviderType"/>.
 		/// </remarks>
 		[SecuritySafeCritical]
-		protected GostHMAC() : this(GostCryptoConfig.ProviderType)
+		protected GostHMAC(int hashSize) : this(GostCryptoConfig.ProviderType, hashSize)
 		{
 		}
 
@@ -25,21 +26,19 @@ namespace GostCryptography.Base
 		/// Конструктор.
 		/// </summary>
 		/// <param name="providerType">Тип криптографического провайдера.</param>
+		/// <param name="hashSize">Размер хэш-кода в битах.</param>
 		[SecuritySafeCritical]
-		protected GostHMAC(ProviderTypes providerType)
+		protected GostHMAC(ProviderTypes providerType, int hashSize)
 		{
 			ProviderType = providerType;
+			HashSizeValue = hashSize;
 		}
 
 
-		/// <summary>
-		/// Тип криптографического провайдера.
-		/// </summary>
+		/// <inheritdoc />
 		public ProviderTypes ProviderType { get; }
 
-		/// <summary>
-		/// Наименование алгоритма хэширования.
-		/// </summary>
+		/// <inheritdoc />
 		public abstract string AlgorithmName { get; }
 	}
 }

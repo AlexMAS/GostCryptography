@@ -24,19 +24,19 @@ namespace GostCryptography.Gost_R3411
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3411_2012_256_HMAC()
+		public Gost_R3411_2012_256_HMAC() : base(Gost_R3411_2012_256_HashAlgorithm.DefaultHashSizeValue)
 		{
 		}
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3411_2012_256_HMAC(ProviderTypes providerType) : base(providerType)
+		public Gost_R3411_2012_256_HMAC(ProviderTypes providerType) : base(providerType, Gost_R3411_2012_256_HashAlgorithm.DefaultHashSizeValue)
 		{
 		}
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3411_2012_256_HMAC(Gost_28147_89_SymmetricAlgorithmBase keyAlgorithm) : base(keyAlgorithm)
+		public Gost_R3411_2012_256_HMAC(Gost_28147_89_SymmetricAlgorithmBase keyAlgorithm) : base(keyAlgorithm, Gost_R3411_2012_256_HashAlgorithm.DefaultHashSizeValue)
 		{
 		}
 

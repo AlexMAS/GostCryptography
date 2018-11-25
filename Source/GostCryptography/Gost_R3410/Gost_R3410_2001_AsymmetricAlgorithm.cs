@@ -19,12 +19,12 @@ namespace GostCryptography.Gost_R3410
 		/// <summary>
 		/// Наименование алгоритма цифровой подписи ГОСТ Р 34.10-2001.
 		/// </summary>
-		public const string SignatureAlgorithmName = "urn:ietf:params:xml:ns:cpxmlsec:algorithms:gostr34102001-gostr3411";
+		public const string SignatureAlgorithmValue = "urn:ietf:params:xml:ns:cpxmlsec:algorithms:gostr34102001-gostr3411";
 
 		/// <summary>
 		/// Наименование алгоритма обмена ключами ГОСТ Р 34.10-2001.
 		/// </summary>
-		public const string KeyExchangeAlgorithmName = "urn:ietf:params:xml:ns:cpxmlsec:algorithms:transport-gost2001";
+		public const string KeyExchangeAlgorithmValue = "urn:ietf:params:xml:ns:cpxmlsec:algorithms:transport-gost2001";
 
 
 		/// <inheritdoc />
@@ -51,10 +51,13 @@ namespace GostCryptography.Gost_R3410
 
 
 		/// <inheritdoc />
-		public override string SignatureAlgorithm => SignatureAlgorithmName;
+		public override string AlgorithmName => SignatureAlgorithmValue;
 
 		/// <inheritdoc />
-		public override string KeyExchangeAlgorithm => KeyExchangeAlgorithmName;
+		public override string SignatureAlgorithm => SignatureAlgorithmValue;
+
+		/// <inheritdoc />
+		public override string KeyExchangeAlgorithm => KeyExchangeAlgorithmValue;
 
 
 		/// <inheritdoc />

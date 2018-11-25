@@ -55,6 +55,9 @@ namespace GostCryptography.Gost_R3410
 
 
 		/// <inheritdoc />
+		public override string AlgorithmName => SignatureAlgorithmValue;
+
+		/// <inheritdoc />
 		public override string SignatureAlgorithm => SignatureAlgorithmValue;
 
 		/// <inheritdoc />

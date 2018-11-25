@@ -7,22 +7,14 @@ namespace GostCryptography.Gost_28147_89
 	/// </summary>
 	public abstract class Gost_28147_89_ImitHashAlgorithmBase : GostKeyedHashAlgorithm
 	{
-		/// <summary>
-		/// Размер хэша по умолчанию.
-		/// </summary>
-		public const int DefaultHashSize = 32;
-
-
 		/// <inheritdoc />
-		protected Gost_28147_89_ImitHashAlgorithmBase()
+		protected Gost_28147_89_ImitHashAlgorithmBase(int hashSize) : base(hashSize)
 		{
-			HashSizeValue = DefaultHashSize;
 		}
 
 		/// <inheritdoc />
-		protected Gost_28147_89_ImitHashAlgorithmBase(ProviderTypes providerType) : base(providerType)
+		protected Gost_28147_89_ImitHashAlgorithmBase(ProviderTypes providerType, int hashSize) : base(providerType, hashSize)
 		{
-			HashSizeValue = DefaultHashSize;
 		}
 
 

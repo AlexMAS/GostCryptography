@@ -52,9 +52,9 @@ namespace GostCryptography.Config
 
 		private static void AddKnownAlgorithms()
 		{
-			AddAlgorithm<Gost_R3410_2001_SignatureDescription>(Gost_R3410_2001_AsymmetricAlgorithm.SignatureAlgorithmName);
-			AddAlgorithm<Gost_R3410_2012_256_SignatureDescription>(Gost_R3410_2012_256_AsymmetricAlgorithm.SignatureAlgorithmName);
-			AddAlgorithm<Gost_R3410_2012_512_SignatureDescription>(Gost_R3410_2012_512_AsymmetricAlgorithm.SignatureAlgorithmName);
+			AddAlgorithm<Gost_R3410_2001_SignatureDescription>(Gost_R3410_2001_AsymmetricAlgorithm.SignatureAlgorithmValue);
+			AddAlgorithm<Gost_R3410_2012_256_SignatureDescription>(Gost_R3410_2012_256_AsymmetricAlgorithm.SignatureAlgorithmValue);
+			AddAlgorithm<Gost_R3410_2012_512_SignatureDescription>(Gost_R3410_2012_512_AsymmetricAlgorithm.SignatureAlgorithmValue);
 
 			AddAlgorithm<Gost_R3411_94_HashAlgorithm>(Gost_R3411_94_HashAlgorithm.KnownAlgorithmNames);
 			AddAlgorithm<Gost_R3411_2012_256_HashAlgorithm>(Gost_R3411_2012_256_HashAlgorithm.KnownAlgorithmNames);
@@ -62,10 +62,12 @@ namespace GostCryptography.Config
 			AddAlgorithm<Gost_R3411_94_HMAC>(Gost_R3411_94_HMAC.KnownAlgorithmNames);
 			AddAlgorithm<Gost_R3411_2012_256_HMAC>(Gost_R3411_2012_256_HMAC.KnownAlgorithmNames);
 			AddAlgorithm<Gost_R3411_2012_512_HMAC>(Gost_R3411_2012_512_HMAC.KnownAlgorithmNames);
-			AddAlgorithm<Gost_R3411_94_PRF>();
+			AddAlgorithm<Gost_R3411_94_PRF>(Gost_R3411_94_PRF.KnownAlgorithmNames);
+			AddAlgorithm<Gost_R3411_2012_256_PRF>(Gost_R3411_2012_256_PRF.KnownAlgorithmNames);
+			AddAlgorithm<Gost_R3411_2012_512_PRF>(Gost_R3411_2012_512_PRF.KnownAlgorithmNames);
 
 			AddAlgorithm<Gost_28147_89_SymmetricAlgorithm>(Gost_28147_89_SymmetricAlgorithm.KnownAlgorithmNames);
-			AddAlgorithm<Gost_28147_89_ImitHashAlgorithm>();
+			AddAlgorithm<Gost_28147_89_ImitHashAlgorithm>(Gost_28147_89_ImitHashAlgorithm.KnownAlgorithmNames);
 
 			AddAlgorithm<Gost_R3410_2001_AsymmetricAlgorithm>();
 			AddAlgorithm<Gost_R3410_2012_256_AsymmetricAlgorithm>();

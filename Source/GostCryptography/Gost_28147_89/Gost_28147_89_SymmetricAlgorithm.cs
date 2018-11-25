@@ -6,7 +6,6 @@ using System.Security.Permissions;
 
 using GostCryptography.Asn1.Gost.Gost_28147_89;
 using GostCryptography.Base;
-using GostCryptography.Gost_R3411;
 using GostCryptography.Native;
 using GostCryptography.Properties;
 
@@ -92,14 +91,19 @@ namespace GostCryptography.Gost_28147_89
 		/// Создает экземпляр <see cref="Gost_28147_89_SymmetricAlgorithm"/> на основе указанного пароля.
 		/// </summary>
 		[SecuritySafeCritical]
-		public static Gost_28147_89_SymmetricAlgorithm CreateFromPassword(GostHashAlgorithm hashAlgorithm, byte[] password)
+		public static Gost_28147_89_SymmetricAlgorithm CreateFromPassword(HashAlgorithm hashAlgorithm, byte[] password)
 		{
 			if (hashAlgorithm == null)
 			{
 				throw ExceptionUtility.ArgumentNull(nameof(hashAlgorithm));
 			}
 
-			if (!(hashAlgorithm is Gost_R3411_HashAlgorithm gostHashAlgorithm))
+			if (!(hashAlgorithm is IGostAlgorithm gostHashAlgorithm))
+			{
+				throw ExceptionUtility.ArgumentOutOfRange(nameof(hashAlgorithm));
+			}
+
+			if (!(hashAlgorithm is ISafeHandleProvider<SafeHashHandleImpl> hashHandleProvider))
 			{
 				throw ExceptionUtility.ArgumentOutOfRange(nameof(hashAlgorithm));
 			}
@@ -113,7 +117,7 @@ namespace GostCryptography.Gost_28147_89
 
 			var providerType = gostHashAlgorithm.ProviderType;
 			var providerHandle = CryptoApiHelper.GetProviderHandle(providerType);
-			var symKeyHandle = CryptoApiHelper.DeriveSymKey(providerHandle, gostHashAlgorithm.SafeHandle);
+			var symKeyHandle = CryptoApiHelper.DeriveSymKey(providerHandle, hashHandleProvider.SafeHandle);
 
 			return new Gost_28147_89_SymmetricAlgorithm(providerType, providerHandle, symKeyHandle);
 		}

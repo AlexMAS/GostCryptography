@@ -12,22 +12,16 @@ namespace GostCryptography.Gost_R3411
 	/// </summary>
 	public abstract class Gost_R3411_HMAC<THash> : GostHMAC where THash : GostHashAlgorithm, ISafeHandleProvider<SafeHashHandleImpl>
 	{
-		/// <summary>
-		/// Размер хэша.
-		/// </summary>
-		public const int DefaultHashSize = 256;
-
-
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		protected Gost_R3411_HMAC()
+		protected Gost_R3411_HMAC(int hashSize) : base(hashSize)
 		{
 			InitDefaults(new Gost_28147_89_SymmetricAlgorithm(ProviderType));
 		}
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		protected Gost_R3411_HMAC(ProviderTypes providerType) : base(providerType)
+		protected Gost_R3411_HMAC(ProviderTypes providerType, int hashSize) : base(providerType, hashSize)
 		{
 			InitDefaults(new Gost_28147_89_SymmetricAlgorithm(ProviderType));
 		}
@@ -36,9 +30,10 @@ namespace GostCryptography.Gost_R3411
 		/// Конструктор.
 		/// </summary>
 		/// <param name="keyAlgorithm">Алгоритм для вычисления HMAC.</param>
+		/// <param name="hashSize">Размер хэш-кода в битах.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		[SecuritySafeCritical]
-		protected Gost_R3411_HMAC(Gost_28147_89_SymmetricAlgorithmBase keyAlgorithm) : base(keyAlgorithm.ProviderType)
+		protected Gost_R3411_HMAC(Gost_28147_89_SymmetricAlgorithmBase keyAlgorithm, int hashSize) : base(keyAlgorithm.ProviderType, hashSize)
 		{
 			if (keyAlgorithm == null)
 			{
@@ -53,10 +48,9 @@ namespace GostCryptography.Gost_R3411
 		private void InitDefaults(Gost_28147_89_SymmetricAlgorithm keyAlgorithm)
 		{
 			HashName = typeof(THash).Name;
-			HashSizeValue = DefaultHashSize;
 
 			_keyAlgorithm = keyAlgorithm;
-			_hashHandle = CreateHashHMAC(keyAlgorithm.ProviderType, CryptoApiHelper.GetProviderHandle(keyAlgorithm.ProviderType), keyAlgorithm.InternalKeyHandle);
+			_hmacHandle = CreateHashHMAC(keyAlgorithm.ProviderType, CryptoApiHelper.GetProviderHandle(keyAlgorithm.ProviderType), keyAlgorithm.InternalKeyHandle);
 		}
 
 
@@ -68,7 +62,7 @@ namespace GostCryptography.Gost_R3411
 
 
 		[SecurityCritical]
-		private SafeHashHandleImpl _hashHandle;
+		private SafeHashHandleImpl _hmacHandle;
 		private Gost_28147_89_SymmetricAlgorithm _keyAlgorithm;
 
 
@@ -78,7 +72,7 @@ namespace GostCryptography.Gost_R3411
 		public SafeHashHandleImpl SafeHandle
 		{
 			[SecurityCritical]
-			get { return _hashHandle; }
+			get { return _hmacHandle; }
 		}
 
 
@@ -118,23 +112,23 @@ namespace GostCryptography.Gost_R3411
 		[SecuritySafeCritical]
 		public override void Initialize()
 		{
-			var hashHmacHandle = CreateHashHMAC(ProviderType, CryptoApiHelper.GetProviderHandle(ProviderType), _keyAlgorithm.InternalKeyHandle);
-			_hashHandle.TryDispose();
-			_hashHandle = hashHmacHandle;
+			var hmacHandle = CreateHashHMAC(ProviderType, CryptoApiHelper.GetProviderHandle(ProviderType), _keyAlgorithm.InternalKeyHandle);
+			_hmacHandle.TryDispose();
+			_hmacHandle = hmacHandle;
 		}
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
 		protected override void HashCore(byte[] data, int dataOffset, int dataLength)
 		{
-			CryptoApiHelper.HashData(_hashHandle, data, dataOffset, dataLength);
+			CryptoApiHelper.HashData(_hmacHandle, data, dataOffset, dataLength);
 		}
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
 		protected override byte[] HashFinal()
 		{
-			return CryptoApiHelper.EndHashData(_hashHandle);
+			return CryptoApiHelper.EndHashData(_hmacHandle);
 		}
 
 		/// <inheritdoc />
@@ -144,7 +138,7 @@ namespace GostCryptography.Gost_R3411
 			if (disposing)
 			{
 				_keyAlgorithm?.Clear();
-				_hashHandle.TryDispose();
+				_hmacHandle.TryDispose();
 			}
 
 			base.Dispose(disposing);
