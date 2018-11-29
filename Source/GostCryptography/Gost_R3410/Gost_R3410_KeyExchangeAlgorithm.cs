@@ -96,7 +96,7 @@ namespace GostCryptography.Gost_R3410
 				keyExchangeHandle = CryptoApiHelper.ImportAndMakeKeyExchange(_provHandle, _keyExchangeParameters, _keyHandle);
 				CryptoApiHelper.SetKeyParameterInt32(keyExchangeHandle, Constants.KP_ALGID, keyExchangeExportAlgId);
 
-				var symKeyHandle = keyExchangeAlgorithm.InternalKeyHandle;
+				var symKeyHandle = keyExchangeAlgorithm.GetSafeHandle();
 				keyExchangeInfo = CryptoApiHelper.ExportKeyExchange(symKeyHandle, keyExchangeHandle);
 			}
 			finally

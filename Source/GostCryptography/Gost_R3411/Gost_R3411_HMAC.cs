@@ -50,7 +50,7 @@ namespace GostCryptography.Gost_R3411
 			HashName = typeof(THash).Name;
 
 			_keyAlgorithm = keyAlgorithm;
-			_hmacHandle = CreateHashHMAC(keyAlgorithm.ProviderType, CryptoApiHelper.GetProviderHandle(keyAlgorithm.ProviderType), keyAlgorithm.InternalKeyHandle);
+			_hmacHandle = CreateHashHMAC(keyAlgorithm.ProviderType, CryptoApiHelper.GetProviderHandle(keyAlgorithm.ProviderType), keyAlgorithm.GetSafeHandle());
 		}
 
 
@@ -110,7 +110,7 @@ namespace GostCryptography.Gost_R3411
 		[SecuritySafeCritical]
 		public override void Initialize()
 		{
-			var hmacHandle = CreateHashHMAC(ProviderType, CryptoApiHelper.GetProviderHandle(ProviderType), _keyAlgorithm.InternalKeyHandle);
+			var hmacHandle = CreateHashHMAC(ProviderType, CryptoApiHelper.GetProviderHandle(ProviderType), _keyAlgorithm.GetSafeHandle());
 			_hmacHandle.TryDispose();
 			_hmacHandle = hmacHandle;
 		}

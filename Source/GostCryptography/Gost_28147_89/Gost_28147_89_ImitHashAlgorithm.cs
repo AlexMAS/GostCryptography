@@ -9,7 +9,7 @@ namespace GostCryptography.Gost_28147_89
 	/// <summary>
 	/// Реализация функции вычисления имитовставки по ГОСТ 28147-89.
 	/// </summary>
-	public class Gost_28147_89_ImitHashAlgorithm : Gost_28147_89_ImitHashAlgorithmBase, ISafeHandleProvider<SafeHashHandleImpl>
+	public sealed class Gost_28147_89_ImitHashAlgorithm : Gost_28147_89_ImitHashAlgorithmBase, ISafeHandleProvider<SafeHashHandleImpl>
 	{
 		/// <summary>
 		/// Размер имитовставки ГОСТ 28147-89.
@@ -79,36 +79,22 @@ namespace GostCryptography.Gost_28147_89
 		}
 
 
-		/// <summary>
-		/// Ключ симметричного шифрования.
-		/// </summary>
+		/// <inheritdoc />
 		public override byte[] Key
 		{
-			get
-			{
-				return _keyAlgorithm.Key;
-			}
-			set
-			{
-				_keyAlgorithm.Key = value;
-			}
+			[SecuritySafeCritical]
+			get => _keyAlgorithm.Key;
+			[SecuritySafeCritical]
+			set => _keyAlgorithm.Key = value;
 		}
 
-		/// <summary>
-		/// Алгоритм симметричного шифрования ключа.
-		/// </summary>
+		/// <inheritdoc />
 		public override Gost_28147_89_SymmetricAlgorithmBase KeyAlgorithm
 		{
 			[SecuritySafeCritical]
-			get
-			{
-				return Gost_28147_89_SymmetricAlgorithm.CreateFromKey(_keyAlgorithm);
-			}
+			get => Gost_28147_89_SymmetricAlgorithm.CreateFromKey(_keyAlgorithm);
 			[SecuritySafeCritical]
-			set
-			{
-				_keyAlgorithm = Gost_28147_89_SymmetricAlgorithm.CreateFromKey(value);
-			}
+			set => _keyAlgorithm = Gost_28147_89_SymmetricAlgorithm.CreateFromKey(value);
 		}
 
 
@@ -139,10 +125,10 @@ namespace GostCryptography.Gost_28147_89
 		[SecurityCritical]
 		private void InitHash()
 		{
-			var hProv = CryptoApiHelper.GetProviderHandle(ProviderType);
-			var hHash = CryptoApiHelper.CreateHashImit(hProv, _keyAlgorithm.InternalKeyHandle);
+			var providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType);
+			var hashHandle = CryptoApiHelper.CreateHashImit(providerHandle, _keyAlgorithm.GetSafeHandle());
 
-			_hashHandle = hHash;
+			_hashHandle = hashHandle;
 		}
 
 		/// <inheritdoc />

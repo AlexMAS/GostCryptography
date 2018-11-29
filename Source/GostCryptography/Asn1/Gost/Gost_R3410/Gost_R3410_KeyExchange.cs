@@ -61,7 +61,7 @@ namespace GostCryptography.Asn1.Gost.Gost_R3410
 				EncryptionParamSet = keyTransport.TransportParams.EncryptionParamSet.Oid.Value,
 				EncryptedKey = keyTransport.SessionEncryptedKey.EncryptedKey.Value,
 				Mac = keyTransport.SessionEncryptedKey.MacKey.Value,
-				Ukm = keyTransport.TransportParams.Ukm.Value,
+				Ukm = keyTransport.TransportParams.Ukm.Value
 			};
 		}
 

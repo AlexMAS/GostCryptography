@@ -1,5 +1,5 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System;
+using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -9,63 +9,43 @@ using GostCryptography.Gost_28147_89;
 
 using NUnit.Framework;
 
-namespace GostCryptography.Tests.Encrypt
+namespace GostCryptography.Tests.Gost_28147_89
 {
 	/// <summary>
 	/// Шифрование и дешифрование данных с использованием случайного сессионного ключа.
 	/// </summary>
 	/// <remarks>
-	/// Тест имитирует обмен данными между условным отправителем, который шифрует заданный поток байт, и условным получателем, который дешифрует 
-	/// зашифрованный поток байт. Шифрация осуществляется с использованием случайного симметричного ключа, который в свою очередь шифруется 
-	/// с использованием открытого ключа получателя. Соответственно для дешифрации данных сначало расшифровывается случайный симметричный ключ 
+	/// Тест имитирует обмен данными между условным отправителем, который шифрует заданный поток байт, и условным получателем, который дешифрует
+	/// зашифрованный поток байт. Шифрация осуществляется с использованием случайного симметричного ключа, который в свою очередь шифруется
+	/// с использованием открытого ключа получателя. Соответственно для дешифрации данных сначала расшифровывается случайный симметричный ключ
 	/// с использованием закрытого ключа получателя.
 	/// </remarks>
 	[TestFixture(Description = "Шифрование и дешифрование данных с использованием случайного сессионного ключа")]
 	public sealed class EncryptDecryptSessionKeyTest
 	{
-		private GostAsymmetricAlgorithm _publicKey;
-		private GostAsymmetricAlgorithm _privateKey;
-
-		[SetUp]
-		public void SetUp()
+		private static readonly EncryptionTestCase[] TestCertificates =
 		{
-			var certificate = TestConfig.FindGostCertificate(c => c.IsGost_R3410_2012_256());
+			new EncryptionTestCase("ГОСТ Р 34.10-2001", c => c.IsGost_R3410_2001()),
+			new EncryptionTestCase("ГОСТ Р 34.10-2012/256", c => c.IsGost_R3410_2012_256()),
+			new EncryptionTestCase("ГОСТ Р 34.10-2012/512", c => c.IsGost_R3410_2012_512())
+		};
 
-			// Отправитель имеет открытый асимметричный ключ для шифрации сессионного ключа
-			_publicKey = (GostAsymmetricAlgorithm)certificate.GetPublicKeyAlgorithm();
-
-			// Получатель имеет закрытый асимметричный ключ для дешифрации сессионного ключа
-			_privateKey = (GostAsymmetricAlgorithm)certificate.GetPrivateKeyAlgorithm();
-		}
-
-		[TearDown]
-		public void TearDown()
-		{
-			try
-			{
-				_publicKey.Dispose();
-			}
-			finally
-			{
-				_publicKey = null;
-			}
-
-			try
-			{
-				_privateKey.Dispose();
-			}
-			finally
-			{
-				_privateKey = null;
-			}
-		}
 
 		[Test]
-		public void ShouldEncryptAndDecrypt()
+		[TestCaseSource(nameof(TestCertificates))]
+		public void ShouldEncryptAndDecrypt(EncryptionTestCase testCase)
 		{
 			// Given
-			var publicKey = _publicKey;
-			var privateKey = _privateKey;
+
+			var certificate = TestConfig.FindGostCertificate(testCase.Filter);
+
+			if (certificate == null)
+			{
+				Assert.Ignore("Certificate not found.");
+			}
+
+			var privateKey = (GostAsymmetricAlgorithm)certificate.GetPrivateKeyAlgorithm();
+			var publicKey = (GostAsymmetricAlgorithm)certificate.GetPublicKeyAlgorithm(privateKey.ProviderType);
 			var dataStream = CreateDataStream();
 
 			// When
@@ -73,14 +53,14 @@ namespace GostCryptography.Tests.Encrypt
 			var decryptedDataStream = ReceiveEncryptedDataStream(privateKey, encryptedDataStream, iv, sessionKey);
 
 			// Then
-			Assert.IsTrue(CompareDataStream(dataStream, decryptedDataStream));
+			Assert.That(dataStream, Is.EqualTo(decryptedDataStream));
 		}
 
 		private static Stream CreateDataStream()
 		{
 			// Некоторый поток байт
 
-			return new MemoryStream(Encoding.UTF8.GetBytes("Some data for encrypt..."));
+			return new MemoryStream(Encoding.UTF8.GetBytes("Some data to encrypt..."));
 		}
 
 		private static Stream SendEncryptedDataStream(GostAsymmetricAlgorithm publicKey, Stream dataStream, out byte[] iv, out byte[] sessionKey)
@@ -135,22 +115,25 @@ namespace GostCryptography.Tests.Encrypt
 			return decryptedDataStream;
 		}
 
-		private static bool CompareDataStream(Stream expected, Stream actual)
+
+		public class EncryptionTestCase
 		{
-			if (expected.Length == actual.Length)
+			public EncryptionTestCase(string name, Predicate<X509Certificate2> filter)
 			{
-				expected.Position = 0;
-				var expectedBytes = new byte[expected.Length];
-				expected.Read(expectedBytes, 0, expectedBytes.Length);
-
-				actual.Position = 0;
-				var actualBytes = new byte[actual.Length];
-				actual.Read(actualBytes, 0, actualBytes.Length);
-
-				return expectedBytes.SequenceEqual(actualBytes);
+				Name = name;
+				Filter = filter;
 			}
 
-			return false;
+
+			public readonly string Name;
+
+			public readonly Predicate<X509Certificate2> Filter;
+
+
+			public override string ToString()
+			{
+				return Name;
+			}
 		}
 	}
 }

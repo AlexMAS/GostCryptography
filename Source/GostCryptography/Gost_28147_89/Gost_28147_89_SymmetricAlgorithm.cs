@@ -12,7 +12,7 @@ namespace GostCryptography.Gost_28147_89
 	/// <summary>
 	/// Реализация алгоритма симметричного шифрования по ГОСТ 28147-89.
 	/// </summary>
-	public class Gost_28147_89_SymmetricAlgorithm : Gost_28147_89_SymmetricAlgorithmBase
+	public sealed class Gost_28147_89_SymmetricAlgorithm : Gost_28147_89_SymmetricAlgorithmBase, ISafeHandleProvider<SafeKeyHandleImpl>
 	{
 		/// <summary>
 		/// Наименование алгоритма шифрования ГОСТ 28147-89.
@@ -41,9 +41,9 @@ namespace GostCryptography.Gost_28147_89
 
 
 		[SecurityCritical]
-		internal Gost_28147_89_SymmetricAlgorithm(ProviderTypes providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle) : base(providerType)
+		internal Gost_28147_89_SymmetricAlgorithm(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl keyHandle) : base(providerType)
 		{
-			_provHandle = provHandle.DangerousAddRef();
+			_providerHandle = providerHandle.DangerousAddRef();
 			_keyHandle = CryptoApiHelper.DuplicateKey(keyHandle);
 
 			if (CryptoApiHelper.GetKeyParameterInt32(_keyHandle, Constants.KP_ALGID) != Constants.CALG_G28147)
@@ -59,7 +59,7 @@ namespace GostCryptography.Gost_28147_89
 			Mode = CipherMode.CFB;
 			Padding = PaddingMode.None;
 
-			_provHandle = SafeProvHandleImpl.InvalidHandle;
+			_providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
 			_keyHandle = SafeKeyHandleImpl.InvalidHandle;
 		}
 
@@ -81,7 +81,7 @@ namespace GostCryptography.Gost_28147_89
 			}
 
 			return (keyAlgorithm is Gost_28147_89_SymmetricAlgorithm sessionKey)
-				? new Gost_28147_89_SymmetricAlgorithm(keyAlgorithm.ProviderType, sessionKey.InternalProvHandle, sessionKey.InternalKeyHandle)
+				? new Gost_28147_89_SymmetricAlgorithm(keyAlgorithm.ProviderType, sessionKey._providerHandle, sessionKey.GetSafeHandle())
 				: new Gost_28147_89_SymmetricAlgorithm(keyAlgorithm.ProviderType) { Key = keyAlgorithm.Key };
 		}
 
@@ -147,34 +147,14 @@ namespace GostCryptography.Gost_28147_89
 
 
 		[SecurityCritical]
-		private SafeProvHandleImpl _provHandle;
+		private SafeProvHandleImpl _providerHandle;
 
 		[SecurityCritical]
 		private SafeKeyHandleImpl _keyHandle;
 
 
-		/// <summary>
-		/// Приватный дескриптор провайдера.
-		/// </summary>
-		internal SafeProvHandleImpl InternalProvHandle
-		{
-			[SecurityCritical]
-			get
-			{
-				if (_keyHandle.IsInvalid)
-				{
-					GenerateKey();
-				}
-
-				return _provHandle;
-			}
-		}
-
-
-		/// <summary>
-		/// Приватный дескриптор ключа симметричного шифрования.
-		/// </summary>
-		internal SafeKeyHandleImpl InternalKeyHandle
+		/// <inheritdoc />
+		SafeKeyHandleImpl ISafeHandleProvider<SafeKeyHandleImpl>.SafeHandle
 		{
 			[SecurityCritical]
 			get
@@ -202,20 +182,17 @@ namespace GostCryptography.Gost_28147_89
 		public override int KeySize
 		{
 			[SecuritySafeCritical]
-			get
-			{
-				return base.KeySize;
-			}
+			get { return base.KeySize; }
 			[SecuritySafeCritical]
 			set
 			{
 				base.KeySize = value;
 
 				_keyHandle.TryDispose();
-				_provHandle.TryDispose();
+				_providerHandle.TryDispose();
 
 				_keyHandle = SafeKeyHandleImpl.InvalidHandle;
-				_provHandle = SafeProvHandleImpl.InvalidHandle;
+				_providerHandle = SafeProvHandleImpl.InvalidHandle;
 			}
 		}
 
@@ -229,13 +206,13 @@ namespace GostCryptography.Gost_28147_89
 			var provider = CreateFromPassword(hashAlgorithm, password);
 
 			_keyHandle.TryDispose();
-			_provHandle.TryDispose();
+			_providerHandle.TryDispose();
 
 			_keyHandle = provider._keyHandle;
-			_provHandle = provider._provHandle;
+			_providerHandle = provider._providerHandle;
 
 			provider._keyHandle = SafeKeyHandleImpl.InvalidHandle;
-			provider._provHandle = SafeProvHandleImpl.InvalidHandle;
+			provider._providerHandle = SafeProvHandleImpl.InvalidHandle;
 		}
 
 
@@ -250,7 +227,7 @@ namespace GostCryptography.Gost_28147_89
 
 			var hashHandle = hashHadnleProvider.SafeHandle;
 
-			CryptoApiHelper.HashKeyExchange(hashHandle, InternalKeyHandle);
+			CryptoApiHelper.HashKeyExchange(hashHandle, this.GetSafeHandle());
 
 			return CryptoApiHelper.EndHashData(hashHandle);
 		}
@@ -268,8 +245,7 @@ namespace GostCryptography.Gost_28147_89
 		[SecuritySafeCritical]
 		public override void GenerateKey()
 		{
-			_provHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
-			_keyHandle = CryptoApiHelper.GenerateKey(_provHandle, Constants.CALG_G28147, CspProviderFlags.NoFlags);
+			_keyHandle = CryptoApiHelper.GenerateKey(_providerHandle, Constants.CALG_G28147, CspProviderFlags.NoFlags);
 
 			KeyValue = null;
 			KeySizeValue = DefaultKeySize;
@@ -280,7 +256,7 @@ namespace GostCryptography.Gost_28147_89
 		[SecuritySafeCritical]
 		public override ICryptoTransform CreateEncryptor()
 		{
-			var hKey = CryptoApiHelper.DuplicateKey(InternalKeyHandle);
+			var hKey = CryptoApiHelper.DuplicateKey(this.GetSafeHandle());
 
 			return CreateCryptoTransform(hKey, IV, Gost_28147_89_CryptoTransformMode.Encrypt);
 		}
@@ -297,7 +273,7 @@ namespace GostCryptography.Gost_28147_89
 		[SecuritySafeCritical]
 		public override ICryptoTransform CreateDecryptor()
 		{
-			var hKey = CryptoApiHelper.DuplicateKey(InternalKeyHandle);
+			var hKey = CryptoApiHelper.DuplicateKey(this.GetSafeHandle());
 
 			return CreateCryptoTransform(hKey, IV, Gost_28147_89_CryptoTransformMode.Decrypt);
 		}
@@ -394,7 +370,7 @@ namespace GostCryptography.Gost_28147_89
 			var keyExchangeInfo = new Gost_28147_89_KeyExchangeInfo();
 			keyExchangeInfo.Decode(encodedKeyExchangeData);
 
-			using (var keyHandle = CryptoApiHelper.DuplicateKey(InternalKeyHandle))
+			using (var keyHandle = CryptoApiHelper.DuplicateKey(this.GetSafeHandle()))
 			{
 				CryptoApiHelper.SetKeyParameterInt32(keyHandle, Constants.KP_ALGID, keyExchangeExportAlgId);
 
@@ -446,9 +422,9 @@ namespace GostCryptography.Gost_28147_89
 		[SecurityCritical]
 		private byte[] EncodePrivateKeyInternal(Gost_28147_89_SymmetricAlgorithm sessionKey, int keyExchangeExportAlgId)
 		{
-			var hSessionKey = sessionKey.InternalKeyHandle;
+			var hSessionKey = sessionKey.GetSafeHandle();
 
-			using (var keyHandle = CryptoApiHelper.DuplicateKey(InternalKeyHandle))
+			using (var keyHandle = CryptoApiHelper.DuplicateKey(this.GetSafeHandle()))
 			{
 				CryptoApiHelper.SetKeyParameterInt32(keyHandle, Constants.KP_ALGID, keyExchangeExportAlgId);
 				CryptoApiHelper.SetKeyParameter(keyHandle, Constants.KP_IV, IV);
@@ -465,7 +441,7 @@ namespace GostCryptography.Gost_28147_89
 		protected override void Dispose(bool disposing)
 		{
 			_keyHandle.TryDispose();
-			_provHandle.TryDispose();
+			_providerHandle.TryDispose();
 
 			base.Dispose(disposing);
 		}

@@ -14,4 +14,20 @@ namespace GostCryptography.Native
 		/// </summary>
 		T SafeHandle { [SecurityCritical] get; }
 	}
+
+
+	/// <summary>
+	/// Методы расширения для <see cref="ISafeHandleProvider{T}"/>.
+	/// </summary>
+	public static class SafeHandleProviderExtensions
+	{
+		/// <summary>
+		/// Возвращает дескриптор объекта.
+		/// </summary>
+		[SecuritySafeCritical]
+		public static T GetSafeHandle<T>(this ISafeHandleProvider<T> provider) where T : SafeHandle
+		{
+			return provider.SafeHandle;
+		}
+	}
 }
