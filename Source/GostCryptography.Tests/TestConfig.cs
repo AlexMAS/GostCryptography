@@ -2,12 +2,19 @@
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
-using GostCryptography.Reflection;
+using GostCryptography.Base;
 
 namespace GostCryptography.Tests
 {
-	static class TestCertificates
+	static class TestConfig
 	{
+		public const ProviderTypes ProviderType = ProviderTypes.VipNet;
+
+		public const ProviderTypes ProviderType_2012_512 = ProviderTypes.VipNet_2012_512;
+
+		public const ProviderTypes ProviderType_2012_1024 = ProviderTypes.VipNet_2012_1024;
+
+
 		/// <summary>
 		/// Имя хранилища для поиска тестового сертификата.
 		/// </summary>

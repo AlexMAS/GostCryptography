@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using System.Security;
 
 namespace GostCryptography.Native
 {
@@ -11,6 +12,6 @@ namespace GostCryptography.Native
 		/// <summary>
 		/// Возвращает дескриптор объекта.
 		/// </summary>
-		T SafeHandle { get; }
+		T SafeHandle { [SecurityCritical] get; }
 	}
 }

@@ -30,7 +30,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 		public void ShouldEncryptXml()
 		{
 			// Given
-			var certificates = new[] { TestCertificates.GetCertificate() };
+			var certificates = new[] { TestConfig.GetCertificate() };
 			var xmlDocument = CreateXmlDocument();
 			var expectedXml = xmlDocument.OuterXml;
 
@@ -183,7 +183,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 
 			GostAsymmetricAlgorithm privateKey = null;
 
-			var store = new X509Store(TestCertificates.CertStoreName, TestCertificates.CertStoreLocation);
+			var store = new X509Store(TestConfig.CertStoreName, TestConfig.CertStoreLocation);
 			store.Open(OpenFlags.OpenExistingOnly | OpenFlags.ReadOnly);
 			var storeCertificates = store.Certificates;
 			store.Close();

@@ -114,12 +114,12 @@ namespace GostCryptography.Gost_R3411
 		[SecuritySafeCritical]
 		public Gost_28147_89_SymmetricAlgorithmBase DeriveKey()
 		{
-			// TODO: Dispose HMAC?
-
-			var hmac = CreateHMAC(_key);
 			var randomPassword = GenerateNextBytes();
 
-			return Gost_28147_89_SymmetricAlgorithm.CreateFromPassword(hmac, randomPassword);
+			using (var hmac = CreateHMAC(_key))
+			{
+				return Gost_28147_89_SymmetricAlgorithm.CreateFromPassword(hmac, randomPassword);
+			}
 		}
 
 		/// <summary>

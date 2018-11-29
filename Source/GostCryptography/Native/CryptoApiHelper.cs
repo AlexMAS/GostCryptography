@@ -221,23 +221,23 @@ namespace GostCryptography.Native
 
 		public static SafeHashHandleImpl CreateHashHMAC_94(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle)
 		{
-			var hmacAlgId = providerType.IsVipNet() ? Constants.CALG_GR3411_HMAC34 : Constants.CALG_GR3411_HMAC;
-			return CreateHashHMAC(providerType, providerHandle, symKeyHandle, hmacAlgId);
+			var hmacAlgId = providerType.IsVipNet() ? Constants.CALG_GR3411 : Constants.CALG_GR3411_HMAC;
+			return CreateHashHMAC(providerHandle, symKeyHandle, hmacAlgId);
 		}
 
 		public static SafeHashHandleImpl CreateHashHMAC_2012_256(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle)
 		{
-			var hmacAlgId = providerType.IsVipNet() ? Constants.CALG_GR3411_HMAC34 : Constants.CALG_GR3411_2012_256_HMAC;
-			return CreateHashHMAC(providerType, providerHandle, symKeyHandle, hmacAlgId);
+			var hmacAlgId = providerType.IsVipNet() ? Constants.CALG_GR3411_2012_256 : Constants.CALG_GR3411_2012_256_HMAC;
+			return CreateHashHMAC(providerHandle, symKeyHandle, hmacAlgId);
 		}
 
 		public static SafeHashHandleImpl CreateHashHMAC_2012_512(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle)
 		{
-			var hmacAlgId = providerType.IsVipNet() ? Constants.CALG_GR3411_HMAC34 : Constants.CALG_GR3411_2012_512_HMAC;
-			return CreateHashHMAC(providerType, providerHandle, symKeyHandle, hmacAlgId);
+			var hmacAlgId = providerType.IsVipNet() ? Constants.CALG_GR3411_2012_512 : Constants.CALG_GR3411_2012_512_HMAC;
+			return CreateHashHMAC(providerHandle, symKeyHandle, hmacAlgId);
 		}
 
-		private static SafeHashHandleImpl CreateHashHMAC(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle, int hmacAlgId)
+		private static SafeHashHandleImpl CreateHashHMAC(SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle, int hmacAlgId)
 		{
 			var hashHmacHandle = SafeHashHandleImpl.InvalidHandle;
 

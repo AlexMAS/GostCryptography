@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Security;
 using System.Security.Cryptography;
-using System.Security.Permissions;
 
 using GostCryptography.Asn1.Gost.Gost_28147_89;
 using GostCryptography.Base;
@@ -172,16 +170,6 @@ namespace GostCryptography.Gost_28147_89
 			}
 		}
 
-		/// <summary>
-		/// Дескрипор провайдера.
-		/// </summary>
-		public IntPtr ProviderHandle
-		{
-			[SecurityCritical]
-			[SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
-			get { return InternalProvHandle.DangerousGetHandle(); }
-		}
-
 
 		/// <summary>
 		/// Приватный дескриптор ключа симметричного шифрования.
@@ -200,23 +188,8 @@ namespace GostCryptography.Gost_28147_89
 			}
 		}
 
-		/// <summary>
-		/// Дескриптор ключа симметричного шифрования.
-		/// </summary>
-		public IntPtr KeyHandle
-		{
-			[SecurityCritical]
-			[SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
-			get { return InternalKeyHandle.DangerousGetHandle(); }
-		}
 
-
-		/// <summary>
-		/// Ключ симметричного шифрования.
-		/// </summary>
-		/// <remarks>
-		/// Если ключ не был задан, то при получении ключа он будет сгенерирован функцией <see cref="GenerateKey()"/>.
-		/// </remarks>
+		/// <inheritdoc />
 		public override byte[] Key
 		{
 			[SecuritySafeCritical]
@@ -225,13 +198,14 @@ namespace GostCryptography.Gost_28147_89
 			set { throw ExceptionUtility.NotSupported(Resources.SymmetryImportBulkKeyNotSupported); }
 		}
 
-		/// <summary>
-		/// Размер ключа симметричного шифрования.
-		/// </summary>
+		/// <inheritdoc />
 		public override int KeySize
 		{
 			[SecuritySafeCritical]
-			get { return base.KeySize; }
+			get
+			{
+				return base.KeySize;
+			}
 			[SecuritySafeCritical]
 			set
 			{
@@ -265,10 +239,7 @@ namespace GostCryptography.Gost_28147_89
 		}
 
 
-		/// <summary>
-		/// Хэширует секретный ключ.
-		/// </summary>
-		/// <exception cref="ArgumentException"></exception>
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		public override byte[] ComputeHash(HashAlgorithm hash)
 		{
@@ -285,9 +256,7 @@ namespace GostCryptography.Gost_28147_89
 		}
 
 
-		/// <summary>
-		/// Генерация случайной синхропосылки.
-		/// </summary>
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		public override void GenerateIV()
 		{
@@ -295,9 +264,7 @@ namespace GostCryptography.Gost_28147_89
 			CryptoApiHelper.GetRandomNumberGenerator(ProviderType).GetBytes(IVValue);
 		}
 
-		/// <summary>
-		/// Генерация случайного ключа.
-		/// </summary>
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		public override void GenerateKey()
 		{
@@ -309,9 +276,7 @@ namespace GostCryptography.Gost_28147_89
 		}
 
 
-		/// <summary>
-		/// Создание объекта криптографического преобразования (шифратора).
-		/// </summary>
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		public override ICryptoTransform CreateEncryptor()
 		{
@@ -320,10 +285,7 @@ namespace GostCryptography.Gost_28147_89
 			return CreateCryptoTransform(hKey, IV, Gost_28147_89_CryptoTransformMode.Encrypt);
 		}
 
-		/// <summary>
-		/// Создание объекта криптографического преобразования (шифратора) с заданным ключом и синхропосылкой.
-		/// </summary>
-		/// <exception cref="NotSupportedException"></exception>
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		public override ICryptoTransform CreateEncryptor(byte[] key, byte[] iv)
 		{
@@ -331,9 +293,7 @@ namespace GostCryptography.Gost_28147_89
 		}
 
 
-		/// <summary>
-		/// Создание объекта криптографического преобразования (дешифратора).
-		/// </summary>
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		public override ICryptoTransform CreateDecryptor()
 		{
@@ -342,10 +302,7 @@ namespace GostCryptography.Gost_28147_89
 			return CreateCryptoTransform(hKey, IV, Gost_28147_89_CryptoTransformMode.Decrypt);
 		}
 
-		/// <summary>
-		/// Создание объекта криптографического преобразования (дешифратора) с заданным ключом и синхропосылкой.
-		/// </summary>
-		/// <exception cref="NotSupportedException"></exception>
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		public override ICryptoTransform CreateDecryptor(byte[] key, byte[] iv)
 		{
@@ -356,6 +313,9 @@ namespace GostCryptography.Gost_28147_89
 		[SecurityCritical]
 		private ICryptoTransform CreateCryptoTransform(SafeKeyHandleImpl hKey, byte[] iv, Gost_28147_89_CryptoTransformMode transformMode)
 		{
+			// TODO: Refactor this!
+			// NOTE: The params order is important!
+
 			if (hKey == null)
 			{
 				hKey = CryptoApiHelper.GenerateKey(CryptoApiHelper.GetProviderHandle(ProviderType), Constants.CALG_G28147, CspProviderFlags.NoFlags);
@@ -373,6 +333,9 @@ namespace GostCryptography.Gost_28147_89
 				throw ExceptionUtility.CryptographicException(Resources.InvalidPaddingMode);
 			}
 
+			// Установка KP_MODE
+			keyParameters.Add(Constants.KP_MODE, ModeValue);
+
 			// Установка KP_PADDING
 			keyParameters.Add(Constants.KP_PADDING, Constants.ZERO_PADDING);
 
@@ -380,9 +343,6 @@ namespace GostCryptography.Gost_28147_89
 			{
 				throw ExceptionUtility.CryptographicException(Resources.IncorrectFeedbackSize);
 			}
-
-			// Установка KP_MODE
-			keyParameters.Add(Constants.KP_MODE, ModeValue);
 
 			// Установка KP_IV
 			if (ModeValue != CipherMode.ECB)
@@ -405,12 +365,7 @@ namespace GostCryptography.Gost_28147_89
 		}
 
 
-		/// <summary>
-		/// Импортирует (дешифрует) секретный ключ.
-		/// </summary>
-		/// <param name="encodedKeyExchangeData">Зашифрованный секретный ключ.</param>
-		/// <param name="keyExchangeExportMethod">Алгоритм экспорта общего секретного ключа.</param>
-		/// <exception cref="ArgumentNullException"></exception>
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		public override SymmetricAlgorithm DecodePrivateKey(byte[] encodedKeyExchangeData, GostKeyExchangeExportMethod keyExchangeExportMethod)
 		{
@@ -449,12 +404,7 @@ namespace GostCryptography.Gost_28147_89
 			}
 		}
 
-		/// <summary>
-		/// Экспортирует (шифрует) секретный ключ.
-		/// </summary>
-		/// <param name="keyExchangeAlgorithm">Алгоритм симметричного шифрования.</param>
-		/// <param name="keyExchangeExportMethod">Алгоритм экспорта ключа.</param>
-		/// <exception cref="ArgumentNullException"></exception>
+		/// <inheritdoc />
 		[SecuritySafeCritical]
 		public override byte[] EncodePrivateKey(Gost_28147_89_SymmetricAlgorithmBase keyExchangeAlgorithm, GostKeyExchangeExportMethod keyExchangeExportMethod)
 		{

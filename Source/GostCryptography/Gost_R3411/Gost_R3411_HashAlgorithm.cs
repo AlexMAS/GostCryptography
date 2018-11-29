@@ -44,10 +44,8 @@ namespace GostCryptography.Gost_R3411
 		[SecurityCritical]
 		private SafeHashHandleImpl _hashHandle;
 
-		/// <summary>
-		/// Дескриптор функции хэширования.
-		/// </summary>
-		public SafeHashHandleImpl SafeHandle
+		/// <inheritdoc />
+		SafeHashHandleImpl ISafeHandleProvider<SafeHashHandleImpl>.SafeHandle
 		{
 			[SecurityCritical]
 			get { return _hashHandle; }

@@ -2,52 +2,35 @@
 using System.Linq;
 using System.Text;
 
+using GostCryptography.Base;
 using GostCryptography.Gost_28147_89;
 
 using NUnit.Framework;
 
-namespace GostCryptography.Tests.Hash
+namespace GostCryptography.Tests.Gost_28147_89
 {
 	/// <summary>
-	/// Вычисление имитовставки и ее проверка на базе общего симметричного ключа.
+	/// Вычисление имитовставки на базе общего симметричного ключа ГОСТ 28147-89.
 	/// </summary>
 	/// <remarks>
-	/// Тест создает поток байт, вычисляет имитовставку на базе общего симметричного ключа, 
-	/// добавляя ее в выходной поток, а затем проверяет полученную имитовставку. 
+	/// Тест выполняет подпись и проверку подписи потока байт с использованием имитовставки.
 	/// </remarks>
-	[TestFixture(Description = "Вычисление имитовставки и ее проверка на базе общего симметричного ключа")]
-	public sealed class ImitHashTest
+	[TestFixture(Description = "Вычисление имитовставки на базе общего симметричного ключа ГОСТ 28147-89")]
+	public class Gost_28147_89_ImitHashAlgorithmTest
 	{
-		private Gost_28147_89_SymmetricAlgorithmBase _sharedKey;
-
-		[SetUp]
-		public void SetUp()
-		{
-			_sharedKey = new Gost_28147_89_SymmetricAlgorithm();
-		}
-
-		[TearDown]
-		public void TearDown()
-		{
-			try
-			{
-				_sharedKey.Dispose();
-			}
-			finally
-			{
-				_sharedKey = null;
-			}
-		}
-
 		[Test]
-		public void ShouldComputeImitHash()
+		[TestCase(TestConfig.ProviderType)]
+		[TestCase(TestConfig.ProviderType_2012_512)]
+		[TestCase(TestConfig.ProviderType_2012_1024)]
+		public void ShouldComputeImitHash(ProviderTypes providerType)
 		{
 			// Given
 			var dataStream = CreateDataStream();
+			var sharedKey = new Gost_28147_89_SymmetricAlgorithm(providerType);
 
 			// When
-			var imitDataStream = CreateImitDataStream(_sharedKey, dataStream);
-			var isValidImitDataStream = VerifyImitDataStream(_sharedKey, imitDataStream);
+			var imitDataStream = CreateImitDataStream(sharedKey, dataStream);
+			var isValidImitDataStream = VerifyImitDataStream(sharedKey, imitDataStream);
 
 			// Then
 			Assert.IsTrue(isValidImitDataStream);
@@ -57,7 +40,7 @@ namespace GostCryptography.Tests.Hash
 		{
 			// Некоторый поток байт
 
-			return new MemoryStream(Encoding.UTF8.GetBytes("Some data for hash..."));
+			return new MemoryStream(Encoding.UTF8.GetBytes("Some data for imit..."));
 		}
 
 		private static Stream CreateImitDataStream(Gost_28147_89_SymmetricAlgorithmBase sharedKey, Stream dataStream)

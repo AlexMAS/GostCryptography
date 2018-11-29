@@ -73,17 +73,17 @@ namespace GostCryptography.Gost_28147_89
 							CryptoApiHelper.SetKeyParameter(_keyHandle, keyParameterId, iv);
 						}
 						break;
-					case Constants.KP_PADDING:
-						{
-							if (providerType.IsVipNet())
-							{
-								CryptoApiHelper.SetKeyParameterInt32(_keyHandle, keyParameterId, (int)keyParameterValue);
-							}
-						}
-						break;
 					case Constants.KP_MODE:
 						{
 							CryptoApiHelper.SetKeyParameterInt32(_keyHandle, keyParameterId, (int)keyParameterValue);
+						}
+						break;
+					case Constants.KP_PADDING:
+						{
+							if (!providerType.IsVipNet())
+							{
+								CryptoApiHelper.SetKeyParameterInt32(_keyHandle, keyParameterId, (int)keyParameterValue);
+							}
 						}
 						break;
 				}
@@ -279,6 +279,11 @@ namespace GostCryptography.Gost_28147_89
 		{
 			Dispose(true);
 			GC.SuppressFinalize(this);
+		}
+
+		~Gost_28147_89_CryptoTransform()
+		{
+			Dispose(false);
 		}
 	}
 }

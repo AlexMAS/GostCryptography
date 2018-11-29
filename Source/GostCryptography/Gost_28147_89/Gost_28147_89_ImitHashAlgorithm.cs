@@ -71,10 +71,8 @@ namespace GostCryptography.Gost_28147_89
 		public override string AlgorithmName => AlgorithmNameValue;
 
 
-		/// <summary>
-		/// Дескриптор функции хэширования.
-		/// </summary>
-		public SafeHashHandleImpl SafeHandle
+		/// <inheritdoc />
+		SafeHashHandleImpl ISafeHandleProvider<SafeHashHandleImpl>.SafeHandle
 		{
 			[SecurityCritical]
 			get { return _hashHandle; }

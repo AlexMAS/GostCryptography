@@ -29,7 +29,7 @@ namespace GostCryptography.Tests.Encrypt
 		[SetUp]
 		public void SetUp()
 		{
-			var certificate = TestCertificates.FindGostCertificate(c => c.IsGost_R3410_2012_256());
+			var certificate = TestConfig.FindGostCertificate(c => c.IsGost_R3410_2012_256());
 
 			// Отправитель имеет открытый асимметричный ключ для шифрации сессионного ключа
 			_publicKey = (GostAsymmetricAlgorithm)certificate.GetPublicKeyAlgorithm();

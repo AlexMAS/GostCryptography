@@ -26,7 +26,7 @@ namespace GostCryptography.Tests.Sign
 		public void ShouldSignDataStream()
 		{
 			// Given
-			var certificate = TestCertificates.GetCertificate();
+			var certificate = TestConfig.GetCertificate();
 			var privateKey = certificate.GetPrivateKeyAlgorithm();
 			var publicKey = certificate.GetPrivateKeyAlgorithm();
 			var dataStream = CreateDataStream();

@@ -42,9 +42,16 @@
   <ItemGroup>
     <Compile Include="Encrypt\EncryptDecryptSessionKeyTest.cs" />
     <Compile Include="Encrypt\EncryptDecryptSharedKeyTest.cs" />
-    <Compile Include="Hash\HashTest.cs" />
-    <Compile Include="Hash\HmacTest.cs" />
-    <Compile Include="Hash\ImitHashTest.cs" />
+    <Compile Include="Gost_28147_89\Gost_28147_89_ImitHashAlgorithmTest.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_2012_256_HashAlgorithmTest.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_2012_256_HMACTest.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_2012_256_PRFTest.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_2012_512_HMACTest.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_2012_512_PRFTest.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_94_HashAlgorithmTest.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_94_HMACTest.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_2012_512_HashAlgorithmTest.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_94_PRFTest.cs" />
     <Compile Include="Pkcs\SignedCmsDetachedSignTest.cs" />
     <Compile Include="Pkcs\EnvelopedCmsEncryptTest.cs" />
     <Compile Include="Pkcs\SignedCmsSignTest.cs" />
@@ -56,7 +63,7 @@
     <Compile Include="Sign\SignDataStreamSignatureDescriptionTest.cs" />
     <Compile Include="Sign\SignDataStreamSignatureFormatterTest.cs" />
     <Compile Include="Sign\SignDataStreamCertificateTest.cs" />
-    <Compile Include="TestCertificates.cs" />
+    <Compile Include="TestConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Xml\Encrypt\EncryptedXmlSessionKey.cs" />
     <Compile Include="Xml\Encrypt\EncryptedXmlKeyContainerTest.cs" />

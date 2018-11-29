@@ -22,7 +22,7 @@ namespace GostCryptography.Tests.Pkcs
 		public void ShouldSign()
 		{
 			// Given
-			var certificate = TestCertificates.GetCertificate();
+			var certificate = TestConfig.GetCertificate();
 			var message = CreateMessage();
 
 			// When

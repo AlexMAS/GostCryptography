@@ -7,7 +7,6 @@ using System.Security.Permissions;
 
 using GostCryptography.Asn1.Gost.Gost_R3410;
 using GostCryptography.Base;
-using GostCryptography.Gost_R3411;
 using GostCryptography.Native;
 using GostCryptography.Properties;
 using GostCryptography.Reflection;
@@ -317,9 +316,10 @@ namespace GostCryptography.Gost_R3410
 				keyContainerPermission.Demand();
 			}
 
-			using (var hashAlgorithm = (Gost_R3411_HashAlgorithm)CreateHashAlgorithm())
+			using (var hashAlgorithm = CreateHashAlgorithm())
 			{
-				return CryptoApiHelper.SignValue(_providerHandle, hashAlgorithm.SafeHandle, _providerParameters.KeyNumber, hash);
+				var hashHandleProvider = (ISafeHandleProvider<SafeHashHandleImpl>)hashAlgorithm;
+				return CryptoApiHelper.SignValue(_providerHandle, hashHandleProvider.SafeHandle, _providerParameters.KeyNumber, hash);
 			}
 		}
 
@@ -381,9 +381,10 @@ namespace GostCryptography.Gost_R3410
 
 			GetKeyPair();
 
-			using (var hashAlgorithm = (Gost_R3411_HashAlgorithm)CreateHashAlgorithm())
+			using (var hashAlgorithm = CreateHashAlgorithm())
 			{
-				return CryptoApiHelper.VerifySign(_providerHandle, hashAlgorithm.SafeHandle, _keyHandle, hash, signature);
+				var hashHandleProvider = (ISafeHandleProvider<SafeHashHandleImpl>)hashAlgorithm;
+				return CryptoApiHelper.VerifySign(_providerHandle, hashHandleProvider.SafeHandle, _keyHandle, hash, signature);
 			}
 		}
 

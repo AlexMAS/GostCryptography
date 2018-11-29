@@ -10,7 +10,7 @@ namespace GostCryptography.Gost_R3411
 	/// <summary>
 	/// Базовый класс для всех реализаций Hash-based Message Authentication Code (HMAC) на базе алгоритма хэширования ГОСТ Р 34.11.
 	/// </summary>
-	public abstract class Gost_R3411_HMAC<THash> : GostHMAC where THash : GostHashAlgorithm, ISafeHandleProvider<SafeHashHandleImpl>
+	public abstract class Gost_R3411_HMAC<THash> : GostHMAC, ISafeHandleProvider<SafeHashHandleImpl> where THash : GostHashAlgorithm
 	{
 		/// <inheritdoc />
 		[SecuritySafeCritical]
@@ -66,10 +66,8 @@ namespace GostCryptography.Gost_R3411
 		private Gost_28147_89_SymmetricAlgorithm _keyAlgorithm;
 
 
-		/// <summary>
-		/// Дескриптор функции хэширования.
-		/// </summary>
-		public SafeHashHandleImpl SafeHandle
+		/// <inheritdoc />
+		SafeHashHandleImpl ISafeHandleProvider<SafeHashHandleImpl>.SafeHandle
 		{
 			[SecurityCritical]
 			get { return _hmacHandle; }

@@ -28,7 +28,7 @@ namespace GostCryptography.Tests.Xml.Sign
 		public void ShouldSignXml()
 		{
 			// Given
-			var signingCertificate = TestCertificates.GetCertificate();
+			var signingCertificate = TestConfig.GetCertificate();
 			var smevRequest = CreateSmevRequest();
 
 			// When

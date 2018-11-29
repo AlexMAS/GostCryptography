@@ -11,14 +11,19 @@ namespace GostCryptography.Gost_R3411
 	public sealed class Gost_R3411_2012_512_PRF : Gost_R3411_PRF<Gost_R3411_2012_512_HMAC>
 	{
 		/// <summary>
-		/// Наименование алгоритма PRF на базе ГОСТ Р 34.11-2012/512.
+		/// Наименование алгоритма PRF на базе ГОСТ Р 34.11-2012/512 для использования в протоколе WS-Trust.
 		/// </summary>
-		public const string AlgorithmNameValue = "urn:ietf:params:xml:ns:cpxmlsec:algorithms:prf-gostr34112012-512";
+		public const string WsTrustAlgorithmNameValue = "urn:ietf:params:xml:ns:cpxmlsec:algorithms:ck-p-gostr3411-2012-512";
+
+		/// <summary>
+		/// Наименование алгоритма PRF на базе ГОСТ Р 34.11-2012/512 для использования в протоколах на базе WS-SecureCoveration.
+		/// </summary>
+		public const string WsSecureCoverationAlgorithmNameValue = "urn:ietf:params:xml:ns:cpxmlsec:algorithms:dk-p-gostr3411-2012-512";
 
 		/// <summary>
 		/// Известные наименования алгоритма PRF на базе ГОСТ Р 34.11-2012/512.
 		/// </summary>
-		public static readonly string[] KnownAlgorithmNames = { AlgorithmNameValue };
+		public static readonly string[] KnownAlgorithmNames = { WsTrustAlgorithmNameValue, WsSecureCoverationAlgorithmNameValue };
 
 
 		/// <inheritdoc />
@@ -35,7 +40,7 @@ namespace GostCryptography.Gost_R3411
 
 
 		/// <inheritdoc />
-		public override string AlgorithmName => AlgorithmNameValue;
+		public override string AlgorithmName => WsTrustAlgorithmNameValue;
 
 
 		/// <inheritdoc />
