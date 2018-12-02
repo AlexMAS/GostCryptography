@@ -6,6 +6,7 @@ using GostCryptography.Asn1.Gost.Gost_R3410_2012_256;
 using GostCryptography.Base;
 using GostCryptography.Gost_R3411;
 using GostCryptography.Native;
+using GostCryptography.Properties;
 
 namespace GostCryptography.Gost_R3410
 {
@@ -84,6 +85,20 @@ namespace GostCryptography.Gost_R3410
 		public override GostHashAlgorithm CreateHashAlgorithm()
 		{
 			return new Gost_R3411_2012_256_HashAlgorithm(ProviderType);
+		}
+
+		/// <inheritdoc />
+		protected override void ValidateHashParameter(byte[] hash)
+		{
+			if (hash == null)
+			{
+				throw ExceptionUtility.ArgumentNull(nameof(hash));
+			}
+
+			if (hash.Length != Gost_R3411_2012_256_HashAlgorithm.DefaultHashSizeValue / 8)
+			{
+				throw ExceptionUtility.ArgumentOutOfRange(nameof(hash), Resources.InvalidHashSize, Gost_R3411_2012_256_HashAlgorithm.DefaultHashSizeValue / 8);
+			}
 		}
 
 

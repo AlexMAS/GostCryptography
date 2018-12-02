@@ -16,7 +16,7 @@ namespace GostCryptography.Gost_R3410
 	/// <inheritdoc cref="Gost_R3410_AsymmetricAlgorithmBase{TKeyParams,TKeyAlgorithm}" />
 	[SecurityCritical]
 	[SecuritySafeCritical]
-	public abstract class Gost_R3410_AsymmetricAlgorithm<TKeyParams, TKeyAlgorithm> : Gost_R3410_AsymmetricAlgorithmBase<TKeyParams, TKeyAlgorithm>, ICspAsymmetricAlgorithm
+	public abstract class Gost_R3410_AsymmetricAlgorithm<TKeyParams, TKeyAlgorithm> : Gost_R3410_AsymmetricAlgorithmBase<TKeyParams, TKeyAlgorithm>, ICspAsymmetricAlgorithm, ISafeHandleProvider<SafeKeyHandleImpl>
 		where TKeyParams : Gost_R3410_KeyExchangeParams
 		where TKeyAlgorithm : Gost_R3410_KeyExchangeAlgorithm
 	{
@@ -66,39 +66,12 @@ namespace GostCryptography.Gost_R3410
 
 		[SecurityCritical]
 		private SafeProvHandleImpl _providerHandle;
-
 		[SecurityCritical]
 		private volatile SafeKeyHandleImpl _keyHandle;
 
 
-		/// <summary>
-		/// Приватный дескриптор провайдера.
-		/// </summary>
-		internal SafeProvHandleImpl InternalProvHandle
-		{
-			[SecurityCritical]
-			get
-			{
-				GetKeyPair();
-
-				return _providerHandle;
-			}
-		}
-
-		/// <summary>
-		/// Дескрипор провайдера.
-		/// </summary>
-		public IntPtr ProviderHandle
-		{
-			[SecurityCritical]
-			[SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
-			get { return InternalProvHandle.DangerousGetHandle(); }
-		}
-
-		/// <summary>
-		/// Приватный дескриптор ключа.
-		/// </summary>
-		internal SafeKeyHandleImpl InternalKeyHandle
+		/// <inheritdoc />
+		SafeKeyHandleImpl ISafeHandleProvider<SafeKeyHandleImpl>.SafeHandle
 		{
 			[SecurityCritical]
 			get
@@ -107,16 +80,6 @@ namespace GostCryptography.Gost_R3410
 
 				return _keyHandle;
 			}
-		}
-
-		/// <summary>
-		/// Дескриптор ключа.
-		/// </summary>
-		public IntPtr KeyHandle
-		{
-			[SecurityCritical]
-			[SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
-			get { return InternalKeyHandle.DangerousGetHandle(); }
 		}
 
 		/// <inheritdoc />
@@ -291,15 +254,7 @@ namespace GostCryptography.Gost_R3410
 		[SecuritySafeCritical]
 		private byte[] SignHash(byte[] hash)
 		{
-			if (hash == null)
-			{
-				throw ExceptionUtility.ArgumentNull(nameof(hash));
-			}
-
-			if (hash.Length != 32)
-			{
-				throw ExceptionUtility.ArgumentOutOfRange(nameof(hash), Resources.InvalidHashSize);
-			}
+			ValidateHashParameter(hash);
 
 			if (IsPublicKeyOnly)
 			{
@@ -364,19 +319,11 @@ namespace GostCryptography.Gost_R3410
 		[SecuritySafeCritical]
 		private bool VerifyHash(byte[] hash, byte[] signature)
 		{
-			if (hash == null)
-			{
-				throw ExceptionUtility.ArgumentNull(nameof(hash));
-			}
+			ValidateHashParameter(hash);
 
 			if (signature == null)
 			{
 				throw ExceptionUtility.ArgumentNull(nameof(signature));
-			}
-
-			if (hash.Length != 32)
-			{
-				throw ExceptionUtility.ArgumentOutOfRange(Resources.InvalidHashSize);
 			}
 
 			GetKeyPair();
@@ -387,6 +334,12 @@ namespace GostCryptography.Gost_R3410
 				return CryptoApiHelper.VerifySign(_providerHandle, hashHandleProvider.SafeHandle, _keyHandle, hash, signature);
 			}
 		}
+
+
+		/// <summary>
+		/// Проверяет корректность хэша.
+		/// </summary>
+		protected abstract void ValidateHashParameter(byte[] hash);
 
 
 		/// <inheritdoc />
@@ -474,10 +427,7 @@ namespace GostCryptography.Gost_R3410
 				{
 					if (_keyHandle == null)
 					{
-						SafeProvHandleImpl providerHandle;
-						SafeKeyHandleImpl keyHandle;
-
-						GetKeyPairValue(_providerParameters, _isRandomKeyContainer, out providerHandle, out keyHandle);
+						GetKeyPairValue(_providerParameters, _isRandomKeyContainer, out var providerHandle, out var keyHandle);
 
 						_providerHandle = providerHandle;
 						_keyHandle = keyHandle;
@@ -547,13 +497,13 @@ namespace GostCryptography.Gost_R3410
 
 		private static SafeProvHandleImpl CreateProviderHandle(CspParameters providerParams, bool randomKeyContainer)
 		{
-			SafeProvHandleImpl propvoderHandle = null;
+			SafeProvHandleImpl providerHandle = null;
 
 			var keyContainerPermission = new KeyContainerPermission(KeyContainerPermissionFlags.NoFlags);
 
 			try
 			{
-				propvoderHandle = CryptoApiHelper.OpenProvider(providerParams);
+				providerHandle = CryptoApiHelper.OpenProvider(providerParams);
 			}
 			catch (Exception exception)
 			{
@@ -576,9 +526,9 @@ namespace GostCryptography.Gost_R3410
 						keyContainerPermission.Demand();
 					}
 
-					propvoderHandle = CryptoApiHelper.CreateProvider(providerParams);
+					providerHandle = CryptoApiHelper.CreateProvider(providerParams);
 
-					return propvoderHandle;
+					return providerHandle;
 				}
 			}
 
@@ -589,7 +539,7 @@ namespace GostCryptography.Gost_R3410
 				keyContainerPermission.Demand();
 			}
 
-			return propvoderHandle;
+			return providerHandle;
 		}
 
 		private static void SetSignatureKeyPassword(SafeProvHandleImpl hProv, SecureString keyPassword, int keyNumber)

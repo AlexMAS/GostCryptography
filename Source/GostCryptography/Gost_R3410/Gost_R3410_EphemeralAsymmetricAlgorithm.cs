@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Security;
 using System.Security.Cryptography;
-using System.Security.Permissions;
 
 using GostCryptography.Asn1.Gost.Gost_R3410;
 using GostCryptography.Base;
@@ -15,14 +14,14 @@ namespace GostCryptography.Gost_R3410
 	/// </summary>
 	[SecurityCritical]
 	[SecuritySafeCritical]
-	public abstract class Gost_R3410_EphemeralAsymmetricAlgorithm<TKeyParams, TKeyAlgorithm> : Gost_R3410_AsymmetricAlgorithmBase<TKeyParams, TKeyAlgorithm>
+	public abstract class Gost_R3410_EphemeralAsymmetricAlgorithm<TKeyParams, TKeyAlgorithm> : Gost_R3410_AsymmetricAlgorithmBase<TKeyParams, TKeyAlgorithm>, ISafeHandleProvider<SafeKeyHandleImpl>
 		where TKeyParams : Gost_R3410_KeyExchangeParams
 		where TKeyAlgorithm : Gost_R3410_KeyExchangeAlgorithm
 	{
 		/// <inheritdoc />
 		[SecurityCritical]
 		[SecuritySafeCritical]
-		public Gost_R3410_EphemeralAsymmetricAlgorithm()
+		protected Gost_R3410_EphemeralAsymmetricAlgorithm()
 		{
 			_provHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
 			_keyHandle = CryptoApiHelper.GenerateKey(_provHandle, ExchangeAlgId, CspProviderFlags.NoFlags);
@@ -31,7 +30,7 @@ namespace GostCryptography.Gost_R3410
 		/// <inheritdoc />
 		[SecurityCritical]
 		[SecuritySafeCritical]
-		public Gost_R3410_EphemeralAsymmetricAlgorithm(ProviderTypes providerType) : base(providerType)
+		protected Gost_R3410_EphemeralAsymmetricAlgorithm(ProviderTypes providerType) : base(providerType)
 		{
 			_provHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
 			_keyHandle = CryptoApiHelper.GenerateKey(_provHandle, ExchangeAlgId, CspProviderFlags.NoFlags);
@@ -50,7 +49,7 @@ namespace GostCryptography.Gost_R3410
 		/// </remarks>
 		[SecurityCritical]
 		[SecuritySafeCritical]
-		public Gost_R3410_EphemeralAsymmetricAlgorithm(TKeyParams keyParameters)
+		protected Gost_R3410_EphemeralAsymmetricAlgorithm(TKeyParams keyParameters)
 		{
 			if (keyParameters == null)
 			{
@@ -74,7 +73,7 @@ namespace GostCryptography.Gost_R3410
 		/// </remarks>
 		[SecurityCritical]
 		[SecuritySafeCritical]
-		public Gost_R3410_EphemeralAsymmetricAlgorithm(ProviderTypes providerType, TKeyParams keyParameters) : base(providerType)
+		protected Gost_R3410_EphemeralAsymmetricAlgorithm(ProviderTypes providerType, TKeyParams keyParameters) : base(providerType)
 		{
 			if (keyParameters == null)
 			{
@@ -88,48 +87,15 @@ namespace GostCryptography.Gost_R3410
 
 		[SecurityCritical]
 		private readonly SafeKeyHandleImpl _keyHandle;
-
 		[SecurityCritical]
 		private readonly SafeProvHandleImpl _provHandle;
 
 
-		/// <summary>
-		/// Приватный дескриптор провайдера.
-		/// </summary>
-		internal SafeProvHandleImpl InternalProvHandle
+		/// <inheritdoc />
+		SafeKeyHandleImpl ISafeHandleProvider<SafeKeyHandleImpl>.SafeHandle
 		{
 			[SecurityCritical]
-			get { return _provHandle; }
-		}
-
-		/// <summary>
-		/// Дескрипор провайдера.
-		/// </summary>
-		public IntPtr ProviderHandle
-		{
-			[SecurityCritical]
-			[SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
-			get { return InternalProvHandle.DangerousGetHandle(); }
-		}
-
-
-		/// <summary>
-		/// Приватный дескриптор ключа.
-		/// </summary>
-		internal SafeKeyHandleImpl InternalKeyHandle
-		{
-			[SecurityCritical]
-			get { return _keyHandle; }
-		}
-
-		/// <summary>
-		/// Дескриптор ключа.
-		/// </summary>
-		public IntPtr KeyHandle
-		{
-			[SecurityCritical]
-			[SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
-			get { return InternalKeyHandle.DangerousGetHandle(); }
+			get => _keyHandle;
 		}
 
 

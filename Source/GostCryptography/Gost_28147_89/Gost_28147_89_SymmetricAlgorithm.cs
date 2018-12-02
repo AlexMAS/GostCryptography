@@ -133,7 +133,7 @@ namespace GostCryptography.Gost_28147_89
 
 			if (sessionKey.Length != 32)
 			{
-				throw ExceptionUtility.Argument(nameof(sessionKey), Resources.InvalidHashSize);
+				throw ExceptionUtility.Argument(nameof(sessionKey), Resources.InvalidHashSize, 32);
 			}
 
 			var providerHandle = CryptoApiHelper.GetProviderHandle(providerType);
