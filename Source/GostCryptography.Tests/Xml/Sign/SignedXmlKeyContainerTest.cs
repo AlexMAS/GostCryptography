@@ -1,9 +1,9 @@
-﻿using System.Security.Cryptography.Xml;
+﻿using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography.Xml;
 using System.Xml;
 
 using GostCryptography.Base;
 using GostCryptography.Gost_R3410;
-using GostCryptography.Gost_R3411;
 using GostCryptography.Tests.Properties;
 using GostCryptography.Xml;
 
@@ -15,18 +15,72 @@ namespace GostCryptography.Tests.Xml.Sign
 	/// Подпись и проверка подписи XML-документа с использованием контейнера ключей.
 	/// </summary>
 	/// <remarks>
-	/// Тест создает XML-документ, подписывает определенную часть данного документа с использованием контейнера ключей, 
+	/// Тест создает XML-документ, подписывает определенную часть данного документа с использованием контейнера ключей,
 	/// а затем проверяет полученную цифровую подпись.
 	/// </remarks>
 	[TestFixture(Description = "Подпись и проверка подписи XML-документа с использованием контейнера ключей")]
-	public sealed class SignedXmlKeyContainerTest
+	public class SignedXmlKeyContainerTest
 	{
 		[Test]
-		public void ShouldSignXml()
+		public void ShouldSignXmlWithGost_R3410_2001()
 		{
 			// Given
-			var keyContainer = TestConfig.GetKeyContainer();
+
+			var certificate = TestConfig.Gost_R3410_2001.Certificate;
+
+			if (certificate == null)
+			{
+				Assert.Ignore("Certificate not found.");
+			}
+
+			var keyContainer = certificate.GetPrivateKeyInfo();
 			var signingKey = new Gost_R3410_2001_AsymmetricAlgorithm(keyContainer);
+			var xmlDocument = CreateXmlDocument();
+
+			// When
+			var signedXmlDocument = SignXmlDocument(xmlDocument, signingKey);
+
+			// Then
+			Assert.IsTrue(VerifyXmlDocumentSignature(signedXmlDocument));
+		}
+
+		[Test]
+		public void ShouldSignXmlWithGost_R3410_2012_256()
+		{
+			// Given
+
+			var certificate = TestConfig.Gost_R3410_2012_256.Certificate;
+
+			if (certificate == null)
+			{
+				Assert.Ignore("Certificate not found.");
+			}
+
+			var keyContainer = certificate.GetPrivateKeyInfo();
+			var signingKey = new Gost_R3410_2012_256_AsymmetricAlgorithm(keyContainer);
+			var xmlDocument = CreateXmlDocument();
+
+			// When
+			var signedXmlDocument = SignXmlDocument(xmlDocument, signingKey);
+
+			// Then
+			Assert.IsTrue(VerifyXmlDocumentSignature(signedXmlDocument));
+		}
+
+		[Test]
+		public void ShouldSignXmlWithGost_R3410_2012_512()
+		{
+			// Given
+
+			var certificate = TestConfig.Gost_R3410_2012_512.Certificate;
+
+			if (certificate == null)
+			{
+				Assert.Ignore("Certificate not found.");
+			}
+
+			var keyContainer = certificate.GetPrivateKeyInfo();
+			var signingKey = new Gost_R3410_2012_512_AsymmetricAlgorithm(keyContainer);
 			var xmlDocument = CreateXmlDocument();
 
 			// When
@@ -46,13 +100,13 @@ namespace GostCryptography.Tests.Xml.Sign
 		private static XmlDocument SignXmlDocument(XmlDocument xmlDocument, GostAsymmetricAlgorithm signingKey)
 		{
 			// Создание подписчика XML-документа
-			var signedXml = new GostSignedXml(xmlDocument);
+			var signedXml = new GostSignedXml(signingKey.ProviderType, xmlDocument);
 
 			// Установка ключа для создания подписи
 			signedXml.SigningKey = signingKey;
 
 			// Ссылка на узел, который нужно подписать, с указанием алгоритма хэширования
-			var dataReference = new Reference { Uri = "#Id1", DigestMethod = Gost_R3411_94_HashAlgorithm.AlgorithmNameValue };
+			var dataReference = new Reference { Uri = "#Id1", DigestMethod = GetDigestMethod(signingKey) };
 
 			// Установка ссылки на узел
 			signedXml.AddReference(dataReference);
@@ -87,6 +141,16 @@ namespace GostCryptography.Tests.Xml.Sign
 
 			// Проверка подписи
 			return signedXml.CheckSignature();
+		}
+
+		private static string GetDigestMethod(GostAsymmetricAlgorithm signingKey)
+		{
+			// Имя алгоритма вычисляем динамически, чтобы сделать код теста универсальным
+
+			using (var hashAlgorithm = signingKey.CreateHashAlgorithm())
+			{
+				return hashAlgorithm.AlgorithmName;
+			}
 		}
 	}
 }

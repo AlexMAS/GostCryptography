@@ -14,13 +14,21 @@ namespace GostCryptography.Tests.Pkcs
 	/// Тест создает сообщение, шифрует его в формате CMS/PKCS#7, а затем дешифрует зашифрованное сообщение.
 	/// </remarks>
 	[TestFixture(Description = "Шифрация и дешифрация сообщения CMS/PKCS#7")]
-	public sealed class EnvelopedCmsEncryptTest
+	public class EnvelopedCmsEncryptTest
 	{
 		[Test]
-		public void ShouldEncryptAndDecrypt()
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Certificates))]
+		public void ShouldEncryptAndDecrypt(TestCertificateInfo testCase)
 		{
 			// Given
-			var certificate = TestConfig.GetCertificate();
+
+			var certificate = testCase.Certificate;
+
+			if (certificate == null)
+			{
+				Assert.Ignore("Certificate not found.");
+			}
+
 			var message = CreateMessage();
 
 			// When
@@ -35,7 +43,7 @@ namespace GostCryptography.Tests.Pkcs
 		{
 			// Некоторое сообщение для подписи
 
-			return Encoding.UTF8.GetBytes("Some message for sign...");
+			return Encoding.UTF8.GetBytes("Some message to sign...");
 		}
 
 		private static byte[] EncryptMessage(X509Certificate2 certificate, byte[] message)
@@ -43,7 +51,7 @@ namespace GostCryptography.Tests.Pkcs
 			// Создание объекта для шифрования сообщения
 			var envelopedCms = new EnvelopedCms(new ContentInfo(message));
 
-			// Создание объектс с информацией о получателе
+			// Создание объект с информацией о получателе
 			var recipient = new CmsRecipient(SubjectIdentifierType.IssuerAndSerialNumber, certificate);
 
 			// Шифрование сообщения CMS/PKCS#7
@@ -55,7 +63,7 @@ namespace GostCryptography.Tests.Pkcs
 
 		private static byte[] DecryptMessage(byte[] encryptedMessage)
 		{
-			// Создание объекта для расшифроваки сообщения
+			// Создание объекта для расшифровки сообщения
 			var envelopedCms = new EnvelopedCms();
 
 			// Чтение сообщения CMS/PKCS#7

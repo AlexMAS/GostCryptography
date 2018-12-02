@@ -19,7 +19,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 	/// </summary>
 	/// <remarks>
 	/// Тест создает XML-документ, выборочно шифрует элементы данного документа, а затем дешифрует полученный зашифрованный документ.
-	/// Элементы шифруются с использованием случайного сессионного ключа, который в свою очередь кодируется (экспортируетяся)
+	/// Элементы шифруются с использованием случайного сессионного ключа, который в свою очередь кодируется (экспортируется)
 	/// с использованием публичного ключа сертификата получателя. Расшифровка документа происходит с использованием первого 
 	/// найденного секретного ключа сертификата получателя.
 	/// </remarks>
@@ -27,10 +27,19 @@ namespace GostCryptography.Tests.Xml.Encrypt
 	public sealed class EncryptedXmlBroadcastTest
 	{
 		[Test]
-		public void ShouldEncryptXml()
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Certificates))]
+		public void ShouldEncryptXml(TestCertificateInfo testCase)
 		{
 			// Given
-			var certificates = new[] { TestConfig.GetCertificate() };
+
+			var certificate = testCase.Certificate;
+
+			if (certificate == null)
+			{
+				Assert.Ignore("Certificate not found.");
+			}
+
+			var certificates = new[] { testCase.Certificate };
 			var xmlDocument = CreateXmlDocument();
 			var expectedXml = xmlDocument.OuterXml;
 
@@ -183,7 +192,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 
 			GostAsymmetricAlgorithm privateKey = null;
 
-			var store = new X509Store(TestConfig.CertStoreName, TestConfig.CertStoreLocation);
+			var store = new X509Store(TestConfig.StoreName, TestConfig.StoreLocation);
 			store.Open(OpenFlags.OpenExistingOnly | OpenFlags.ReadOnly);
 			var storeCertificates = store.Certificates;
 			store.Close();

@@ -18,9 +18,7 @@ namespace GostCryptography.Tests.Gost_R3411
 	public class Gost_R3411_2012_256_HashAlgorithmTest
 	{
 		[Test]
-		[TestCase(TestConfig.ProviderType)]
-		[TestCase(TestConfig.ProviderType_2012_512)]
-		[TestCase(TestConfig.ProviderType_2012_1024)]
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Providers))]
 		public void ShouldComputeHash(ProviderTypes providerType)
 		{
 			// Given

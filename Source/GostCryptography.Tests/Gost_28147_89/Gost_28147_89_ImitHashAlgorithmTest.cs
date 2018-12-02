@@ -19,9 +19,7 @@ namespace GostCryptography.Tests.Gost_28147_89
 	public class Gost_28147_89_ImitHashAlgorithmTest
 	{
 		[Test]
-		[TestCase(TestConfig.ProviderType)]
-		[TestCase(TestConfig.ProviderType_2012_512)]
-		[TestCase(TestConfig.ProviderType_2012_1024)]
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Providers))]
 		public void ShouldComputeImitHash(ProviderTypes providerType)
 		{
 			// Given
@@ -77,7 +75,7 @@ namespace GostCryptography.Tests.Gost_28147_89
 				// Вычисление реального значения имитовставки для потока данных
 				var expectedImitHashValue = imitHash.ComputeHash(imitDataStream);
 
-				// Сравнение исходной имитовствки с ожидаемой
+				// Сравнение исходной имитовставки с ожидаемой
 				return imitHashValue.SequenceEqual(expectedImitHashValue);
 			}
 		}

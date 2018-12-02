@@ -2,7 +2,7 @@
 using System.Security.Cryptography.Xml;
 using System.Xml;
 
-using GostCryptography.Gost_R3411;
+using GostCryptography.Base;
 using GostCryptography.Tests.Properties;
 using GostCryptography.Xml;
 
@@ -14,21 +14,29 @@ namespace GostCryptography.Tests.Xml.Sign
 	/// Подпись и проверка подписи XML-документа с использованием сертификата.
 	/// </summary>
 	/// <remarks>
-	/// Тест создает XML-документ, подписывает определенную часть данного документа с использованием сертификата, 
+	/// Тест создает XML-документ, подписывает определенную часть данного документа с использованием сертификата,
 	/// а затем проверяет полученную цифровую подпись.
 	/// </remarks>
 	[TestFixture(Description = "Подпись и проверка подписи XML-документа с использованием сертификата")]
-	public sealed class SignedXmlCertificateTest
+	public class SignedXmlCertificateTest
 	{
 		[Test]
-		public void ShouldSignXml()
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Certificates))]
+		public void ShouldSignXml(TestCertificateInfo testCase)
 		{
 			// Given
-			var signingCertificate = TestConfig.GetCertificate();
+
+			var certificate = testCase.Certificate;
+
+			if (certificate == null)
+			{
+				Assert.Ignore("Certificate not found.");
+			}
+
 			var xmlDocument = CreateXmlDocument();
 
 			// When
-			var signedXmlDocument = SignXmlDocument(xmlDocument, signingCertificate);
+			var signedXmlDocument = SignXmlDocument(xmlDocument, certificate);
 
 			// Then
 			Assert.IsTrue(VerifyXmlDocumentSignature(signedXmlDocument));
@@ -41,23 +49,23 @@ namespace GostCryptography.Tests.Xml.Sign
 			return document;
 		}
 
-		private static XmlDocument SignXmlDocument(XmlDocument xmlDocument, X509Certificate2 signingCertificate)
+		private static XmlDocument SignXmlDocument(XmlDocument xmlDocument, X509Certificate2 certificate)
 		{
 			// Создание подписчика XML-документа
 			var signedXml = new GostSignedXml(xmlDocument);
 
 			// Установка ключа для создания подписи
-			signedXml.SetSigningCertificate(signingCertificate);
+			signedXml.SetSigningCertificate(certificate);
 
 			// Ссылка на узел, который нужно подписать, с указанием алгоритма хэширования
-			var dataReference = new Reference { Uri = "#Id1", DigestMethod = Gost_R3411_94_HashAlgorithm.AlgorithmNameValue };
+			var dataReference = new Reference { Uri = "#Id1", DigestMethod = GetDigestMethod(certificate) };
 
 			// Установка ссылки на узел
 			signedXml.AddReference(dataReference);
 
 			// Установка информации о сертификате, который использовался для создания подписи
 			var keyInfo = new KeyInfo();
-			keyInfo.AddClause(new KeyInfoX509Data(signingCertificate));
+			keyInfo.AddClause(new KeyInfoX509Data(certificate));
 			signedXml.KeyInfo = keyInfo;
 
 			// Вычисление подписи
@@ -85,6 +93,17 @@ namespace GostCryptography.Tests.Xml.Sign
 
 			// Проверка подписи
 			return signedXml.CheckSignature();
+		}
+
+		private static string GetDigestMethod(X509Certificate2 certificate)
+		{
+			// Имя алгоритма вычисляем динамически, чтобы сделать код теста универсальным
+
+			using (var publicKey = (GostAsymmetricAlgorithm)certificate.GetPublicKeyAlgorithm())
+			using (var hashAlgorithm = publicKey.CreateHashAlgorithm())
+			{
+				return hashAlgorithm.AlgorithmName;
+			}
 		}
 	}
 }

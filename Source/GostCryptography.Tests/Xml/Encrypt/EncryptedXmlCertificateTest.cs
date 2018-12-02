@@ -19,10 +19,18 @@ namespace GostCryptography.Tests.Xml.Encrypt
 	public sealed class EncryptedXmlCertificateTest
 	{
 		[Test]
-		public void ShouldEncryptXml()
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Certificates))]
+		public void ShouldEncryptXml(TestCertificateInfo testCase)
 		{
 			// Given
-			var certificate = TestConfig.GetCertificate();
+
+			var certificate = testCase.Certificate;
+
+			if (certificate == null)
+			{
+				Assert.Ignore("Certificate not found.");
+			}
+
 			var xmlDocument = CreateXmlDocument();
 			var expectedXml = xmlDocument.OuterXml;
 

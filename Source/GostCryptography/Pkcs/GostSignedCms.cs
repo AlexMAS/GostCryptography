@@ -1,10 +1,7 @@
-﻿using System.Security.Cryptography.Pkcs;
+﻿using System.Security;
+using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 
-using GostCryptography.Asn1.Gost.Gost_R3410_2001;
-using GostCryptography.Asn1.Gost.Gost_R3410_2012_256;
-using GostCryptography.Asn1.Gost.Gost_R3410_2012_512;
-using GostCryptography.Asn1.Gost.Gost_R3410_94;
 using GostCryptography.Config;
 
 namespace GostCryptography.Pkcs
@@ -170,6 +167,7 @@ namespace GostCryptography.Pkcs
 			return signerIdentifierType;
 		}
 
+		[SecuritySafeCritical]
 		private static CmsSigner InitCmsSigner(CmsSigner cmsSigner)
 		{
 			var certificate = cmsSigner.Certificate;

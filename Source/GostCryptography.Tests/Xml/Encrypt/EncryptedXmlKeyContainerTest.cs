@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography.Xml;
+﻿using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography.Xml;
 using System.Xml;
 
 using GostCryptography.Base;
@@ -15,75 +16,109 @@ namespace GostCryptography.Tests.Xml.Encrypt
 	/// Шифрация и дешифрация XML с использованием контейнера ключей.
 	/// </summary>
 	/// <remarks>
-	/// Тест имитирует обмен данными между условным отправителем, который шифрует заданный XML-документ, и условным получателем, который дешифрует 
-	/// зашифрованный XML-документ. Шифрация и дешифрация осуществляется без использования сертификатов. Шифрация осуществляется с использованием 
-	/// случайного симметричного ключа, который в свою очередь шифруется с использованием открытого ключа получателя. Соответственно для дешифрации 
-	/// данных сначало расшифровывается случайный симметричный ключ с использованием закрытого ключа получателя.
+	/// Тест имитирует обмен данными между условным отправителем, который шифрует заданный XML-документ, и условным получателем, который дешифрует
+	/// зашифрованный XML-документ. Шифрация и дешифрация осуществляется без использования сертификатов. Шифрация осуществляется с использованием
+	/// случайного симметричного ключа, который в свою очередь шифруется с использованием открытого ключа получателя. Соответственно для дешифрации
+	/// данных сначала расшифровывается случайный симметричный ключ с использованием закрытого ключа получателя.
 	/// 
-	/// Перед началом теста имитируется передача получателем своего открытого ключа отправителю. Для этого получатель извлекает информацию о закрытом 
-	/// ключе из контейнера ключей, формирует закрытый ключ для дешифрации XML и условно передает (экспортирует) отправителю информацию о своем открытом 
+	/// Перед началом теста имитируется передача получателем своего открытого ключа отправителю. Для этого получатель извлекает информацию о закрытом
+	/// ключе из контейнера ключей, формирует закрытый ключ для дешифрации XML и условно передает (экспортирует) отправителю информацию о своем открытом
 	/// ключе. Отправитель в свою очередь принимает (импортирует) от получателя информацию о его открытом ключе и формирует открытый ключ для шифрации XML.
 	/// 
-	/// Тест создает XML-документ, выборочно шифрует элементы данного документа с использованием случайного симметричного ключа, а затем дешифрует 
-	/// полученный зашифрованный документ. Случайный симметричного ключ в свою очередь шифруется открытым асимметричным ключом получателя и в зашифрованном 
+	/// Тест создает XML-документ, выборочно шифрует элементы данного документа с использованием случайного симметричного ключа, а затем дешифрует
+	/// полученный зашифрованный документ. Случайный симметричного ключ в свою очередь шифруется открытым асимметричным ключом получателя и в зашифрованном
 	/// виде добавляется в зашифрованный документ.
 	/// </remarks>
 	[TestFixture(Description = "Шифрация и дешифрация XML с использованием контейнера ключей")]
-	public sealed class EncryptedXmlKeyContainerTest
+	public class EncryptedXmlKeyContainerTest
 	{
-		private Gost_R3410_2001_AsymmetricAlgorithm _privateKey;
-		private Gost_R3410_2001_AsymmetricAlgorithm _publicKey;
-
-		[SetUp]
-		public void SetUp()
+		[Test]
+		public void ShouldEncryptXmlWithGost_R3410_2001()
 		{
-			// Получатель извлекает информацию о закрытом ключе из контейнера ключей
-			var keyContainer = TestConfig.GetKeyContainer();
+			// Given
 
-			// Получатель формирует закрытый ключ для дешифрации XML
-			var privateKey = new Gost_R3410_2001_AsymmetricAlgorithm(keyContainer);
+			var certificate = TestConfig.Gost_R3410_2001.Certificate;
+
+			if (certificate == null)
+			{
+				Assert.Ignore("Certificate not found.");
+			}
 
 			// Получатель экспортирует отправителю информацию о своем открытом ключе
+			var keyContainer = certificate.GetPrivateKeyInfo();
+			var privateKey = new Gost_R3410_2001_AsymmetricAlgorithm(keyContainer);
 			var publicKeyInfo = privateKey.ExportParameters(false);
 
 			// Отправитель импортирует от получателя информацию о его открытом ключе
-			var publicKey = new Gost_R3410_2001_AsymmetricAlgorithm();
-
-			// Отправитель формирует открытый ключ для шифрации XML
+			var publicKey = new Gost_R3410_2001_AsymmetricAlgorithm(privateKey.ProviderType);
 			publicKey.ImportParameters(publicKeyInfo);
 
-			_privateKey = privateKey;
-			_publicKey = publicKey;
-		}
+			var xmlDocument = CreateXmlDocument();
+			var expectedXml = xmlDocument.OuterXml;
 
-		[TearDown]
-		public void TearDown()
-		{
-			try
-			{
-				_privateKey.Dispose();
-			}
-			finally
-			{
-				_privateKey = null;
-			}
+			// When
+			var encryptedXmlDocument = EncryptXmlDocument(xmlDocument, publicKey);
+			var decryptedXmlDocument = DecryptXmlDocument(encryptedXmlDocument, privateKey);
+			var actualXml = decryptedXmlDocument.OuterXml;
 
-			try
-			{
-				_publicKey.Dispose();
-			}
-			finally
-			{
-				_publicKey = null;
-			}
+			// Then
+			Assert.AreEqual(expectedXml, actualXml);
 		}
 
 		[Test]
-		public void ShouldEncryptXml()
+		public void ShouldEncryptXmlWithGost_R3410_2012_256()
 		{
 			// Given
-			var privateKey = _privateKey;
-			var publicKey = _publicKey;
+
+			var certificate = TestConfig.Gost_R3410_2012_256.Certificate;
+
+			if (certificate == null)
+			{
+				Assert.Ignore("Certificate not found.");
+			}
+
+			// Получатель экспортирует отправителю информацию о своем открытом ключе
+			var keyContainer = certificate.GetPrivateKeyInfo();
+			var privateKey = new Gost_R3410_2012_256_AsymmetricAlgorithm(keyContainer);
+			var publicKeyInfo = privateKey.ExportParameters(false);
+
+			// Отправитель импортирует от получателя информацию о его открытом ключе
+			var publicKey = new Gost_R3410_2012_256_AsymmetricAlgorithm(privateKey.ProviderType);
+			publicKey.ImportParameters(publicKeyInfo);
+
+			var xmlDocument = CreateXmlDocument();
+			var expectedXml = xmlDocument.OuterXml;
+
+			// When
+			var encryptedXmlDocument = EncryptXmlDocument(xmlDocument, publicKey);
+			var decryptedXmlDocument = DecryptXmlDocument(encryptedXmlDocument, privateKey);
+			var actualXml = decryptedXmlDocument.OuterXml;
+
+			// Then
+			Assert.AreEqual(expectedXml, actualXml);
+		}
+
+		[Test]
+		public void ShouldEncryptXmlWithGost_R3410_2012_512()
+		{
+			// Given
+
+			var certificate = TestConfig.Gost_R3410_2012_512.Certificate;
+
+			if (certificate == null)
+			{
+				Assert.Ignore("Certificate not found.");
+			}
+
+			// Получатель экспортирует отправителю информацию о своем открытом ключе
+			var keyContainer = certificate.GetPrivateKeyInfo();
+			var privateKey = new Gost_R3410_2012_512_AsymmetricAlgorithm(keyContainer);
+			var publicKeyInfo = privateKey.ExportParameters(false);
+
+			// Отправитель импортирует от получателя информацию о его открытом ключе
+			var publicKey = new Gost_R3410_2012_512_AsymmetricAlgorithm(privateKey.ProviderType);
+			publicKey.ImportParameters(publicKeyInfo);
+
 			var xmlDocument = CreateXmlDocument();
 			var expectedXml = xmlDocument.OuterXml;
 
@@ -106,7 +141,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 		private static XmlDocument EncryptXmlDocument(XmlDocument xmlDocument, GostAsymmetricAlgorithm publicKey)
 		{
 			// Создание объекта для шифрации XML
-			var encryptedXml = new GostEncryptedXml();
+			var encryptedXml = new GostEncryptedXml(publicKey.ProviderType);
 
 			// Поиск элементов для шифрации
 			var elements = xmlDocument.SelectNodes("//SomeElement[@Encrypt='true']");
@@ -118,7 +153,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 				foreach (XmlElement element in elements)
 				{
 					// Создание случайного сессионного ключа
-					using (var sessionKey = new Gost_28147_89_SymmetricAlgorithm())
+					using (var sessionKey = new Gost_28147_89_SymmetricAlgorithm(publicKey.ProviderType))
 					{
 						// Шифрация элемента
 						var encryptedData = encryptedXml.EncryptData(element, sessionKey, false);
@@ -156,7 +191,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 		private static XmlDocument DecryptXmlDocument(XmlDocument encryptedXmlDocument, GostAsymmetricAlgorithm privateKey)
 		{
 			// Создание объекта для дешифрации XML
-			var encryptedXml = new GostEncryptedXml(encryptedXmlDocument);
+			var encryptedXml = new GostEncryptedXml(privateKey.ProviderType, encryptedXmlDocument);
 
 			// Добавление ссылки на приватный асимметричный ключ
 			encryptedXml.AddKeyNameMapping("KeyName1", privateKey);

@@ -20,9 +20,7 @@ namespace GostCryptography.Tests.Gost_R3411
 
 
 		[Test]
-		[TestCase(TestConfig.ProviderType)]
-		[TestCase(TestConfig.ProviderType_2012_512)]
-		[TestCase(TestConfig.ProviderType_2012_1024)]
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Providers))]
 		public void ShouldDeriveBytes(ProviderTypes providerType)
 		{
 			// Given
@@ -54,9 +52,7 @@ namespace GostCryptography.Tests.Gost_R3411
 		}
 
 		[Test]
-		[TestCase(TestConfig.ProviderType)]
-		[TestCase(TestConfig.ProviderType_2012_512)]
-		[TestCase(TestConfig.ProviderType_2012_1024)]
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Providers))]
 		public void ShouldDeriveKey(ProviderTypes providerType)
 		{
 			// Given

@@ -4,7 +4,7 @@ using System.Security;
 namespace GostCryptography.Native
 {
 	/// <summary>
-	/// Провайдер дескрипторов криптографического объкта.
+	/// Провайдер дескрипторов криптографического объекта.
 	/// </summary>
 	/// <typeparam name="T">Тип безопасного дескриптора.</typeparam>
 	public interface ISafeHandleProvider<out T> where T : SafeHandle
@@ -24,7 +24,7 @@ namespace GostCryptography.Native
 		/// <summary>
 		/// Возвращает дескриптор объекта.
 		/// </summary>
-		[SecuritySafeCritical]
+		[SecurityCritical]
 		public static T GetSafeHandle<T>(this ISafeHandleProvider<T> provider) where T : SafeHandle
 		{
 			return provider.SafeHandle;

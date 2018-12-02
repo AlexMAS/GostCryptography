@@ -3,7 +3,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 using GostCryptography.Base;
-using GostCryptography.Gost_R3411;
 
 using NUnit.Framework;
 
@@ -17,15 +16,23 @@ namespace GostCryptography.Tests.Sign
 	/// а затем с помощью открытого ключа сертификата проверяет полученную подпись.
 	/// </remarks>
 	[TestFixture(Description = "Подпись и проверка подписи потока байт с помощью сертификата")]
-	public sealed class SignDataStreamCertificateTest
+	public class SignDataStreamCertificateTest
 	{
 		[Test]
-		public void ShouldSignDataStream()
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Certificates))]
+		public void ShouldSignDataStream(TestCertificateInfo testCase)
 		{
 			// Given
-			var certificate = TestConfig.GetCertificate();
+
+			var certificate = testCase.Certificate;
+
+			if (certificate == null)
+			{
+				Assert.Ignore("Certificate not found.");
+			}
+
 			var privateKey = (GostAsymmetricAlgorithm)certificate.GetPrivateKeyAlgorithm();
-			var publicKey = (GostAsymmetricAlgorithm)certificate.GetPrivateKeyAlgorithm();
+			var publicKey = (GostAsymmetricAlgorithm)certificate.GetPublicKeyAlgorithm(privateKey.ProviderType);
 			var dataStream = CreateDataStream();
 
 			// When
@@ -44,14 +51,14 @@ namespace GostCryptography.Tests.Sign
 		{
 			// Некоторый поток байт для подписи
 
-			return new MemoryStream(Encoding.UTF8.GetBytes("Some data for sign..."));
+			return new MemoryStream(Encoding.UTF8.GetBytes("Some data to sign..."));
 		}
 
 		private static byte[] CreateSignature(GostAsymmetricAlgorithm privateKey, Stream dataStream)
 		{
 			byte[] hash;
 
-			using (var hashAlg = new Gost_R3411_94_HashAlgorithm())
+			using (var hashAlg = privateKey.CreateHashAlgorithm())
 			{
 				hash = hashAlg.ComputeHash(dataStream);
 			}
@@ -63,7 +70,7 @@ namespace GostCryptography.Tests.Sign
 		{
 			byte[] hash;
 
-			using (var hashAlg = new Gost_R3411_94_HashAlgorithm())
+			using (var hashAlg = publicKey.CreateHashAlgorithm())
 			{
 				hash = hashAlg.ComputeHash(dataStream);
 			}

@@ -1,4 +1,6 @@
-﻿namespace GostCryptography.Base
+﻿using System.Collections.Generic;
+
+namespace GostCryptography.Base
 {
 	/// <summary>
 	/// Типы криптографических провайдеров.
@@ -44,31 +46,40 @@
 	public static class ProviderTypesExtensions
 	{
 		/// <summary>
+		/// Набор провайдеров VipNet.
+		/// </summary>
+		public static readonly HashSet<ProviderTypes> VipNetProviders = new HashSet<ProviderTypes>
+		{
+			ProviderTypes.VipNet,
+			ProviderTypes.VipNet_2012_512,
+			ProviderTypes.VipNet_2012_1024
+		};
+
+		/// <summary>
+		/// Набор провайдеров CryptoPro.
+		/// </summary>
+		public static readonly HashSet<ProviderTypes> CryptoProProviders = new HashSet<ProviderTypes>
+		{
+			ProviderTypes.CryptoPro,
+			ProviderTypes.CryptoPro_2012_512,
+			ProviderTypes.CryptoPro_2012_1024
+		};
+
+
+		/// <summary>
 		/// Возвращает <see langword="true"/> для VipNet.
 		/// </summary>
-		public static bool IsVipNet(this ProviderTypes providerType)
-		{
-			return (providerType == ProviderTypes.VipNet_2012_1024)
-				|| (providerType == ProviderTypes.VipNet_2012_512)
-				|| (providerType == ProviderTypes.VipNet);
-		}
+		public static bool IsVipNet(this ProviderTypes providerType) => VipNetProviders.Contains(providerType);
 
 		/// <summary>
 		/// Возвращает <see langword="true"/> для CryptoPro.
 		/// </summary>
-		public static bool IsCryptoPro(this ProviderTypes providerType)
-		{
-			return (providerType == ProviderTypes.CryptoPro_2012_1024)
-				|| (providerType == ProviderTypes.CryptoPro_2012_512)
-				|| (providerType == ProviderTypes.CryptoPro);
-		}
+		public static bool IsCryptoPro(this ProviderTypes providerType) => CryptoProProviders.Contains(providerType);
+
 
 		/// <summary>
 		/// Преобразует значение в <see cref="int"/>.
 		/// </summary>
-		public static int ToInt(this ProviderTypes providerType)
-		{
-			return (int)providerType;
-		}
+		public static int ToInt(this ProviderTypes providerType) => (int)providerType;
 	}
 }

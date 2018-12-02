@@ -21,23 +21,15 @@ namespace GostCryptography.Tests.Gost_28147_89
 	/// с использованием закрытого ключа получателя.
 	/// </remarks>
 	[TestFixture(Description = "Шифрование и дешифрование данных с использованием случайного сессионного ключа")]
-	public sealed class EncryptDecryptSessionKeyTest
+	public class EncryptDecryptSessionKeyTest
 	{
-		private static readonly EncryptionTestCase[] TestCertificates =
-		{
-			new EncryptionTestCase("ГОСТ Р 34.10-2001", c => c.IsGost_R3410_2001()),
-			new EncryptionTestCase("ГОСТ Р 34.10-2012/256", c => c.IsGost_R3410_2012_256()),
-			new EncryptionTestCase("ГОСТ Р 34.10-2012/512", c => c.IsGost_R3410_2012_512())
-		};
-
-
 		[Test]
-		[TestCaseSource(nameof(TestCertificates))]
-		public void ShouldEncryptAndDecrypt(EncryptionTestCase testCase)
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Certificates))]
+		public void ShouldEncryptAndDecrypt(TestCertificateInfo testCase)
 		{
 			// Given
 
-			var certificate = TestConfig.FindGostCertificate(testCase.Filter);
+			var certificate = testCase.Certificate;
 
 			if (certificate == null)
 			{
