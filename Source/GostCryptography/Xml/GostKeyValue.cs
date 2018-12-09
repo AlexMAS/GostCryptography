@@ -19,7 +19,7 @@ namespace GostCryptography.Xml
 		/// <summary>
 		/// Устаревшее наименование ключа.
 		/// </summary>
-		public const string ObsoleteNameValue = "http://www.w3.org/2000/09/xmldsig#KeyValue/GostKeyValue";
+		public const string ObsoleteNameValue = "http://www.w3.org/2000/09/xmldsig# KeyValue/GostKeyValue";
 
 		/// <summary>
 		/// Известные наименования ключа.
