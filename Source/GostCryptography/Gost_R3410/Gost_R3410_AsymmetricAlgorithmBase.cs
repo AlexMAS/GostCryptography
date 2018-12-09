@@ -28,11 +28,6 @@ namespace GostCryptography.Gost_R3410
 		private const string PrivateKeyXmlTag = "PrivateKey";
 
 
-		/// <inheritdoc cref="GostAsymmetricAlgorithm(int)" />
-		protected Gost_R3410_AsymmetricAlgorithmBase(int keySize) : base(keySize)
-		{
-		}
-
 		/// <inheritdoc cref="GostAsymmetricAlgorithm(ProviderTypes,int)" />
 		protected Gost_R3410_AsymmetricAlgorithmBase(ProviderTypes providerType, int keySize) : base(providerType, keySize)
 		{

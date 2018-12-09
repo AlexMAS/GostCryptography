@@ -1,7 +1,5 @@
 ﻿using System.Security.Cryptography;
 
-using GostCryptography.Config;
-
 namespace GostCryptography.Base
 {
 	/// <summary>
@@ -9,16 +7,6 @@ namespace GostCryptography.Base
 	/// </summary>
 	public abstract class GostAsymmetricAlgorithm : AsymmetricAlgorithm, IGostAlgorithm
 	{
-		/// <summary>
-		/// Конструктор.
-		/// </summary>
-		/// <remarks>
-		/// По умолчанию использует криптографический провайдер, установленный в <see cref="GostCryptoConfig.ProviderType"/>.
-		/// </remarks>
-		protected GostAsymmetricAlgorithm(int keySize) : this(GostCryptoConfig.ProviderType, keySize)
-		{
-		}
-
 		/// <summary>
 		/// Конструктор.
 		/// </summary>

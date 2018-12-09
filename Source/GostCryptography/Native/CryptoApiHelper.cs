@@ -19,6 +19,84 @@ namespace GostCryptography.Native
 	[SecurityCritical]
 	public static class CryptoApiHelper
 	{
+		/// <summary>
+		/// Возвращает <see langword="true"/>, если заданный провайдер установлен.
+		/// </summary>
+		[SecurityCritical]
+		public static bool IsInstalled(ProviderTypes providerType)
+		{
+			try
+			{
+				var providerHandle = GetProviderHandle(providerType);
+				return !providerHandle.IsInvalid;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Возвращает доступный провайдер для ключей ГОСТ Р 34.10-2001.
+		/// </summary>
+		/// <exception cref="CryptographicException">Провайдер не установлен.</exception>
+		[SecuritySafeCritical]
+		public static ProviderTypes GetAvailableProviderType_2001()
+		{
+			if (IsInstalled(ProviderTypes.VipNet))
+			{
+				return ProviderTypes.VipNet;
+			}
+
+			if (IsInstalled(ProviderTypes.CryptoPro))
+			{
+				return ProviderTypes.CryptoPro;
+			}
+
+			throw ExceptionUtility.CryptographicException(Resources.Provider_2001_IsNotInstalled);
+		}
+
+		/// <summary>
+		/// Возвращает доступный провайдер для ключей ГОСТ Р 34.10-2012/512.
+		/// </summary>
+		/// <exception cref="CryptographicException">Провайдер не установлен.</exception>
+		[SecuritySafeCritical]
+		public static ProviderTypes GetAvailableProviderType_2012_512()
+		{
+			if (IsInstalled(ProviderTypes.VipNet_2012_512))
+			{
+				return ProviderTypes.VipNet_2012_512;
+			}
+
+			if (IsInstalled(ProviderTypes.CryptoPro_2012_512))
+			{
+				return ProviderTypes.CryptoPro_2012_512;
+			}
+
+			throw ExceptionUtility.CryptographicException(Resources.Provider_2012_512_IsNotInstalled);
+		}
+
+		/// <summary>
+		/// Возвращает доступный провайдер для ключей ГОСТ Р 34.10-2012/1024.
+		/// </summary>
+		/// <exception cref="CryptographicException">Провайдер не установлен.</exception>
+		[SecuritySafeCritical]
+		public static ProviderTypes GetAvailableProviderType_2012_1024()
+		{
+			if (IsInstalled(ProviderTypes.VipNet_2012_1024))
+			{
+				return ProviderTypes.VipNet_2012_1024;
+			}
+
+			if (IsInstalled(ProviderTypes.CryptoPro_2012_1024))
+			{
+				return ProviderTypes.CryptoPro_2012_1024;
+			}
+
+			throw ExceptionUtility.CryptographicException(Resources.Provider_2012_1024_IsNotInstalled);
+		}
+
+
 		#region Общие объекты
 
 		private static readonly object ProviderHandleSync = new object();
@@ -367,6 +445,7 @@ namespace GostCryptography.Native
 						{
 							throw ExceptionUtility.CryptographicException(Resources.EncryptInvalidDataSize);
 						}
+
 						break;
 					case PaddingMode.Zeros:
 						if (dataPadding != 0)
@@ -375,6 +454,7 @@ namespace GostCryptography.Native
 
 							// Дополнение заполняется нулевыми байтами
 						}
+
 						break;
 					case PaddingMode.PKCS7:
 						{

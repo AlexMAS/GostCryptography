@@ -8,33 +8,33 @@ namespace GostCryptography.Base
 	public enum ProviderTypes
 	{
 		/// <summary>
-		/// Идентификатор типа криптографического провайдера VipNet: Infotecs Cryptographic Service Provider.
+		/// Infotecs Cryptographic Service Provider.
 		/// </summary>
 		VipNet = 2,
 
 		/// <summary>
-		/// Идентификатор типа криптографического провайдера VipNet: Infotecs GOST 2012/512 Cryptographic Service Provider.
+		/// Infotecs GOST 2012/512 Cryptographic Service Provider.
 		/// </summary>
 		VipNet_2012_512 = 77,
 
 		/// <summary>
-		/// Идентификатор типа криптографического провайдера VipNet: Infotecs GOST 2012/1024 Cryptographic Service Provider.
+		/// Infotecs GOST 2012/1024 Cryptographic Service Provider.
 		/// </summary>
 		VipNet_2012_1024 = 78,
 
 
 		/// <summary>
-		/// Идентификатор типа криптографического провайдера CryptoPro: CryptoPro Cryptographic Service Provider.
+		/// Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider.
 		/// </summary>
 		CryptoPro = 75,
 
 		/// <summary>
-		/// Идентификатор типа криптографического провайдера CryptoPro: CryptoPro GOST 2012/512 Cryptographic Service Provider.
+		/// Crypto-Pro GOST R 34.10-2012 Cryptographic Service Provider.
 		/// </summary>
 		CryptoPro_2012_512 = 80,
 
 		/// <summary>
-		/// Идентификатор типа криптографического провайдера CryptoPro: CryptoPro GOST 2012/1024 Cryptographic Service Provider.
+		/// Crypto-Pro GOST R 34.10-2012 Strong Cryptographic Service Provider.
 		/// </summary>
 		CryptoPro_2012_1024 = 81
 	}

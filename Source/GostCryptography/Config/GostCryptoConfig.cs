@@ -12,6 +12,7 @@ using GostCryptography.Base;
 using GostCryptography.Gost_28147_89;
 using GostCryptography.Gost_R3410;
 using GostCryptography.Gost_R3411;
+using GostCryptography.Native;
 using GostCryptography.Xml;
 
 namespace GostCryptography.Config
@@ -21,34 +22,27 @@ namespace GostCryptography.Config
 	/// </summary>
 	public static class GostCryptoConfig
 	{
-		/// <summary>
-		/// Статический конструктор.
-		/// </summary>
+		private static Lazy<ProviderTypes> _providerType_2001;
+		private static Lazy<ProviderTypes> _providerType_2012_512;
+		private static Lazy<ProviderTypes> _providerType_2012_1024;
+		private static readonly Dictionary<string, Type> NameToType = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
+		private static readonly Dictionary<string, string> NameToOid = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+
 		static GostCryptoConfig()
 		{
-			ProviderType = ProviderTypes.VipNet_2012_512;
+			InitDefaultProviders();
 			AddKnownAlgorithms();
 			AddKnownOIDs();
 		}
 
-
-		/// <summary>
-		/// Идентификатор типа криптографического провайдера по умолчанию.
-		/// </summary>
-		public static ProviderTypes ProviderType { get; set; }
-
-
-		/// <summary>
-		/// Инициализирует конфигурацию.
-		/// </summary>
-		public static void Initialize()
+		[SecuritySafeCritical]
+		private static void InitDefaultProviders()
 		{
-			// На самом деле инициализация происходит в статическом конструкторе
+			_providerType_2001 = new Lazy<ProviderTypes>(CryptoApiHelper.GetAvailableProviderType_2001);
+			_providerType_2012_512 = new Lazy<ProviderTypes>(CryptoApiHelper.GetAvailableProviderType_2012_512);
+			_providerType_2012_1024 = new Lazy<ProviderTypes>(CryptoApiHelper.GetAvailableProviderType_2012_1024);
 		}
-
-
-		private static readonly Dictionary<string, Type> NameToType
-			= new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
 
 		private static void AddKnownAlgorithms()
 		{
@@ -78,6 +72,45 @@ namespace GostCryptography.Config
 
 			AddAlgorithm<GostKeyValue>(GostKeyValue.KnownNames);
 		}
+
+		private static void AddKnownOIDs()
+		{
+			AddOID<Gost_R3410_2001_AsymmetricAlgorithm>(Gost_R3410_2001_Constants.KeyAlgorithm.Value);
+			AddOID<Gost_R3410_2012_256_AsymmetricAlgorithm>(Gost_R3410_2012_256_Constants.KeyAlgorithm.Value);
+			AddOID<Gost_R3410_2012_512_AsymmetricAlgorithm>(Gost_R3410_2012_512_Constants.KeyAlgorithm.Value);
+
+			AddOID<Gost_R3411_94_HashAlgorithm>(Gost_R3410_94_Constants.HashAlgorithm.Value, Gost_R3411_94_HashAlgorithm.KnownAlgorithmNames);
+			AddOID<Gost_R3411_2012_256_HashAlgorithm>(Gost_R3410_2012_256_Constants.HashAlgorithm.Value, Gost_R3411_2012_256_HashAlgorithm.KnownAlgorithmNames);
+			AddOID<Gost_R3411_2012_512_HashAlgorithm>(Gost_R3410_2012_512_Constants.HashAlgorithm.Value, Gost_R3411_2012_512_HashAlgorithm.KnownAlgorithmNames);
+
+			AddOID<Gost_28147_89_SymmetricAlgorithm>(Gost_28147_89_Constants.EncryptAlgorithm.Value, Gost_28147_89_SymmetricAlgorithm.KnownAlgorithmNames);
+		}
+
+
+		/// <summary>
+		/// Инициализирует конфигурацию.
+		/// </summary>
+		public static void Initialize()
+		{
+			// На самом деле инициализация происходит в статическом конструкторе
+		}
+
+
+		/// <summary>
+		/// Возвращает провайдер по умолчанию для ключей ГОСТ Р 34.10-2001.
+		/// </summary>
+		public static ProviderTypes ProviderType => _providerType_2001.Value;
+
+		/// <summary>
+		/// Возвращает провайдер по умолчанию для ключей ГОСТ Р 34.10-2012/512.
+		/// </summary>
+		public static ProviderTypes ProviderType_2012_512 => _providerType_2012_512.Value;
+
+		/// <summary>
+		/// Возвращает провайдер по умолчанию для ключей ГОСТ Р 34.10-2012/1024.
+		/// </summary>
+		public static ProviderTypes ProviderType_2012_1024 => _providerType_2012_1024.Value;
+
 
 		/// <summary>
 		/// Добавляет связь между алгоритмом и именем.
@@ -110,23 +143,6 @@ namespace GostCryptography.Config
 				NameToType.Add(type.AssemblyQualifiedName, type);
 				CryptoConfig.AddAlgorithm(type, type.AssemblyQualifiedName);
 			}
-		}
-
-
-		private static readonly Dictionary<string, string> NameToOid
-			= new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-		private static void AddKnownOIDs()
-		{
-			AddOID<Gost_R3410_2001_AsymmetricAlgorithm>(Gost_R3410_2001_Constants.KeyAlgorithm.Value);
-			AddOID<Gost_R3410_2012_256_AsymmetricAlgorithm>(Gost_R3410_2012_256_Constants.KeyAlgorithm.Value);
-			AddOID<Gost_R3410_2012_512_AsymmetricAlgorithm>(Gost_R3410_2012_512_Constants.KeyAlgorithm.Value);
-
-			AddOID<Gost_R3411_94_HashAlgorithm>(Gost_R3410_94_Constants.HashAlgorithm.Value, Gost_R3411_94_HashAlgorithm.KnownAlgorithmNames);
-			AddOID<Gost_R3411_2012_256_HashAlgorithm>(Gost_R3410_2012_256_Constants.HashAlgorithm.Value, Gost_R3411_2012_256_HashAlgorithm.KnownAlgorithmNames);
-			AddOID<Gost_R3411_2012_512_HashAlgorithm>(Gost_R3410_2012_512_Constants.HashAlgorithm.Value, Gost_R3411_2012_512_HashAlgorithm.KnownAlgorithmNames);
-
-			AddOID<Gost_28147_89_SymmetricAlgorithm>(Gost_28147_89_Constants.EncryptAlgorithm.Value, Gost_28147_89_SymmetricAlgorithm.KnownAlgorithmNames);
 		}
 
 		/// <summary>
@@ -162,7 +178,6 @@ namespace GostCryptography.Config
 			}
 		}
 
-
 		/// <inheritdoc cref="CryptoConfig.MapNameToOID"/>
 		public static string MapNameToOID(string name)
 		{
@@ -190,12 +205,9 @@ namespace GostCryptography.Config
 			{
 				obj = CryptoConfig.CreateFromName(name, arguments);
 
-				if (obj == null)
+				if (obj == null && NameToType.TryGetValue(name, out var objType))
 				{
-					if (NameToType.TryGetValue(name, out var objType))
-					{
-						obj = Activator.CreateInstance(objType, arguments);
-					}
+					obj = Activator.CreateInstance(objType, arguments);
 				}
 			}
 

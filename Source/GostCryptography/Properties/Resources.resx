@@ -375,4 +375,13 @@
   <data name="XmlMissingAlgorithm" xml:space="preserve">
     <value>Symmetric algorithm is not specified.</value>
   </data>
+  <data name="Provider_2001_IsNotInstalled" xml:space="preserve">
+    <value>GOST R 34.10-2001 Cryptographic Service Provider is not installed.</value>
+  </data>
+  <data name="Provider_2012_1024_IsNotInstalled" xml:space="preserve">
+    <value>GOST R 34.10-2012/1024 Cryptographic Service Provider is not installed.</value>
+  </data>
+  <data name="Provider_2012_512_IsNotInstalled" xml:space="preserve">
+    <value>GOST R 34.10-2012/512 Cryptographic Service Provider is not installed.</value>
+  </data>
 </root>

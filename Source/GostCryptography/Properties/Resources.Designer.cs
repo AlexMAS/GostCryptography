@@ -700,6 +700,33 @@ namespace GostCryptography.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GOST R 34.10-2001 Cryptographic Service Provider is not installed..
+        /// </summary>
+        internal static string Provider_2001_IsNotInstalled {
+            get {
+                return ResourceManager.GetString("Provider_2001_IsNotInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GOST R 34.10-2012/1024 Cryptographic Service Provider is not installed..
+        /// </summary>
+        internal static string Provider_2012_1024_IsNotInstalled {
+            get {
+                return ResourceManager.GetString("Provider_2012_1024_IsNotInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GOST R 34.10-2012/512 Cryptographic Service Provider is not installed..
+        /// </summary>
+        internal static string Provider_2012_512_IsNotInstalled {
+            get {
+                return ResourceManager.GetString("Provider_2012_512_IsNotInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Required GOST 28147 key handle..
         /// </summary>
         internal static string RequiredGost28147 {

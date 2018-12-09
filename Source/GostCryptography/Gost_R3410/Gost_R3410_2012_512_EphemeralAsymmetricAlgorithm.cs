@@ -2,6 +2,7 @@
 
 using GostCryptography.Asn1.Gost.Gost_R3410_2012_512;
 using GostCryptography.Base;
+using GostCryptography.Config;
 using GostCryptography.Gost_R3411;
 using GostCryptography.Native;
 
@@ -30,7 +31,7 @@ namespace GostCryptography.Gost_R3410
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3410_2012_512_EphemeralAsymmetricAlgorithm() : base(DefaultKeySizeValue)
+		public Gost_R3410_2012_512_EphemeralAsymmetricAlgorithm() : this(GostCryptoConfig.ProviderType_2012_1024)
 		{
 		}
 
@@ -42,7 +43,7 @@ namespace GostCryptography.Gost_R3410
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3410_2012_512_EphemeralAsymmetricAlgorithm(Gost_R3410_2012_512_KeyExchangeParams keyParameters) : base(keyParameters, DefaultKeySizeValue)
+		public Gost_R3410_2012_512_EphemeralAsymmetricAlgorithm(Gost_R3410_2012_512_KeyExchangeParams keyParameters) : this(GostCryptoConfig.ProviderType_2012_1024, keyParameters)
 		{
 		}
 

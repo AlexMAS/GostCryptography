@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 
 using GostCryptography.Asn1.Gost.Gost_R3410_2001;
 using GostCryptography.Base;
+using GostCryptography.Config;
 using GostCryptography.Gost_R3411;
 using GostCryptography.Native;
 using GostCryptography.Properties;
@@ -32,7 +33,7 @@ namespace GostCryptography.Gost_R3410
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3410_2001_AsymmetricAlgorithm() : base(DefaultKeySizeValue)
+		public Gost_R3410_2001_AsymmetricAlgorithm() : this(GostCryptoConfig.ProviderType)
 		{
 		}
 

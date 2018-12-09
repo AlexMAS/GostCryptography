@@ -18,42 +18,10 @@ namespace GostCryptography.Gost_R3410
 	{
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		protected Gost_R3410_EphemeralAsymmetricAlgorithm(int keySize) : base(keySize)
-		{
-			_providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
-			_keyHandle = CryptoApiHelper.GenerateKey(_providerHandle, ExchangeAlgId, CspProviderFlags.NoFlags);
-		}
-
-		/// <inheritdoc />
-		[SecuritySafeCritical]
 		protected Gost_R3410_EphemeralAsymmetricAlgorithm(ProviderTypes providerType, int keySize) : base(providerType, keySize)
 		{
 			_providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
 			_keyHandle = CryptoApiHelper.GenerateKey(_providerHandle, ExchangeAlgId, CspProviderFlags.NoFlags);
-		}
-
-
-		/// <summary>
-		/// Конструктор.
-		/// </summary>
-		/// <param name="keyParameters">Параметры ключа, используемого для создания общего секретного ключа.</param>
-		/// <param name="keySize">Размер ключа в битах.</param>
-		/// <exception cref="ArgumentNullException"></exception>
-		/// <remarks>
-		/// В параметре <paramref name="keyParameters"/> достаточно передать идентификатор OID параметров хэширования
-		/// <see cref="Gost_R3410_KeyExchangeParams.DigestParamSet"/> и идентификатор OID параметров открытого ключа
-		/// <see cref="Gost_R3410_KeyExchangeParams.PublicKeyParamSet"/>. Остальные параметры не используются.
-		/// </remarks>
-		[SecuritySafeCritical]
-		protected Gost_R3410_EphemeralAsymmetricAlgorithm(TKeyParams keyParameters, int keySize) : base(keySize)
-		{
-			if (keyParameters == null)
-			{
-				throw ExceptionUtility.ArgumentNull(nameof(keyParameters));
-			}
-
-			_providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
-			_keyHandle = CryptoApiHelper.GenerateDhEphemeralKey(_providerHandle, ExchangeAlgId, keyParameters.DigestParamSet, keyParameters.PublicKeyParamSet);
 		}
 
 		/// <summary>
