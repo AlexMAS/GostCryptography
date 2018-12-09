@@ -43,13 +43,18 @@ namespace GostCryptography.Gost_R3411
 		{
 		}
 
+		[SecurityCritical]
+		internal Gost_R3411_94_HashAlgorithm(ProviderTypes providerType, SafeProvHandleImpl providerHandle) : base(providerType, providerHandle, DefaultHashSizeValue)
+		{
+		}
+
 
 		/// <inheritdoc />
 		public override string AlgorithmName => AlgorithmNameValue;
 
 
 		/// <inheritdoc />
-		[SecuritySafeCritical]
+		[SecurityCritical]
 		protected override SafeHashHandleImpl CreateHashHandle(SafeProvHandleImpl providerHandle)
 		{
 			return CryptoApiHelper.CreateHash_3411_94(providerHandle);

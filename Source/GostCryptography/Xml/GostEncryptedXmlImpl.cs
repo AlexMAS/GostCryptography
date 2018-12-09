@@ -98,7 +98,7 @@ namespace GostCryptography.Xml
 				throw ExceptionUtility.ArgumentNull(nameof(publicKey));
 			}
 
-			var formatter = publicKey.CreatKeyExchangeFormatter();
+			var formatter = publicKey.CreateKeyExchangeFormatter();
 			return formatter.CreateKeyExchangeData(sessionKey);
 		}
 

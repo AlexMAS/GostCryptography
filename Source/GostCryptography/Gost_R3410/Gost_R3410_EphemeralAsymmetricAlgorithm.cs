@@ -12,28 +12,24 @@ namespace GostCryptography.Gost_R3410
 	/// <summary>
 	/// Реализация алгоритма формирования общих ключей на основе алгоритма ГОСТ Р 34.10 и эфимерного ключа.
 	/// </summary>
-	[SecurityCritical]
-	[SecuritySafeCritical]
-	public abstract class Gost_R3410_EphemeralAsymmetricAlgorithm<TKeyParams, TKeyAlgorithm> : Gost_R3410_AsymmetricAlgorithmBase<TKeyParams, TKeyAlgorithm>, ISafeHandleProvider<SafeKeyHandleImpl>
+	public abstract class Gost_R3410_EphemeralAsymmetricAlgorithm<TKeyParams, TKeyAlgorithm> : Gost_R3410_AsymmetricAlgorithmBase<TKeyParams, TKeyAlgorithm>, ISafeHandleProvider<SafeProvHandleImpl>, ISafeHandleProvider<SafeKeyHandleImpl>
 		where TKeyParams : Gost_R3410_KeyExchangeParams
 		where TKeyAlgorithm : Gost_R3410_KeyExchangeAlgorithm
 	{
 		/// <inheritdoc />
-		[SecurityCritical]
 		[SecuritySafeCritical]
-		protected Gost_R3410_EphemeralAsymmetricAlgorithm()
+		protected Gost_R3410_EphemeralAsymmetricAlgorithm(int keySize) : base(keySize)
 		{
-			_provHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
-			_keyHandle = CryptoApiHelper.GenerateKey(_provHandle, ExchangeAlgId, CspProviderFlags.NoFlags);
+			_providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
+			_keyHandle = CryptoApiHelper.GenerateKey(_providerHandle, ExchangeAlgId, CspProviderFlags.NoFlags);
 		}
 
 		/// <inheritdoc />
-		[SecurityCritical]
 		[SecuritySafeCritical]
-		protected Gost_R3410_EphemeralAsymmetricAlgorithm(ProviderTypes providerType) : base(providerType)
+		protected Gost_R3410_EphemeralAsymmetricAlgorithm(ProviderTypes providerType, int keySize) : base(providerType, keySize)
 		{
-			_provHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
-			_keyHandle = CryptoApiHelper.GenerateKey(_provHandle, ExchangeAlgId, CspProviderFlags.NoFlags);
+			_providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
+			_keyHandle = CryptoApiHelper.GenerateKey(_providerHandle, ExchangeAlgId, CspProviderFlags.NoFlags);
 		}
 
 
@@ -41,23 +37,23 @@ namespace GostCryptography.Gost_R3410
 		/// Конструктор.
 		/// </summary>
 		/// <param name="keyParameters">Параметры ключа, используемого для создания общего секретного ключа.</param>
+		/// <param name="keySize">Размер ключа в битах.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		/// <remarks>
 		/// В параметре <paramref name="keyParameters"/> достаточно передать идентификатор OID параметров хэширования
 		/// <see cref="Gost_R3410_KeyExchangeParams.DigestParamSet"/> и идентификатор OID параметров открытого ключа
 		/// <see cref="Gost_R3410_KeyExchangeParams.PublicKeyParamSet"/>. Остальные параметры не используются.
 		/// </remarks>
-		[SecurityCritical]
 		[SecuritySafeCritical]
-		protected Gost_R3410_EphemeralAsymmetricAlgorithm(TKeyParams keyParameters)
+		protected Gost_R3410_EphemeralAsymmetricAlgorithm(TKeyParams keyParameters, int keySize) : base(keySize)
 		{
 			if (keyParameters == null)
 			{
 				throw ExceptionUtility.ArgumentNull(nameof(keyParameters));
 			}
 
-			_provHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
-			_keyHandle = CryptoApiHelper.GenerateDhEphemeralKey(_provHandle, ExchangeAlgId, keyParameters.DigestParamSet, keyParameters.PublicKeyParamSet);
+			_providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
+			_keyHandle = CryptoApiHelper.GenerateDhEphemeralKey(_providerHandle, ExchangeAlgId, keyParameters.DigestParamSet, keyParameters.PublicKeyParamSet);
 		}
 
 		/// <summary>
@@ -65,31 +61,38 @@ namespace GostCryptography.Gost_R3410
 		/// </summary>
 		/// <param name="providerType">Тип криптографического провайдера.</param>
 		/// <param name="keyParameters">Параметры ключа, используемого для создания общего секретного ключа.</param>
+		/// <param name="keySize">Размер ключа в битах.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		/// <remarks>
 		/// В параметре <paramref name="keyParameters"/> достаточно передать идентификатор OID параметров хэширования
 		/// <see cref="Gost_R3410_KeyExchangeParams.DigestParamSet"/> и идентификатор OID параметров открытого ключа
 		/// <see cref="Gost_R3410_KeyExchangeParams.PublicKeyParamSet"/>. Остальные параметры не используются.
 		/// </remarks>
-		[SecurityCritical]
 		[SecuritySafeCritical]
-		protected Gost_R3410_EphemeralAsymmetricAlgorithm(ProviderTypes providerType, TKeyParams keyParameters) : base(providerType)
+		protected Gost_R3410_EphemeralAsymmetricAlgorithm(ProviderTypes providerType, TKeyParams keyParameters, int keySize) : base(providerType, keySize)
 		{
 			if (keyParameters == null)
 			{
 				throw ExceptionUtility.ArgumentNull(nameof(keyParameters));
 			}
 
-			_provHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
-			_keyHandle = CryptoApiHelper.GenerateDhEphemeralKey(_provHandle, ExchangeAlgId, keyParameters.DigestParamSet, keyParameters.PublicKeyParamSet);
+			_providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
+			_keyHandle = CryptoApiHelper.GenerateDhEphemeralKey(_providerHandle, ExchangeAlgId, keyParameters.DigestParamSet, keyParameters.PublicKeyParamSet);
 		}
 
 
 		[SecurityCritical]
-		private readonly SafeKeyHandleImpl _keyHandle;
+		private readonly SafeProvHandleImpl _providerHandle;
 		[SecurityCritical]
-		private readonly SafeProvHandleImpl _provHandle;
+		private readonly SafeKeyHandleImpl _keyHandle;
 
+
+		/// <inheritdoc />
+		SafeProvHandleImpl ISafeHandleProvider<SafeProvHandleImpl>.SafeHandle
+		{
+			[SecurityCritical]
+			get => _providerHandle;
+		}
 
 		/// <inheritdoc />
 		SafeKeyHandleImpl ISafeHandleProvider<SafeKeyHandleImpl>.SafeHandle
@@ -116,7 +119,7 @@ namespace GostCryptography.Gost_R3410
 		[SecuritySafeCritical]
 		public override TKeyAlgorithm CreateKeyExchange(TKeyParams keyParameters)
 		{
-			return CreateKeyExchangeAlgorithm(ProviderType, _provHandle, _keyHandle, (TKeyParams)keyParameters.Clone());
+			return CreateKeyExchangeAlgorithm(ProviderType, _providerHandle, _keyHandle, (TKeyParams)keyParameters.Clone());
 		}
 
 
@@ -144,7 +147,7 @@ namespace GostCryptography.Gost_R3410
 		protected override void Dispose(bool disposing)
 		{
 			_keyHandle.TryDispose();
-			_provHandle.TryDispose();
+			_providerHandle.TryDispose();
 
 			base.Dispose(disposing);
 		}

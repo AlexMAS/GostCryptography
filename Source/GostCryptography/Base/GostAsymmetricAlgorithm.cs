@@ -1,15 +1,12 @@
-﻿using System.Security;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 
 using GostCryptography.Config;
 
 namespace GostCryptography.Base
 {
 	/// <summary>
-	/// Базовый класс для всех ассиметричных алгоритмов ГОСТ.
+	/// Базовый класс для всех асимметричных алгоритмов ГОСТ.
 	/// </summary>
-	[SecurityCritical]
-	[SecuritySafeCritical]
 	public abstract class GostAsymmetricAlgorithm : AsymmetricAlgorithm, IGostAlgorithm
 	{
 		/// <summary>
@@ -18,9 +15,7 @@ namespace GostCryptography.Base
 		/// <remarks>
 		/// По умолчанию использует криптографический провайдер, установленный в <see cref="GostCryptoConfig.ProviderType"/>.
 		/// </remarks>
-		[SecurityCritical]
-		[SecuritySafeCritical]
-		protected GostAsymmetricAlgorithm() : this(GostCryptoConfig.ProviderType)
+		protected GostAsymmetricAlgorithm(int keySize) : this(GostCryptoConfig.ProviderType, keySize)
 		{
 		}
 
@@ -28,11 +23,12 @@ namespace GostCryptography.Base
 		/// Конструктор.
 		/// </summary>
 		/// <param name="providerType">Тип криптографического провайдера.</param>
-		[SecurityCritical]
-		[SecuritySafeCritical]
-		protected GostAsymmetricAlgorithm(ProviderTypes providerType)
+		/// <param name="keySize">Размер ключа в битах.</param>
+		protected GostAsymmetricAlgorithm(ProviderTypes providerType, int keySize)
 		{
 			ProviderType = providerType;
+			KeySizeValue = keySize;
+			LegalKeySizesValue = new[] { new KeySizes(keySize, keySize, 0) };
 		}
 
 
@@ -64,7 +60,7 @@ namespace GostCryptography.Base
 		/// Создает экземпляр <see cref="GostKeyExchangeFormatter"/>.
 		/// </summary>
 		/// <returns></returns>
-		public abstract GostKeyExchangeFormatter CreatKeyExchangeFormatter();
+		public abstract GostKeyExchangeFormatter CreateKeyExchangeFormatter();
 
 		/// <summary>
 		/// Создает экземпляр <see cref="GostKeyExchangeDeformatter"/>.

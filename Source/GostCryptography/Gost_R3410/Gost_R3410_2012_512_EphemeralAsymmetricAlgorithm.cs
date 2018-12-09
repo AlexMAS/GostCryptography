@@ -10,10 +10,13 @@ namespace GostCryptography.Gost_R3410
 	/// <summary>
 	/// Реализация алгоритма ГОСТ Р 34.10-2012/512 на основе эфимерного ключа.
 	/// </summary>
-	[SecurityCritical]
-	[SecuritySafeCritical]
 	public sealed class Gost_R3410_2012_512_EphemeralAsymmetricAlgorithm : Gost_R3410_EphemeralAsymmetricAlgorithm<Gost_R3410_2012_512_KeyExchangeParams, Gost_R3410_2012_512_KeyExchangeAlgorithm>
 	{
+		/// <summary>
+		/// Размер ключа ГОСТ Р 34.10-2012/512.
+		/// </summary>
+		public const int DefaultKeySizeValue = 1024;
+
 		/// <summary>
 		/// Наименование алгоритма цифровой подписи ГОСТ Р 34.10-2012 для ключей длины 512 бит.
 		/// </summary>
@@ -26,30 +29,26 @@ namespace GostCryptography.Gost_R3410
 
 
 		/// <inheritdoc />
-		[SecurityCritical]
 		[SecuritySafeCritical]
-		public Gost_R3410_2012_512_EphemeralAsymmetricAlgorithm()
+		public Gost_R3410_2012_512_EphemeralAsymmetricAlgorithm() : base(DefaultKeySizeValue)
 		{
 		}
 
 		/// <inheritdoc />
-		[SecurityCritical]
 		[SecuritySafeCritical]
-		public Gost_R3410_2012_512_EphemeralAsymmetricAlgorithm(ProviderTypes providerType) : base(providerType)
+		public Gost_R3410_2012_512_EphemeralAsymmetricAlgorithm(ProviderTypes providerType) : base(providerType, DefaultKeySizeValue)
 		{
 		}
 
 		/// <inheritdoc />
-		[SecurityCritical]
 		[SecuritySafeCritical]
-		public Gost_R3410_2012_512_EphemeralAsymmetricAlgorithm(Gost_R3410_2012_512_KeyExchangeParams keyParameters) : base(keyParameters)
+		public Gost_R3410_2012_512_EphemeralAsymmetricAlgorithm(Gost_R3410_2012_512_KeyExchangeParams keyParameters) : base(keyParameters, DefaultKeySizeValue)
 		{
 		}
 
 		/// <inheritdoc />
-		[SecurityCritical]
 		[SecuritySafeCritical]
-		public Gost_R3410_2012_512_EphemeralAsymmetricAlgorithm(ProviderTypes providerType, Gost_R3410_2012_512_KeyExchangeParams keyParameters) : base(providerType, keyParameters)
+		public Gost_R3410_2012_512_EphemeralAsymmetricAlgorithm(ProviderTypes providerType, Gost_R3410_2012_512_KeyExchangeParams keyParameters) : base(providerType, keyParameters, DefaultKeySizeValue)
 		{
 		}
 
@@ -78,6 +77,7 @@ namespace GostCryptography.Gost_R3410
 		}
 
 		/// <inheritdoc />
+		[SecuritySafeCritical]
 		protected override Gost_R3410_2012_512_KeyExchangeAlgorithm CreateKeyExchangeAlgorithm(ProviderTypes providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, Gost_R3410_2012_512_KeyExchangeParams keyExchangeParameters)
 		{
 			return new Gost_R3410_2012_512_KeyExchangeAlgorithm(providerType, provHandle, keyHandle, keyExchangeParameters);
@@ -85,14 +85,15 @@ namespace GostCryptography.Gost_R3410
 
 
 		/// <inheritdoc />
+		[SecuritySafeCritical]
 		public override GostHashAlgorithm CreateHashAlgorithm()
 		{
-			return new Gost_R3411_2012_512_HashAlgorithm(ProviderType);
+			return new Gost_R3411_2012_512_HashAlgorithm(ProviderType, this.GetSafeHandle<SafeProvHandleImpl>());
 		}
 
 
 		/// <inheritdoc />
-		public override GostKeyExchangeFormatter CreatKeyExchangeFormatter()
+		public override GostKeyExchangeFormatter CreateKeyExchangeFormatter()
 		{
 			return new Gost_R3410_2012_512_KeyExchangeFormatter(this);
 		}

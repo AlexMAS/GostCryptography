@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Security;
-using System.Security.Permissions;
 using System.Text;
 
 using GostCryptography.Asn1.Gost.Gost_R3410;
@@ -15,8 +14,6 @@ namespace GostCryptography.Gost_R3410
 	/// </summary>
 	/// <typeparam name="TKeyParams">Параметры ключа цифровой подписи ГОСТ Р 34.10.</typeparam>
 	/// <typeparam name="TKeyAlgorithm">Алгоритм общего секретного ключа ГОСТ Р 34.10.</typeparam>
-	[SecurityCritical]
-	[SecuritySafeCritical]
 	public abstract class Gost_R3410_AsymmetricAlgorithmBase<TKeyParams, TKeyAlgorithm> : GostAsymmetricAlgorithm
 		where TKeyParams : Gost_R3410_KeyExchangeParams
 		where TKeyAlgorithm : Gost_R3410_KeyExchangeAlgorithm
@@ -31,17 +28,13 @@ namespace GostCryptography.Gost_R3410
 		private const string PrivateKeyXmlTag = "PrivateKey";
 
 
-		/// <inheritdoc />
-		[SecurityCritical]
-		[SecuritySafeCritical]
-		protected Gost_R3410_AsymmetricAlgorithmBase()
+		/// <inheritdoc cref="GostAsymmetricAlgorithm(int)" />
+		protected Gost_R3410_AsymmetricAlgorithmBase(int keySize) : base(keySize)
 		{
 		}
 
-		/// <inheritdoc />
-		[SecurityCritical]
-		[SecuritySafeCritical]
-		protected Gost_R3410_AsymmetricAlgorithmBase(ProviderTypes providerType) : base(providerType)
+		/// <inheritdoc cref="GostAsymmetricAlgorithm(ProviderTypes,int)" />
+		protected Gost_R3410_AsymmetricAlgorithmBase(ProviderTypes providerType, int keySize) : base(providerType, keySize)
 		{
 		}
 
@@ -64,6 +57,7 @@ namespace GostCryptography.Gost_R3410
 		/// <summary>
 		/// Создает экземпляр <typeparamref name="TKeyAlgorithm"/>.
 		/// </summary>
+		[SecuritySafeCritical]
 		protected abstract TKeyAlgorithm CreateKeyExchangeAlgorithm(ProviderTypes providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, TKeyParams keyExchangeParameters);
 
 
@@ -103,7 +97,6 @@ namespace GostCryptography.Gost_R3410
 		/// <param name="keyParametersXml">Параметры ключа, используемого для создания общего секретного ключа.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		[SecuritySafeCritical]
-		[ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
 		public override void FromXmlString(string keyParametersXml)
 		{
 			if (string.IsNullOrEmpty(keyParametersXml))

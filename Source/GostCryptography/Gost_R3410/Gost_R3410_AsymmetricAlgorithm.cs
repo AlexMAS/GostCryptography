@@ -14,33 +14,22 @@ using GostCryptography.Reflection;
 namespace GostCryptography.Gost_R3410
 {
 	/// <inheritdoc cref="Gost_R3410_AsymmetricAlgorithmBase{TKeyParams,TKeyAlgorithm}" />
-	[SecurityCritical]
-	[SecuritySafeCritical]
-	public abstract class Gost_R3410_AsymmetricAlgorithm<TKeyParams, TKeyAlgorithm> : Gost_R3410_AsymmetricAlgorithmBase<TKeyParams, TKeyAlgorithm>, ICspAsymmetricAlgorithm, ISafeHandleProvider<SafeKeyHandleImpl>
+	public abstract class Gost_R3410_AsymmetricAlgorithm<TKeyParams, TKeyAlgorithm> : Gost_R3410_AsymmetricAlgorithmBase<TKeyParams, TKeyAlgorithm>, ICspAsymmetricAlgorithm, ISafeHandleProvider<SafeProvHandleImpl>, ISafeHandleProvider<SafeKeyHandleImpl>
 		where TKeyParams : Gost_R3410_KeyExchangeParams
 		where TKeyAlgorithm : Gost_R3410_KeyExchangeAlgorithm
 	{
-		public const int DefaultKeySize = 512;
-		public static readonly KeySizes[] DefaultLegalKeySizes = { new KeySizes(DefaultKeySize, DefaultKeySize, 0) };
-
-
 		/// <inheritdoc />
-		[SecurityCritical]
 		[SecuritySafeCritical]
-		protected Gost_R3410_AsymmetricAlgorithm()
+		protected Gost_R3410_AsymmetricAlgorithm(int keySize) : base(keySize)
 		{
-			LegalKeySizesValue = DefaultLegalKeySizes;
 			_providerParameters = CreateDefaultProviderParameters();
 			InitKeyContainer(_providerParameters, out _isRandomKeyContainer);
 		}
 
 		/// <inheritdoc />
-		[SecurityCritical]
 		[SecuritySafeCritical]
-		[ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
-		protected Gost_R3410_AsymmetricAlgorithm(ProviderTypes providerType) : base(providerType)
+		protected Gost_R3410_AsymmetricAlgorithm(ProviderTypes providerType, int keySize) : base(providerType, keySize)
 		{
-			LegalKeySizesValue = DefaultLegalKeySizes;
 			_providerParameters = CreateDefaultProviderParameters();
 			InitKeyContainer(_providerParameters, out _isRandomKeyContainer);
 		}
@@ -49,11 +38,10 @@ namespace GostCryptography.Gost_R3410
 		/// Конструктор.
 		/// </summary>
 		/// <param name="providerParameters">Параметры криптографического провайдера.</param>
-		[SecurityCritical]
+		/// <param name="keySize">Размер ключа в битах.</param>
 		[SecuritySafeCritical]
-		protected Gost_R3410_AsymmetricAlgorithm(CspParameters providerParameters) : base((ProviderTypes)providerParameters.ProviderType)
+		protected Gost_R3410_AsymmetricAlgorithm(CspParameters providerParameters, int keySize) : base((ProviderTypes)providerParameters.ProviderType, keySize)
 		{
-			LegalKeySizesValue = DefaultLegalKeySizes;
 			_providerParameters = CopyExistingProviderParameters(providerParameters);
 			InitKeyContainer(_providerParameters, out _isRandomKeyContainer);
 		}
@@ -69,6 +57,18 @@ namespace GostCryptography.Gost_R3410
 		[SecurityCritical]
 		private volatile SafeKeyHandleImpl _keyHandle;
 
+
+		/// <inheritdoc />
+		SafeProvHandleImpl ISafeHandleProvider<SafeProvHandleImpl>.SafeHandle
+		{
+			[SecurityCritical]
+			get
+			{
+				GetKeyPair();
+
+				return _providerHandle;
+			}
+		}
 
 		/// <inheritdoc />
 		SafeKeyHandleImpl ISafeHandleProvider<SafeKeyHandleImpl>.SafeHandle
@@ -90,7 +90,7 @@ namespace GostCryptography.Gost_R3410
 			{
 				GetKeyPair();
 
-				return DefaultKeySize;
+				return base.KeySize;
 			}
 		}
 
@@ -439,6 +439,7 @@ namespace GostCryptography.Gost_R3410
 		}
 
 
+		[SecurityCritical]
 		private void GetKeyPairValue(CspParameters providerParams, bool randomKeyContainer, out SafeProvHandleImpl providerHandle, out SafeKeyHandleImpl keyHandle)
 		{
 			SafeProvHandleImpl resultProviderHandle = null;
@@ -495,6 +496,7 @@ namespace GostCryptography.Gost_R3410
 			keyHandle = resultKeyHandle;
 		}
 
+		[SecurityCritical]
 		private static SafeProvHandleImpl CreateProviderHandle(CspParameters providerParams, bool randomKeyContainer)
 		{
 			SafeProvHandleImpl providerHandle = null;
@@ -611,6 +613,8 @@ namespace GostCryptography.Gost_R3410
 			}
 		}
 
+
+		[SecurityCritical]
 		private void InitKeyContainer(CspParameters providerParameters, out bool randomKeyContainer)
 		{
 			// Установка типа ключа

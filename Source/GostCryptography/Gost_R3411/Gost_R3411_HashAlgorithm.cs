@@ -24,11 +24,17 @@ namespace GostCryptography.Gost_R3411
 			_hashHandle = CreateHashHandle();
 		}
 
+		[SecurityCritical]
+		internal Gost_R3411_HashAlgorithm(ProviderTypes providerType, SafeProvHandleImpl providerHandle, int hashSize) : base(providerType, hashSize)
+		{
+			_hashHandle = CreateHashHandle(providerHandle);
+		}
+
 
 		/// <summary>
 		/// Создает дескриптор функции хэширования криптографического провайдера.
 		/// </summary>
-		[SecuritySafeCritical]
+		[SecurityCritical]
 		protected SafeHashHandleImpl CreateHashHandle()
 		{
 			return CreateHashHandle(CryptoApiHelper.GetProviderHandle(ProviderType));
@@ -37,7 +43,7 @@ namespace GostCryptography.Gost_R3411
 		/// <summary>
 		/// Создает дескриптор функции хэширования криптографического провайдера.
 		/// </summary>
-		[SecuritySafeCritical]
+		[SecurityCritical]
 		protected abstract SafeHashHandleImpl CreateHashHandle(SafeProvHandleImpl providerHandle);
 
 
@@ -48,7 +54,7 @@ namespace GostCryptography.Gost_R3411
 		SafeHashHandleImpl ISafeHandleProvider<SafeHashHandleImpl>.SafeHandle
 		{
 			[SecurityCritical]
-			get { return _hashHandle; }
+			get => _hashHandle;
 		}
 
 

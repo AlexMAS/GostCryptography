@@ -1,6 +1,5 @@
 ﻿using System.Security;
 using System.Security.Cryptography;
-using System.Security.Permissions;
 
 using GostCryptography.Asn1.Gost.Gost_R3410_2012_256;
 using GostCryptography.Base;
@@ -13,10 +12,13 @@ namespace GostCryptography.Gost_R3410
 	/// <summary>
 	/// Реализация алгоритма ГОСТ Р 34.10-2012/256.
 	/// </summary>
-	[SecurityCritical]
-	[SecuritySafeCritical]
 	public sealed class Gost_R3410_2012_256_AsymmetricAlgorithm : Gost_R3410_AsymmetricAlgorithm<Gost_R3410_2012_256_KeyExchangeParams, Gost_R3410_2012_256_KeyExchangeAlgorithm>
 	{
+		/// <summary>
+		/// Размер ключа ГОСТ Р 34.10-2012/256.
+		/// </summary>
+		public const int DefaultKeySizeValue = 512;
+
 		/// <summary>
 		/// Наименование алгоритма цифровой подписи ГОСТ Р 34.10-2012 для ключей длины 256 бит.
 		/// </summary>
@@ -29,24 +31,20 @@ namespace GostCryptography.Gost_R3410
 
 
 		/// <inheritdoc />
-		[SecurityCritical]
 		[SecuritySafeCritical]
-		public Gost_R3410_2012_256_AsymmetricAlgorithm()
+		public Gost_R3410_2012_256_AsymmetricAlgorithm() : base(DefaultKeySizeValue)
 		{
 		}
 
 		/// <inheritdoc />
-		[SecurityCritical]
 		[SecuritySafeCritical]
-		[ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
-		public Gost_R3410_2012_256_AsymmetricAlgorithm(ProviderTypes providerType) : base(providerType)
+		public Gost_R3410_2012_256_AsymmetricAlgorithm(ProviderTypes providerType) : base(providerType, DefaultKeySizeValue)
 		{
 		}
 
 		/// <inheritdoc />
-		[SecurityCritical]
 		[SecuritySafeCritical]
-		public Gost_R3410_2012_256_AsymmetricAlgorithm(CspParameters providerParameters) : base(providerParameters)
+		public Gost_R3410_2012_256_AsymmetricAlgorithm(CspParameters providerParameters) : base(providerParameters, DefaultKeySizeValue)
 		{
 		}
 
@@ -75,6 +73,7 @@ namespace GostCryptography.Gost_R3410
 		}
 
 		/// <inheritdoc />
+		[SecuritySafeCritical]
 		protected override Gost_R3410_2012_256_KeyExchangeAlgorithm CreateKeyExchangeAlgorithm(ProviderTypes providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, Gost_R3410_2012_256_KeyExchangeParams keyExchangeParameters)
 		{
 			return new Gost_R3410_2012_256_KeyExchangeAlgorithm(providerType, provHandle, keyHandle, keyExchangeParameters);
@@ -82,9 +81,10 @@ namespace GostCryptography.Gost_R3410
 
 
 		/// <inheritdoc />
+		[SecuritySafeCritical]
 		public override GostHashAlgorithm CreateHashAlgorithm()
 		{
-			return new Gost_R3411_2012_256_HashAlgorithm(ProviderType);
+			return new Gost_R3411_2012_256_HashAlgorithm(ProviderType, this.GetSafeHandle<SafeProvHandleImpl>());
 		}
 
 		/// <inheritdoc />
@@ -103,7 +103,7 @@ namespace GostCryptography.Gost_R3410
 
 
 		/// <inheritdoc />
-		public override GostKeyExchangeFormatter CreatKeyExchangeFormatter()
+		public override GostKeyExchangeFormatter CreateKeyExchangeFormatter()
 		{
 			return new Gost_R3410_2012_256_KeyExchangeFormatter(this);
 		}
