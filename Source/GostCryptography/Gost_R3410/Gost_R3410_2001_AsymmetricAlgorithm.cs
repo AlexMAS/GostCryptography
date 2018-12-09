@@ -114,5 +114,11 @@ namespace GostCryptography.Gost_R3410
 		{
 			return new Gost_R3410_2001_KeyExchangeDeformatter(this);
 		}
+
+		/// <inheritdoc />
+		protected override Gost_R3410_KeyExchangeXmlSerializer<Gost_R3410_2001_KeyExchangeParams> CreateKeyExchangeXmlSerializer()
+		{
+			return new Gost_R3410_2001_KeyExchangeXmlSerializer();
+		}
 	}
 }

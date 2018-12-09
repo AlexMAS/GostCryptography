@@ -70,7 +70,9 @@ namespace GostCryptography.Config
 			AddAlgorithm<GostSignatureFormatter>();
 			AddAlgorithm<GostSignatureDeformatter>();
 
-			AddAlgorithm<GostKeyValue>(GostKeyValue.KnownNames);
+			AddAlgorithm<Gost_R3410_2001_KeyValue>(Gost_R3410_2001_KeyValue.KnownValueUrls);
+			AddAlgorithm<Gost_R3410_2012_256_KeyValue>(Gost_R3410_2012_256_KeyValue.KnownValueUrls);
+			AddAlgorithm<Gost_R3410_2012_512_KeyValue>(Gost_R3410_2012_512_KeyValue.KnownValueUrls);
 		}
 
 		private static void AddKnownOIDs()

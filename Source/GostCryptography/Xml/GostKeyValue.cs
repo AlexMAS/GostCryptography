@@ -1,5 +1,4 @@
-﻿using System;
-using System.Security.Cryptography.Xml;
+﻿using System.Security.Cryptography.Xml;
 using System.Xml;
 
 using GostCryptography.Base;
@@ -7,33 +6,20 @@ using GostCryptography.Base;
 namespace GostCryptography.Xml
 {
 	/// <summary>
-	/// Параметры открытого ключа цифровой подписи ГОСТ Р 34.10.
+	/// Параметры открытого ключа цифровой подписи ГОСТ Р 34.10 элемента <see cref="KeyInfo"/>.
 	/// </summary>
-	public sealed class GostKeyValue : KeyInfoClause
+	public abstract class GostKeyValue : KeyInfoClause
 	{
 		/// <summary>
-		/// Наименование ключа.
+		/// URI пространства имен для XML-подписи ГОСТ Р 34.10.
 		/// </summary>
-		public const string NameValue = "urn:ietf:params:xml:ns:cpxmlsec:GOSTKeyValue";
+		public const string XmlDsigNamespaceUrl = "urn:ietf:params:xml:ns:cpxmlsec:";
+
 
 		/// <summary>
-		/// Устаревшее наименование ключа.
+		/// Создает экземпляр класса с заданным публичным ключом.
 		/// </summary>
-		public const string ObsoleteNameValue = "http://www.w3.org/2000/09/xmldsig# KeyValue/GostKeyValue";
-
-		/// <summary>
-		/// Известные наименования ключа.
-		/// </summary>
-		public static readonly string[] KnownNames = { NameValue, ObsoleteNameValue };
-
-
-		/// <inheritdoc />
-		public GostKeyValue()
-		{
-		}
-
-		/// <inheritdoc />
-		public GostKeyValue(GostAsymmetricAlgorithm publicKey)
+		protected GostKeyValue(GostAsymmetricAlgorithm publicKey)
 		{
 			PublicKey = publicKey;
 		}
@@ -50,7 +36,7 @@ namespace GostCryptography.Xml
 		{
 			if (element == null)
 			{
-				throw new ArgumentNullException(nameof(element));
+				throw ExceptionUtility.ArgumentNull(nameof(element));
 			}
 
 			PublicKey.FromXmlString(element.OuterXml);

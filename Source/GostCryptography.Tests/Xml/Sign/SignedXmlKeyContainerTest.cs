@@ -32,7 +32,7 @@ namespace GostCryptography.Tests.Xml.Sign
 			var xmlDocument = CreateXmlDocument();
 
 			// When
-			var signedXmlDocument = SignXmlDocument(xmlDocument, signingKey);
+			var signedXmlDocument = SignXmlDocument(xmlDocument, new Gost_R3410_2001_KeyValue(signingKey));
 
 			// Then
 			Assert.IsTrue(VerifyXmlDocumentSignature(signedXmlDocument));
@@ -49,7 +49,7 @@ namespace GostCryptography.Tests.Xml.Sign
 			var xmlDocument = CreateXmlDocument();
 
 			// When
-			var signedXmlDocument = SignXmlDocument(xmlDocument, signingKey);
+			var signedXmlDocument = SignXmlDocument(xmlDocument, new Gost_R3410_2012_256_KeyValue(signingKey));
 
 			// Then
 			Assert.IsTrue(VerifyXmlDocumentSignature(signedXmlDocument));
@@ -66,7 +66,7 @@ namespace GostCryptography.Tests.Xml.Sign
 			var xmlDocument = CreateXmlDocument();
 
 			// When
-			var signedXmlDocument = SignXmlDocument(xmlDocument, signingKey);
+			var signedXmlDocument = SignXmlDocument(xmlDocument, new Gost_R3410_2012_512_KeyValue(signingKey));
 
 			// Then
 			Assert.IsTrue(VerifyXmlDocumentSignature(signedXmlDocument));
@@ -79,8 +79,10 @@ namespace GostCryptography.Tests.Xml.Sign
 			return document;
 		}
 
-		private static XmlDocument SignXmlDocument(XmlDocument xmlDocument, GostAsymmetricAlgorithm signingKey)
+		private static XmlDocument SignXmlDocument(XmlDocument xmlDocument, GostKeyValue keyValue)
 		{
+			var signingKey = keyValue.PublicKey;
+
 			// Создание подписчика XML-документа
 			var signedXml = new GostSignedXml(signingKey.ProviderType, xmlDocument);
 
@@ -95,7 +97,7 @@ namespace GostCryptography.Tests.Xml.Sign
 
 			// Установка информации о ключе, который использовался для создания подписи
 			var keyInfo = new KeyInfo();
-			keyInfo.AddClause(new GostKeyValue(signingKey));
+			keyInfo.AddClause(keyValue);
 			signedXml.KeyInfo = keyInfo;
 
 			// Вычисление подписи
