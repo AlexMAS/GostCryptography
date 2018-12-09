@@ -5,11 +5,18 @@ namespace GostCryptography.Asn1.Gost.Gost_R3410
 {
 	public abstract class Gost_R3410_PublicKey : Asn1OctetString
 	{
+		private readonly int _keySize;
+
+		protected Gost_R3410_PublicKey(int keySize)
+		{
+			_keySize = keySize;
+		}
+
 		public override void Decode(Asn1BerDecodeBuffer buffer, bool explicitTagging, int implicitLength)
 		{
 			base.Decode(buffer, explicitTagging, implicitLength);
 
-			if (Length != 64)
+			if (Length != _keySize)
 			{
 				throw ExceptionUtility.CryptographicException(Resources.Asn1ConsVioException, nameof(Length), Length);
 			}
@@ -17,7 +24,7 @@ namespace GostCryptography.Asn1.Gost.Gost_R3410
 
 		public override int Encode(Asn1BerEncodeBuffer buffer, bool explicitTagging)
 		{
-			if (Length != 64)
+			if (Length != _keySize)
 			{
 				throw ExceptionUtility.CryptographicException(Resources.Asn1ConsVioException, nameof(Length), Length);
 			}
