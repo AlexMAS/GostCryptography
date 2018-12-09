@@ -30,6 +30,8 @@ namespace GostCryptography.Gost_28147_89
 		public Gost_28147_89_SymmetricAlgorithm()
 		{
 			InitDefaults();
+			_providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
+			_keyHandle = SafeKeyHandleImpl.InvalidHandle;
 		}
 
 		/// <inheritdoc />
@@ -37,12 +39,15 @@ namespace GostCryptography.Gost_28147_89
 		public Gost_28147_89_SymmetricAlgorithm(ProviderTypes providerType) : base(providerType)
 		{
 			InitDefaults();
+			_providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
+			_keyHandle = SafeKeyHandleImpl.InvalidHandle;
 		}
 
 
 		[SecurityCritical]
 		internal Gost_28147_89_SymmetricAlgorithm(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl keyHandle) : base(providerType)
 		{
+			InitDefaults();
 			_providerHandle = providerHandle.DangerousAddRef();
 			_keyHandle = CryptoApiHelper.DuplicateKey(keyHandle);
 
@@ -58,9 +63,6 @@ namespace GostCryptography.Gost_28147_89
 		{
 			Mode = CipherMode.CFB;
 			Padding = PaddingMode.None;
-
-			_providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
-			_keyHandle = SafeKeyHandleImpl.InvalidHandle;
 		}
 
 
