@@ -47,40 +47,40 @@ namespace GostCryptography.Reflection
 		}
 
 
-		public static IEnumerator GetX509Enumumerable(this SignedXml signedXml)
+		public static IEnumerator GetX509Enumerable(this SignedXml signedXml)
 		{
-			return (IEnumerator)X509EnumumerableField.GetValue(signedXml);
+			return (IEnumerator)X509EnumerableField.GetValue(signedXml);
 		}
 
-		public static void SetX509Enumumerable(this SignedXml signedXml, IEnumerator x509Enumumerable)
+		public static void SetX509Enumerable(this SignedXml signedXml, IEnumerator x509Enumerable)
 		{
-			X509EnumumerableField.SetValue(signedXml, x509Enumumerable);
+			X509EnumerableField.SetValue(signedXml, x509Enumerable);
 		}
 
-		private static volatile FieldInfo _x509EnumumerableField;
-		private static readonly object X509EnumumerableSync = new object();
+		private static volatile FieldInfo _x509EnumerableField;
+		private static readonly object X509EnumerableSync = new object();
 
-		private static FieldInfo X509EnumumerableField
+		private static FieldInfo X509EnumerableField
 		{
 			get
 			{
-				if (_x509EnumumerableField == null)
+				if (_x509EnumerableField == null)
 				{
-					lock (X509EnumumerableSync)
+					lock (X509EnumerableSync)
 					{
-						if (_x509EnumumerableField == null)
+						if (_x509EnumerableField == null)
 						{
-							_x509EnumumerableField = typeof(SignedXml).GetField("m_x509Enum", BindingFlags.Instance | BindingFlags.NonPublic);
+							_x509EnumerableField = typeof(SignedXml).GetField("m_x509Enum", BindingFlags.Instance | BindingFlags.NonPublic);
 						}
 					}
 				}
 
-				if (_x509EnumumerableField == null)
+				if (_x509EnumerableField == null)
 				{
 					throw ExceptionUtility.CryptographicException(Resources.XmlCannotFindPrivateMember, "m_x509Enum");
 				}
 
-				return _x509EnumumerableField;
+				return _x509EnumerableField;
 			}
 		}
 

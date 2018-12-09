@@ -40,10 +40,10 @@ namespace GostCryptography.Xml
 			set => this.SetKeyInfoEnumerable(value);
 		}
 
-		private IEnumerator X509Enumumerable
+		private IEnumerator X509Enumerable
 		{
-			get => this.GetX509Enumumerable();
-			set => this.SetX509Enumumerable(value);
+			get => this.GetX509Enumerable();
+			set => this.SetX509Enumerable(value);
 		}
 
 		private X509Certificate2Collection X509Collection
@@ -87,7 +87,7 @@ namespace GostCryptography.Xml
 				throw ExceptionUtility.CryptographicException(Resources.XmlKeyInfoRequired);
 			}
 
-			if (X509Enumumerable != null)
+			if (X509Enumerable != null)
 			{
 				var nextCertificatePublicKey = GetNextCertificatePublicKey();
 
@@ -127,7 +127,7 @@ namespace GostCryptography.Xml
 
 					if (X509Collection.Count > 0)
 					{
-						X509Enumumerable = X509Collection.GetEnumerator();
+						X509Enumerable = X509Collection.GetEnumerator();
 
 						var nextCertificatePublicKey = GetNextCertificatePublicKey();
 
@@ -145,9 +145,9 @@ namespace GostCryptography.Xml
 		[SecuritySafeCritical]
 		private AsymmetricAlgorithm GetNextCertificatePublicKey()
 		{
-			while (X509Enumumerable.MoveNext())
+			while (X509Enumerable.MoveNext())
 			{
-				if (X509Enumumerable.Current is X509Certificate2 certificate)
+				if (X509Enumerable.Current is X509Certificate2 certificate)
 				{
 					return certificate.GetPublicKeyAlgorithm(ProviderType);
 				}

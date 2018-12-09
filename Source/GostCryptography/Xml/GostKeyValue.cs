@@ -13,7 +13,7 @@ namespace GostCryptography.Xml
 		/// <summary>
 		/// URI пространства имен для XML-подписи ГОСТ Р 34.10.
 		/// </summary>
-		public const string XmlDsigNamespaceUrl = "urn:ietf:params:xml:ns:cpxmlsec:";
+		public const string XmlDsigNamespaceUrl = "urn:ietf:params:xml:ns:cpxmlsec";
 
 
 		/// <summary>
