@@ -25,14 +25,7 @@ namespace GostCryptography.Tests.Xml.Sign
 		public void ShouldSignXml(TestCertificateInfo testCase)
 		{
 			// Given
-
 			var certificate = testCase.Certificate;
-
-			if (certificate == null)
-			{
-				Assert.Ignore("Certificate not found.");
-			}
-
 			var xmlDocument = CreateXmlDocument();
 
 			// When

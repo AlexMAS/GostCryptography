@@ -21,14 +21,7 @@ namespace GostCryptography.Tests.Pkcs
 		public void ShouldEncryptAndDecrypt(TestCertificateInfo testCase)
 		{
 			// Given
-
 			var certificate = testCase.Certificate;
-
-			if (certificate == null)
-			{
-				Assert.Ignore("Certificate not found.");
-			}
-
 			var message = CreateMessage();
 
 			// When

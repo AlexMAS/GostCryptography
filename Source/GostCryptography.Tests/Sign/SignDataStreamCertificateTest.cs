@@ -23,14 +23,7 @@ namespace GostCryptography.Tests.Sign
 		public void ShouldSignDataStream(TestCertificateInfo testCase)
 		{
 			// Given
-
 			var certificate = testCase.Certificate;
-
-			if (certificate == null)
-			{
-				Assert.Ignore("Certificate not found.");
-			}
-
 			var privateKey = (GostAsymmetricAlgorithm)certificate.GetPrivateKeyAlgorithm();
 			var publicKey = (GostAsymmetricAlgorithm)certificate.GetPublicKeyAlgorithm(privateKey.ProviderType);
 			var dataStream = CreateDataStream();

@@ -22,17 +22,11 @@ namespace GostCryptography.Tests.Xml.Sign
 	public class SignedXmlKeyContainerTest
 	{
 		[Test]
-		public void ShouldSignXmlWithGost_R3410_2001()
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Gost_R3410_2001_Certificates))]
+		public void ShouldSignXmlWithGost_R3410_2001(TestCertificateInfo testCase)
 		{
 			// Given
-
-			var certificate = TestConfig.Gost_R3410_2001.Certificate;
-
-			if (certificate == null)
-			{
-				Assert.Ignore("Certificate not found.");
-			}
-
+			var certificate = testCase.Certificate;
 			var keyContainer = certificate.GetPrivateKeyInfo();
 			var signingKey = new Gost_R3410_2001_AsymmetricAlgorithm(keyContainer);
 			var xmlDocument = CreateXmlDocument();
@@ -45,17 +39,11 @@ namespace GostCryptography.Tests.Xml.Sign
 		}
 
 		[Test]
-		public void ShouldSignXmlWithGost_R3410_2012_256()
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Gost_R3410_2012_256_Certificates))]
+		public void ShouldSignXmlWithGost_R3410_2012_256(TestCertificateInfo testCase)
 		{
 			// Given
-
-			var certificate = TestConfig.Gost_R3410_2012_256.Certificate;
-
-			if (certificate == null)
-			{
-				Assert.Ignore("Certificate not found.");
-			}
-
+			var certificate = testCase.Certificate;
 			var keyContainer = certificate.GetPrivateKeyInfo();
 			var signingKey = new Gost_R3410_2012_256_AsymmetricAlgorithm(keyContainer);
 			var xmlDocument = CreateXmlDocument();
@@ -68,17 +56,11 @@ namespace GostCryptography.Tests.Xml.Sign
 		}
 
 		[Test]
-		public void ShouldSignXmlWithGost_R3410_2012_512()
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Gost_R3410_2012_512_Certificates))]
+		public void ShouldSignXmlWithGost_R3410_2012_512(TestCertificateInfo testCase)
 		{
 			// Given
-
-			var certificate = TestConfig.Gost_R3410_2012_512.Certificate;
-
-			if (certificate == null)
-			{
-				Assert.Ignore("Certificate not found.");
-			}
-
+			var certificate = testCase.Certificate;
 			var keyContainer = certificate.GetPrivateKeyInfo();
 			var signingKey = new Gost_R3410_2012_512_AsymmetricAlgorithm(keyContainer);
 			var xmlDocument = CreateXmlDocument();

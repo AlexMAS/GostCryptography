@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -28,14 +27,7 @@ namespace GostCryptography.Tests.Gost_28147_89
 		public void ShouldEncryptAndDecrypt(TestCertificateInfo testCase)
 		{
 			// Given
-
 			var certificate = testCase.Certificate;
-
-			if (certificate == null)
-			{
-				Assert.Ignore("Certificate not found.");
-			}
-
 			var privateKey = (GostAsymmetricAlgorithm)certificate.GetPrivateKeyAlgorithm();
 			var publicKey = (GostAsymmetricAlgorithm)certificate.GetPublicKeyAlgorithm(privateKey.ProviderType);
 			var dataStream = CreateDataStream();
@@ -60,13 +52,13 @@ namespace GostCryptography.Tests.Gost_28147_89
 			var encryptedDataStream = new MemoryStream();
 
 			// Отправитель создает случайный сессионный ключ для шифрации данных
-			using (var senderSessionKey = new Gost_28147_89_SymmetricAlgorithm())
+			using (var senderSessionKey = new Gost_28147_89_SymmetricAlgorithm(publicKey.ProviderType))
 			{
 				// Отправитель передает получателю вектор инициализации
 				iv = senderSessionKey.IV;
 
 				// Отправитель шифрует сессионный ключ и передает его получателю
-				var formatter = publicKey.CreatKeyExchangeFormatter();
+				var formatter = publicKey.CreateKeyExchangeFormatter();
 				sessionKey = formatter.CreateKeyExchangeData(senderSessionKey);
 
 				// Отправитель шифрует данные с использованием сессионного ключа
@@ -74,6 +66,7 @@ namespace GostCryptography.Tests.Gost_28147_89
 				{
 					var cryptoStream = new CryptoStream(encryptedDataStream, encryptor, CryptoStreamMode.Write);
 					dataStream.CopyTo(cryptoStream);
+					cryptoStream.FlushFinalBlock();
 				}
 			}
 
@@ -105,27 +98,6 @@ namespace GostCryptography.Tests.Gost_28147_89
 			decryptedDataStream.Position = 0;
 
 			return decryptedDataStream;
-		}
-
-
-		public class EncryptionTestCase
-		{
-			public EncryptionTestCase(string name, Predicate<X509Certificate2> filter)
-			{
-				Name = name;
-				Filter = filter;
-			}
-
-
-			public readonly string Name;
-
-			public readonly Predicate<X509Certificate2> Filter;
-
-
-			public override string ToString()
-			{
-				return Name;
-			}
 		}
 	}
 }

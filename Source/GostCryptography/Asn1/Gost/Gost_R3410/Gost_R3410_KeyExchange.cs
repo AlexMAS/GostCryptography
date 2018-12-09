@@ -96,7 +96,7 @@ namespace GostCryptography.Asn1.Gost.Gost_R3410
 			TransportParameters = CreateKeyExchangeParams();
 			TransportParameters.DigestParamSet = publicKeyParams.DigestParamSet.Oid.Value;
 			TransportParameters.PublicKeyParamSet = publicKeyParams.PublicKeyParamSet.Oid.Value;
-			TransportParameters.EncryptionParamSet = publicKeyParams.EncryptionParamSet.Oid.Value;
+			TransportParameters.EncryptionParamSet = publicKeyParams.EncryptionParamSet?.Oid.Value;
 			TransportParameters.PublicKey = publicKey.Value;
 			TransportParameters.PrivateKey = null;
 		}

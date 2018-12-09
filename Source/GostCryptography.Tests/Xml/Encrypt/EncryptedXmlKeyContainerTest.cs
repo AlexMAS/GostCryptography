@@ -33,16 +33,12 @@ namespace GostCryptography.Tests.Xml.Encrypt
 	public class EncryptedXmlKeyContainerTest
 	{
 		[Test]
-		public void ShouldEncryptXmlWithGost_R3410_2001()
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Gost_R3410_2001_Certificates))]
+		public void ShouldEncryptXmlWithGost_R3410_2001(TestCertificateInfo testCase)
 		{
 			// Given
 
-			var certificate = TestConfig.Gost_R3410_2001.Certificate;
-
-			if (certificate == null)
-			{
-				Assert.Ignore("Certificate not found.");
-			}
+			var certificate = testCase.Certificate;
 
 			// Получатель экспортирует отправителю информацию о своем открытом ключе
 			var keyContainer = certificate.GetPrivateKeyInfo();
@@ -66,16 +62,12 @@ namespace GostCryptography.Tests.Xml.Encrypt
 		}
 
 		[Test]
-		public void ShouldEncryptXmlWithGost_R3410_2012_256()
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Gost_R3410_2012_256_Certificates))]
+		public void ShouldEncryptXmlWithGost_R3410_2012_256(TestCertificateInfo testCase)
 		{
 			// Given
 
-			var certificate = TestConfig.Gost_R3410_2012_256.Certificate;
-
-			if (certificate == null)
-			{
-				Assert.Ignore("Certificate not found.");
-			}
+			var certificate = testCase.Certificate;
 
 			// Получатель экспортирует отправителю информацию о своем открытом ключе
 			var keyContainer = certificate.GetPrivateKeyInfo();
@@ -99,16 +91,12 @@ namespace GostCryptography.Tests.Xml.Encrypt
 		}
 
 		[Test]
-		public void ShouldEncryptXmlWithGost_R3410_2012_512()
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Gost_R3410_2012_512_Certificates))]
+		public void ShouldEncryptXmlWithGost_R3410_2012_512(TestCertificateInfo testCase)
 		{
 			// Given
 
-			var certificate = TestConfig.Gost_R3410_2012_512.Certificate;
-
-			if (certificate == null)
-			{
-				Assert.Ignore("Certificate not found.");
-			}
+			var certificate = testCase.Certificate;
 
 			// Получатель экспортирует отправителю информацию о своем открытом ключе
 			var keyContainer = certificate.GetPrivateKeyInfo();

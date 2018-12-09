@@ -23,14 +23,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 		public void ShouldEncryptXml(TestCertificateInfo testCase)
 		{
 			// Given
-
 			var certificate = testCase.Certificate;
-
-			if (certificate == null)
-			{
-				Assert.Ignore("Certificate not found.");
-			}
-
 			var xmlDocument = CreateXmlDocument();
 			var expectedXml = xmlDocument.OuterXml;
 

@@ -58,7 +58,7 @@ namespace GostCryptography.Tests.Gost_R3411
 			// TODO: VipNet does not support this feature - https://infotecs.ru/forum/topic/10142-oshibka-pri-sozdanii-klyucha-shifrovaniya-na-osnove-dannyih-polzovatelya-cryptderivekey/
 			if (providerType.IsVipNet())
 			{
-				return;
+				Assert.Ignore("VipNet does not support this feature");
 			}
 
 			// Given
