@@ -12,7 +12,7 @@ namespace GostCryptography.Base
 		/// </summary>
 		/// <param name="providerType">Тип криптографического провайдера.</param>
 		/// <param name="keySize">Размер ключа в битах.</param>
-		protected GostAsymmetricAlgorithm(ProviderTypes providerType, int keySize)
+		protected GostAsymmetricAlgorithm(ProviderType providerType, int keySize)
 		{
 			ProviderType = providerType;
 			KeySizeValue = keySize;
@@ -21,7 +21,7 @@ namespace GostCryptography.Base
 
 
 		/// <inheritdoc />
-		public ProviderTypes ProviderType { get; }
+		public ProviderType ProviderType { get; }
 
 		/// <inheritdoc />
 		public abstract string AlgorithmName { get; }

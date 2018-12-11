@@ -34,12 +34,12 @@ namespace GostCryptography.Gost_R3411
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3411_2012_256_HashAlgorithm(ProviderTypes providerType) : base(providerType, DefaultHashSizeValue)
+		public Gost_R3411_2012_256_HashAlgorithm(ProviderType providerType) : base(providerType, DefaultHashSizeValue)
 		{
 		}
 
 		[SecurityCritical]
-		internal Gost_R3411_2012_256_HashAlgorithm(ProviderTypes providerType, SafeProvHandleImpl providerHandle) : base(providerType, providerHandle, DefaultHashSizeValue)
+		internal Gost_R3411_2012_256_HashAlgorithm(ProviderType providerType, SafeProvHandleImpl providerHandle) : base(providerType, providerHandle, DefaultHashSizeValue)
 		{
 		}
 

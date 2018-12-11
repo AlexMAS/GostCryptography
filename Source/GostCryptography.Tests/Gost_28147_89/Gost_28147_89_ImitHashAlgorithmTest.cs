@@ -20,7 +20,7 @@ namespace GostCryptography.Tests.Gost_28147_89
 	{
 		[Test]
 		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Providers))]
-		public void ShouldComputeImitHash(ProviderTypes providerType)
+		public void ShouldComputeImitHash(ProviderType providerType)
 		{
 			// Given
 			var dataStream = CreateDataStream();

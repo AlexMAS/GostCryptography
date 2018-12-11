@@ -44,7 +44,7 @@ namespace GostCryptography.Xml
 		}
 
 		/// <inheritdoc cref="EncryptedXml()"/>
-		public GostEncryptedXml(ProviderTypes providerType)
+		public GostEncryptedXml(ProviderType providerType)
 		{
 			_encryptedXml = new GostEncryptedXmlImpl(providerType);
 		}
@@ -55,7 +55,7 @@ namespace GostCryptography.Xml
 		}
 
 		/// <inheritdoc cref="EncryptedXml(XmlDocument)"/>
-		public GostEncryptedXml(ProviderTypes providerType, XmlDocument document)
+		public GostEncryptedXml(ProviderType providerType, XmlDocument document)
 		{
 			_encryptedXml = new GostEncryptedXmlImpl(providerType, document);
 		}
@@ -66,7 +66,7 @@ namespace GostCryptography.Xml
 		}
 
 		/// <inheritdoc cref="EncryptedXml(XmlDocument,Evidence)"/>
-		public GostEncryptedXml(ProviderTypes providerType, XmlDocument document, Evidence evidence)
+		public GostEncryptedXml(ProviderType providerType, XmlDocument document, Evidence evidence)
 		{
 			_encryptedXml = new GostEncryptedXmlImpl(providerType, document, evidence);
 		}

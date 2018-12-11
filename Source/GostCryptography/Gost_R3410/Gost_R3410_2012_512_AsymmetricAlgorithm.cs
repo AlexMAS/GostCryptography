@@ -39,7 +39,7 @@ namespace GostCryptography.Gost_R3410
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3410_2012_512_AsymmetricAlgorithm(ProviderTypes providerType) : base(providerType, DefaultKeySizeValue)
+		public Gost_R3410_2012_512_AsymmetricAlgorithm(ProviderType providerType) : base(providerType, DefaultKeySizeValue)
 		{
 		}
 
@@ -75,7 +75,7 @@ namespace GostCryptography.Gost_R3410
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		protected override Gost_R3410_2012_512_KeyExchangeAlgorithm CreateKeyExchangeAlgorithm(ProviderTypes providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, Gost_R3410_2012_512_KeyExchangeParams keyExchangeParameters)
+		protected override Gost_R3410_2012_512_KeyExchangeAlgorithm CreateKeyExchangeAlgorithm(ProviderType providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, Gost_R3410_2012_512_KeyExchangeParams keyExchangeParameters)
 		{
 			return new Gost_R3410_2012_512_KeyExchangeAlgorithm(providerType, provHandle, keyHandle, keyExchangeParameters);
 		}

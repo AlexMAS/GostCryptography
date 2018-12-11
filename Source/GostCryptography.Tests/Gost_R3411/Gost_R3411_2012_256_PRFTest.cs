@@ -21,7 +21,7 @@ namespace GostCryptography.Tests.Gost_R3411
 
 		[Test]
 		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Providers))]
-		public void ShouldDeriveBytes(ProviderTypes providerType)
+		public void ShouldDeriveBytes(ProviderType providerType)
 		{
 			// Given
 			var initKey = new Gost_28147_89_SymmetricAlgorithm(providerType);
@@ -53,7 +53,7 @@ namespace GostCryptography.Tests.Gost_R3411
 
 		[Test]
 		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Providers))]
-		public void ShouldDeriveKey(ProviderTypes providerType)
+		public void ShouldDeriveKey(ProviderType providerType)
 		{
 			// TODO: VipNet does not support this feature - https://infotecs.ru/forum/topic/10142-oshibka-pri-sozdanii-klyucha-shifrovaniya-na-osnove-dannyih-polzovatelya-cryptderivekey/
 			if (providerType.IsVipNet())

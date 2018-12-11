@@ -219,7 +219,7 @@ namespace System.Security.Cryptography.X509Certificates
 		/// <summary>
 		/// Возвращает открытый ключ сертификата с использованием заданного типа криптографического провайдера.
 		/// </summary>
-		public static AsymmetricAlgorithm GetPublicKeyAlgorithm(this X509Certificate2 certificate, ProviderTypes providerType)
+		public static AsymmetricAlgorithm GetPublicKeyAlgorithm(this X509Certificate2 certificate, ProviderType providerType)
 		{
 			if (certificate.IsGost_R3410_2012_512())
 			{

@@ -34,7 +34,7 @@ namespace GostCryptography.Gost_R3411
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3411_2012_512_PRF(ProviderTypes providerType, byte[] key, byte[] label, byte[] seed) : base(providerType, key, label, seed)
+		public Gost_R3411_2012_512_PRF(ProviderType providerType, byte[] key, byte[] label, byte[] seed) : base(providerType, key, label, seed)
 		{
 		}
 

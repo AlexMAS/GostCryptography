@@ -22,9 +22,9 @@ namespace GostCryptography.Config
 	/// </summary>
 	public static class GostCryptoConfig
 	{
-		private static Lazy<ProviderTypes> _providerType_2001;
-		private static Lazy<ProviderTypes> _providerType_2012_512;
-		private static Lazy<ProviderTypes> _providerType_2012_1024;
+		private static Lazy<ProviderType> _providerType_2001;
+		private static Lazy<ProviderType> _providerType_2012_512;
+		private static Lazy<ProviderType> _providerType_2012_1024;
 		private static readonly Dictionary<string, Type> NameToType = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
 		private static readonly Dictionary<string, string> NameToOid = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
@@ -39,9 +39,9 @@ namespace GostCryptography.Config
 		[SecuritySafeCritical]
 		private static void InitDefaultProviders()
 		{
-			_providerType_2001 = new Lazy<ProviderTypes>(CryptoApiHelper.GetAvailableProviderType_2001);
-			_providerType_2012_512 = new Lazy<ProviderTypes>(CryptoApiHelper.GetAvailableProviderType_2012_512);
-			_providerType_2012_1024 = new Lazy<ProviderTypes>(CryptoApiHelper.GetAvailableProviderType_2012_1024);
+			_providerType_2001 = new Lazy<ProviderType>(CryptoApiHelper.GetAvailableProviderType_2001);
+			_providerType_2012_512 = new Lazy<ProviderType>(CryptoApiHelper.GetAvailableProviderType_2012_512);
+			_providerType_2012_1024 = new Lazy<ProviderType>(CryptoApiHelper.GetAvailableProviderType_2012_1024);
 		}
 
 		private static void AddKnownAlgorithms()
@@ -101,17 +101,17 @@ namespace GostCryptography.Config
 		/// <summary>
 		/// Возвращает провайдер по умолчанию для ключей ГОСТ Р 34.10-2001.
 		/// </summary>
-		public static ProviderTypes ProviderType => _providerType_2001.Value;
+		public static ProviderType ProviderType => _providerType_2001.Value;
 
 		/// <summary>
 		/// Возвращает провайдер по умолчанию для ключей ГОСТ Р 34.10-2012/512.
 		/// </summary>
-		public static ProviderTypes ProviderType_2012_512 => _providerType_2012_512.Value;
+		public static ProviderType ProviderType_2012_512 => _providerType_2012_512.Value;
 
 		/// <summary>
 		/// Возвращает провайдер по умолчанию для ключей ГОСТ Р 34.10-2012/1024.
 		/// </summary>
-		public static ProviderTypes ProviderType_2012_1024 => _providerType_2012_1024.Value;
+		public static ProviderType ProviderType_2012_1024 => _providerType_2012_1024.Value;
 
 
 		/// <summary>

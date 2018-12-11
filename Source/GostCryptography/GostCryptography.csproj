@@ -210,7 +210,7 @@
     <Compile Include="Base\GostPRF.cs" />
     <Compile Include="Gost_R3410\Gost_R3410_2001_SignatureDescription.cs" />
     <Compile Include="Base\GostSymmetricAlgorithm.cs" />
-    <Compile Include="Base\ProviderTypes.cs" />
+    <Compile Include="Base\ProviderType.cs" />
     <Compile Include="ExceptionUtility.cs" />
     <Compile Include="Native\CryptoApiHelper.cs" />
     <Compile Include="Native\Constants.cs" />

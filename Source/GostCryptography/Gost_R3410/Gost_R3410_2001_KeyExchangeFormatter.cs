@@ -24,7 +24,7 @@ namespace GostCryptography.Gost_R3410
 		}
 
 		/// <inheritdoc />
-		protected override Gost_R3410_EphemeralAsymmetricAlgorithm<Gost_R3410_2001_KeyExchangeParams, Gost_R3410_2001_KeyExchangeAlgorithm> CreateEphemeralAlgorithm(ProviderTypes providerType, Gost_R3410_2001_KeyExchangeParams keyExchangeParameters)
+		protected override Gost_R3410_EphemeralAsymmetricAlgorithm<Gost_R3410_2001_KeyExchangeParams, Gost_R3410_2001_KeyExchangeAlgorithm> CreateEphemeralAlgorithm(ProviderType providerType, Gost_R3410_2001_KeyExchangeParams keyExchangeParameters)
 		{
 			return new Gost_R3410_2001_EphemeralAsymmetricAlgorithm(providerType, keyExchangeParameters);
 		}

@@ -36,7 +36,7 @@ namespace GostCryptography.Gost_28147_89
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_28147_89_SymmetricAlgorithm(ProviderTypes providerType) : base(providerType)
+		public Gost_28147_89_SymmetricAlgorithm(ProviderType providerType) : base(providerType)
 		{
 			InitDefaults();
 			_providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
@@ -45,7 +45,7 @@ namespace GostCryptography.Gost_28147_89
 
 
 		[SecurityCritical]
-		internal Gost_28147_89_SymmetricAlgorithm(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl keyHandle) : base(providerType)
+		internal Gost_28147_89_SymmetricAlgorithm(ProviderType providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl keyHandle) : base(providerType)
 		{
 			InitDefaults();
 			_providerHandle = providerHandle.DangerousAddRef();
@@ -126,7 +126,7 @@ namespace GostCryptography.Gost_28147_89
 		/// Создает экземпляр <see cref="Gost_28147_89_SymmetricAlgorithm"/> на основе сессионного ключа.
 		/// </summary>
 		[SecuritySafeCritical]
-		public static Gost_28147_89_SymmetricAlgorithm CreateFromSessionKey(ProviderTypes providerType, byte[] sessionKey)
+		public static Gost_28147_89_SymmetricAlgorithm CreateFromSessionKey(ProviderType providerType, byte[] sessionKey)
 		{
 			if (sessionKey == null)
 			{

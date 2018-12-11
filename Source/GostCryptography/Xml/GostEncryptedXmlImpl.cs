@@ -16,23 +16,23 @@ namespace GostCryptography.Xml
 {
 	sealed class GostEncryptedXmlImpl : EncryptedXml
 	{
-		public GostEncryptedXmlImpl(ProviderTypes providerType)
+		public GostEncryptedXmlImpl(ProviderType providerType)
 		{
 			ProviderType = providerType;
 		}
 
-		public GostEncryptedXmlImpl(ProviderTypes providerType, XmlDocument document) : base(document)
+		public GostEncryptedXmlImpl(ProviderType providerType, XmlDocument document) : base(document)
 		{
 			ProviderType = providerType;
 		}
 
-		public GostEncryptedXmlImpl(ProviderTypes providerType, XmlDocument document, Evidence evidence) : base(document, evidence)
+		public GostEncryptedXmlImpl(ProviderType providerType, XmlDocument document, Evidence evidence) : base(document, evidence)
 		{
 			ProviderType = providerType;
 		}
 
 
-		public ProviderTypes ProviderType { get; }
+		public ProviderType ProviderType { get; }
 
 
 		public new void AddKeyNameMapping(string keyName, object keyObject)

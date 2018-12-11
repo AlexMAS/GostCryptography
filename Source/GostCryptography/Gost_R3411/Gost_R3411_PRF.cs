@@ -36,7 +36,7 @@ namespace GostCryptography.Gost_R3411
 		/// <exception cref="ArgumentException"></exception>
 		/// <exception cref="ArgumentNullException"></exception>
 		[SecuritySafeCritical]
-		protected Gost_R3411_PRF(ProviderTypes providerType, byte[] key, byte[] label, byte[] seed)
+		protected Gost_R3411_PRF(ProviderType providerType, byte[] key, byte[] label, byte[] seed)
 			: this(providerType, Gost_28147_89_SymmetricAlgorithm.CreateFromSessionKey(providerType, key), label, seed)
 		{
 		}
@@ -51,7 +51,7 @@ namespace GostCryptography.Gost_R3411
 		/// <exception cref="ArgumentException"></exception>
 		/// <exception cref="ArgumentNullException"></exception>
 		[SecuritySafeCritical]
-		private Gost_R3411_PRF(ProviderTypes providerType, Gost_28147_89_SymmetricAlgorithm key, byte[] label, byte[] seed) : base(providerType)
+		private Gost_R3411_PRF(ProviderType providerType, Gost_28147_89_SymmetricAlgorithm key, byte[] label, byte[] seed) : base(providerType)
 		{
 			if (label == null)
 			{

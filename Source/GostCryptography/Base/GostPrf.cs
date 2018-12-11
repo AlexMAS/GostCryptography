@@ -13,14 +13,14 @@ namespace GostCryptography.Base
 		/// </summary>
 		/// <param name="providerType">Тип криптографического провайдера.</param>
 		[SecuritySafeCritical]
-		protected GostPRF(ProviderTypes providerType)
+		protected GostPRF(ProviderType providerType)
 		{
 			ProviderType = providerType;
 		}
 
 
 		/// <inheritdoc />
-		public ProviderTypes ProviderType { get; }
+		public ProviderType ProviderType { get; }
 
 		/// <inheritdoc />
 		public abstract string AlgorithmName { get; }

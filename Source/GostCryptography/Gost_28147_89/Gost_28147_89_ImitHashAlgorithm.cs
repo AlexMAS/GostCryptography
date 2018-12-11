@@ -36,7 +36,7 @@ namespace GostCryptography.Gost_28147_89
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_28147_89_ImitHashAlgorithm(ProviderTypes providerType) : base(providerType, DefaultHashSize)
+		public Gost_28147_89_ImitHashAlgorithm(ProviderType providerType) : base(providerType, DefaultHashSize)
 		{
 			_keyAlgorithm = new Gost_28147_89_SymmetricAlgorithm(ProviderType);
 		}

@@ -5,7 +5,7 @@ namespace GostCryptography.Base
 	/// <summary>
 	/// Типы криптографических провайдеров.
 	/// </summary>
-	public enum ProviderTypes
+	public enum ProviderType
 	{
 		/// <summary>
 		/// Infotecs Cryptographic Service Provider.
@@ -41,45 +41,45 @@ namespace GostCryptography.Base
 
 
 	/// <summary>
-	/// Методы расширения <see cref="ProviderTypes"/>.
+	/// Методы расширения <see cref="ProviderType"/>.
 	/// </summary>
 	public static class ProviderTypesExtensions
 	{
 		/// <summary>
 		/// Набор провайдеров VipNet.
 		/// </summary>
-		public static readonly HashSet<ProviderTypes> VipNetProviders = new HashSet<ProviderTypes>
+		public static readonly HashSet<ProviderType> VipNetProviders = new HashSet<ProviderType>
 		{
-			ProviderTypes.VipNet,
-			ProviderTypes.VipNet_2012_512,
-			ProviderTypes.VipNet_2012_1024
+			ProviderType.VipNet,
+			ProviderType.VipNet_2012_512,
+			ProviderType.VipNet_2012_1024
 		};
 
 		/// <summary>
 		/// Набор провайдеров CryptoPro.
 		/// </summary>
-		public static readonly HashSet<ProviderTypes> CryptoProProviders = new HashSet<ProviderTypes>
+		public static readonly HashSet<ProviderType> CryptoProProviders = new HashSet<ProviderType>
 		{
-			ProviderTypes.CryptoPro,
-			ProviderTypes.CryptoPro_2012_512,
-			ProviderTypes.CryptoPro_2012_1024
+			ProviderType.CryptoPro,
+			ProviderType.CryptoPro_2012_512,
+			ProviderType.CryptoPro_2012_1024
 		};
 
 
 		/// <summary>
 		/// Возвращает <see langword="true"/> для VipNet.
 		/// </summary>
-		public static bool IsVipNet(this ProviderTypes providerType) => VipNetProviders.Contains(providerType);
+		public static bool IsVipNet(this ProviderType providerType) => VipNetProviders.Contains(providerType);
 
 		/// <summary>
 		/// Возвращает <see langword="true"/> для CryptoPro.
 		/// </summary>
-		public static bool IsCryptoPro(this ProviderTypes providerType) => CryptoProProviders.Contains(providerType);
+		public static bool IsCryptoPro(this ProviderType providerType) => CryptoProProviders.Contains(providerType);
 
 
 		/// <summary>
 		/// Преобразует значение в <see cref="int"/>.
 		/// </summary>
-		public static int ToInt(this ProviderTypes providerType) => (int)providerType;
+		public static int ToInt(this ProviderType providerType) => (int)providerType;
 	}
 }

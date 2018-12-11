@@ -20,7 +20,7 @@ namespace GostCryptography.Gost_R3410
 	{
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		protected Gost_R3410_AsymmetricAlgorithm(ProviderTypes providerType, int keySize) : base(providerType, keySize)
+		protected Gost_R3410_AsymmetricAlgorithm(ProviderType providerType, int keySize) : base(providerType, keySize)
 		{
 			_providerParameters = CreateDefaultProviderParameters();
 			InitKeyContainer(_providerParameters, out _isRandomKeyContainer);
@@ -32,7 +32,7 @@ namespace GostCryptography.Gost_R3410
 		/// <param name="providerParameters">Параметры криптографического провайдера.</param>
 		/// <param name="keySize">Размер ключа в битах.</param>
 		[SecuritySafeCritical]
-		protected Gost_R3410_AsymmetricAlgorithm(CspParameters providerParameters, int keySize) : base((ProviderTypes)providerParameters.ProviderType, keySize)
+		protected Gost_R3410_AsymmetricAlgorithm(CspParameters providerParameters, int keySize) : base((ProviderType)providerParameters.ProviderType, keySize)
 		{
 			_providerParameters = CopyExistingProviderParameters(providerParameters);
 			InitKeyContainer(_providerParameters, out _isRandomKeyContainer);

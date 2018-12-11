@@ -21,7 +21,7 @@ namespace GostCryptography.Tests.Gost_R3411
 
 		[Test]
 		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Providers))]
-		public void ShouldDeriveBytes(ProviderTypes providerType)
+		public void ShouldDeriveBytes(ProviderType providerType)
 		{
 			// Given
 			var initKey = new Gost_28147_89_SymmetricAlgorithm(providerType);
@@ -53,7 +53,7 @@ namespace GostCryptography.Tests.Gost_R3411
 
 		[Test]
 		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Providers))]
-		public void ShouldDeriveKey(ProviderTypes providerType)
+		public void ShouldDeriveKey(ProviderType providerType)
 		{
 			// Given
 			var initKey = new Gost_28147_89_SymmetricAlgorithm(providerType);

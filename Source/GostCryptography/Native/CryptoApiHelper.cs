@@ -23,7 +23,7 @@ namespace GostCryptography.Native
 		/// Возвращает <see langword="true"/>, если заданный провайдер установлен.
 		/// </summary>
 		[SecurityCritical]
-		public static bool IsInstalled(ProviderTypes providerType)
+		public static bool IsInstalled(ProviderType providerType)
 		{
 			try
 			{
@@ -41,16 +41,16 @@ namespace GostCryptography.Native
 		/// </summary>
 		/// <exception cref="CryptographicException">Провайдер не установлен.</exception>
 		[SecuritySafeCritical]
-		public static ProviderTypes GetAvailableProviderType_2001()
+		public static ProviderType GetAvailableProviderType_2001()
 		{
-			if (IsInstalled(ProviderTypes.VipNet))
+			if (IsInstalled(ProviderType.VipNet))
 			{
-				return ProviderTypes.VipNet;
+				return ProviderType.VipNet;
 			}
 
-			if (IsInstalled(ProviderTypes.CryptoPro))
+			if (IsInstalled(ProviderType.CryptoPro))
 			{
-				return ProviderTypes.CryptoPro;
+				return ProviderType.CryptoPro;
 			}
 
 			throw ExceptionUtility.CryptographicException(Resources.Provider_2001_IsNotInstalled);
@@ -61,16 +61,16 @@ namespace GostCryptography.Native
 		/// </summary>
 		/// <exception cref="CryptographicException">Провайдер не установлен.</exception>
 		[SecuritySafeCritical]
-		public static ProviderTypes GetAvailableProviderType_2012_512()
+		public static ProviderType GetAvailableProviderType_2012_512()
 		{
-			if (IsInstalled(ProviderTypes.VipNet_2012_512))
+			if (IsInstalled(ProviderType.VipNet_2012_512))
 			{
-				return ProviderTypes.VipNet_2012_512;
+				return ProviderType.VipNet_2012_512;
 			}
 
-			if (IsInstalled(ProviderTypes.CryptoPro_2012_512))
+			if (IsInstalled(ProviderType.CryptoPro_2012_512))
 			{
-				return ProviderTypes.CryptoPro_2012_512;
+				return ProviderType.CryptoPro_2012_512;
 			}
 
 			throw ExceptionUtility.CryptographicException(Resources.Provider_2012_512_IsNotInstalled);
@@ -81,16 +81,16 @@ namespace GostCryptography.Native
 		/// </summary>
 		/// <exception cref="CryptographicException">Провайдер не установлен.</exception>
 		[SecuritySafeCritical]
-		public static ProviderTypes GetAvailableProviderType_2012_1024()
+		public static ProviderType GetAvailableProviderType_2012_1024()
 		{
-			if (IsInstalled(ProviderTypes.VipNet_2012_1024))
+			if (IsInstalled(ProviderType.VipNet_2012_1024))
 			{
-				return ProviderTypes.VipNet_2012_1024;
+				return ProviderType.VipNet_2012_1024;
 			}
 
-			if (IsInstalled(ProviderTypes.CryptoPro_2012_1024))
+			if (IsInstalled(ProviderType.CryptoPro_2012_1024))
 			{
-				return ProviderTypes.CryptoPro_2012_1024;
+				return ProviderType.CryptoPro_2012_1024;
 			}
 
 			throw ExceptionUtility.CryptographicException(Resources.Provider_2012_1024_IsNotInstalled);
@@ -100,9 +100,9 @@ namespace GostCryptography.Native
 		#region Общие объекты
 
 		private static readonly object ProviderHandleSync = new object();
-		private static volatile Dictionary<ProviderTypes, SafeProvHandleImpl> _providerHandles = new Dictionary<ProviderTypes, SafeProvHandleImpl>();
+		private static volatile Dictionary<ProviderType, SafeProvHandleImpl> _providerHandles = new Dictionary<ProviderType, SafeProvHandleImpl>();
 
-		public static SafeProvHandleImpl GetProviderHandle(ProviderTypes providerType)
+		public static SafeProvHandleImpl GetProviderHandle(ProviderType providerType)
 		{
 			if (!_providerHandles.ContainsKey(providerType))
 			{
@@ -125,9 +125,9 @@ namespace GostCryptography.Native
 
 
 		private static readonly object RandomNumberGeneratorSync = new object();
-		private static volatile Dictionary<ProviderTypes, RNGCryptoServiceProvider> _randomNumberGenerators = new Dictionary<ProviderTypes, RNGCryptoServiceProvider>();
+		private static volatile Dictionary<ProviderType, RNGCryptoServiceProvider> _randomNumberGenerators = new Dictionary<ProviderType, RNGCryptoServiceProvider>();
 
-		public static RNGCryptoServiceProvider GetRandomNumberGenerator(ProviderTypes providerType)
+		public static RNGCryptoServiceProvider GetRandomNumberGenerator(ProviderType providerType)
 		{
 			if (!_randomNumberGenerators.ContainsKey(providerType))
 			{
@@ -238,7 +238,7 @@ namespace GostCryptography.Native
 			}
 		}
 
-		public static ProviderTypes GetProviderType(SafeProvHandleImpl providerHandle)
+		public static ProviderType GetProviderType(SafeProvHandleImpl providerHandle)
 		{
 			uint providerTypeLen = sizeof(uint);
 			byte[] dwData = new byte[sizeof(uint)];
@@ -250,7 +250,7 @@ namespace GostCryptography.Native
 
 			var providerType = BitConverter.ToUInt32(dwData, 0);
 
-			return (ProviderTypes)providerType;
+			return (ProviderType)providerType;
 		}
 
 		#endregion
@@ -297,19 +297,19 @@ namespace GostCryptography.Native
 			return hashImitHandle;
 		}
 
-		public static SafeHashHandleImpl CreateHashHMAC_94(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle)
+		public static SafeHashHandleImpl CreateHashHMAC_94(ProviderType providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle)
 		{
 			var hmacAlgId = providerType.IsVipNet() ? Constants.CALG_GR3411 : Constants.CALG_GR3411_HMAC;
 			return CreateHashHMAC(providerHandle, symKeyHandle, hmacAlgId);
 		}
 
-		public static SafeHashHandleImpl CreateHashHMAC_2012_256(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle)
+		public static SafeHashHandleImpl CreateHashHMAC_2012_256(ProviderType providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle)
 		{
 			var hmacAlgId = providerType.IsVipNet() ? Constants.CALG_GR3411_2012_256 : Constants.CALG_GR3411_2012_256_HMAC;
 			return CreateHashHMAC(providerHandle, symKeyHandle, hmacAlgId);
 		}
 
-		public static SafeHashHandleImpl CreateHashHMAC_2012_512(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle)
+		public static SafeHashHandleImpl CreateHashHMAC_2012_512(ProviderType providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle)
 		{
 			var hmacAlgId = providerType.IsVipNet() ? Constants.CALG_GR3411_2012_512 : Constants.CALG_GR3411_2012_512_HMAC;
 			return CreateHashHMAC(providerHandle, symKeyHandle, hmacAlgId);
@@ -402,7 +402,7 @@ namespace GostCryptography.Native
 
 		#region Для работы с функцией шифрования криптографического провайдера
 
-		public static int EncryptData(ProviderTypes providerType, SafeKeyHandleImpl symKeyHandle, byte[] data, int dataOffset, int dataLength, ref byte[] encryptedData, int encryptedDataOffset, PaddingMode paddingMode, bool isDone, bool isStream)
+		public static int EncryptData(ProviderType providerType, SafeKeyHandleImpl symKeyHandle, byte[] data, int dataOffset, int dataLength, ref byte[] encryptedData, int encryptedDataOffset, PaddingMode paddingMode, bool isDone, bool isStream)
 		{
 			if (dataOffset < 0)
 			{
@@ -629,7 +629,7 @@ namespace GostCryptography.Native
 			return length;
 		}
 
-		public static void EndEncrypt(ProviderTypes providerType, SafeKeyHandleImpl symKeyHandle)
+		public static void EndEncrypt(ProviderType providerType, SafeKeyHandleImpl symKeyHandle)
 		{
 			uint dataLength = 0;
 			var data = new byte[32];
@@ -641,7 +641,7 @@ namespace GostCryptography.Native
 			}
 		}
 
-		public static void EndDecrypt(ProviderTypes providerType, SafeKeyHandleImpl symKeyHandle)
+		public static void EndDecrypt(ProviderType providerType, SafeKeyHandleImpl symKeyHandle)
 		{
 			uint dataLength = 0;
 			var data = new byte[0];

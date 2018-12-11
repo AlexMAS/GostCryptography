@@ -21,7 +21,7 @@ namespace GostCryptography.Tests.Gost_28147_89
 	{
 		[Test]
 		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Providers))]
-		public void ShouldEncryptAndDecrypt(ProviderTypes providerType)
+		public void ShouldEncryptAndDecrypt(ProviderType providerType)
 		{
 			// Given
 			var sharedKey = new Gost_28147_89_SymmetricAlgorithm(providerType);

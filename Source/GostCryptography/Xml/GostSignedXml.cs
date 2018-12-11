@@ -34,7 +34,7 @@ namespace GostCryptography.Xml
 		}
 
 		/// <inheritdoc cref="SignedXml()"/>
-		public GostSignedXml(ProviderTypes providerType)
+		public GostSignedXml(ProviderType providerType)
 		{
 			_signedXml = new GostSignedXmlImpl(providerType);
 		}
@@ -45,7 +45,7 @@ namespace GostCryptography.Xml
 		}
 
 		/// <inheritdoc cref="SignedXml(XmlElement)"/>
-		public GostSignedXml(ProviderTypes providerType, XmlElement element)
+		public GostSignedXml(ProviderType providerType, XmlElement element)
 		{
 			if (element == null)
 			{
@@ -61,7 +61,7 @@ namespace GostCryptography.Xml
 		}
 
 		/// <inheritdoc cref="SignedXml(XmlDocument)"/>
-		public GostSignedXml(ProviderTypes providerType, XmlDocument document)
+		public GostSignedXml(ProviderType providerType, XmlDocument document)
 		{
 			if (document == null)
 			{

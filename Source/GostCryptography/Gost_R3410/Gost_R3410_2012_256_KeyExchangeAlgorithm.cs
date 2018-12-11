@@ -11,7 +11,7 @@ namespace GostCryptography.Gost_R3410
 	{
 		/// <inheritdoc />
 		[SecurityCritical]
-		public Gost_R3410_2012_256_KeyExchangeAlgorithm(ProviderTypes providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, Gost_R3410_2012_256_KeyExchangeParams keyExchangeParameters)
+		public Gost_R3410_2012_256_KeyExchangeAlgorithm(ProviderType providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, Gost_R3410_2012_256_KeyExchangeParams keyExchangeParameters)
 			: base(providerType, provHandle, keyHandle, keyExchangeParameters)
 		{
 		}

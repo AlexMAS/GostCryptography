@@ -21,7 +21,7 @@ namespace GostCryptography.Gost_R3411
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		protected Gost_R3411_HMAC(ProviderTypes providerType, int hashSize) : base(providerType, hashSize)
+		protected Gost_R3411_HMAC(ProviderType providerType, int hashSize) : base(providerType, hashSize)
 		{
 			InitDefaults(new Gost_28147_89_SymmetricAlgorithm(ProviderType));
 		}
@@ -58,7 +58,7 @@ namespace GostCryptography.Gost_R3411
 		/// Создает дескриптор функции хэширования HMAC криптографического провайдера.
 		/// </summary>
 		[SecuritySafeCritical]
-		protected abstract SafeHashHandleImpl CreateHashHMAC(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle);
+		protected abstract SafeHashHandleImpl CreateHashHMAC(ProviderType providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle);
 
 
 		[SecurityCritical]

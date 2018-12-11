@@ -24,7 +24,7 @@ namespace GostCryptography.Gost_28147_89
 		}
 
 		/// <inheritdoc />
-		protected Gost_28147_89_SymmetricAlgorithmBase(ProviderTypes providerType) : base(providerType)
+		protected Gost_28147_89_SymmetricAlgorithmBase(ProviderType providerType) : base(providerType)
 		{
 			InitDefaults();
 		}

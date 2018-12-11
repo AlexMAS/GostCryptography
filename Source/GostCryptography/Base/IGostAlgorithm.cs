@@ -8,7 +8,7 @@
 		/// <summary>
 		/// Тип криптографического провайдера.
 		/// </summary>
-		ProviderTypes ProviderType { get; }
+		ProviderType ProviderType { get; }
 
 		/// <summary>
 		/// Наименование криптографического алгоритма.

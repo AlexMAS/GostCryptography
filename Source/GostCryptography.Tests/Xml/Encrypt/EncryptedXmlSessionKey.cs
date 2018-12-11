@@ -23,7 +23,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 	{
 		[Test]
 		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Providers))]
-		public void ShouldEncryptXml(ProviderTypes providerType)
+		public void ShouldEncryptXml(ProviderType providerType)
 		{
 			// Given
 			var sharedKey = new Gost_28147_89_SymmetricAlgorithm(providerType);

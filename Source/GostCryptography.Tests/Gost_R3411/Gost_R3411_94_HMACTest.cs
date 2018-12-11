@@ -21,7 +21,7 @@ namespace GostCryptography.Tests.Gost_R3411
 	{
 		[Test]
 		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Providers))]
-		public void ShouldComputeHMAC(ProviderTypes providerType)
+		public void ShouldComputeHMAC(ProviderType providerType)
 		{
 			// Given
 			var dataStream = CreateDataStream();

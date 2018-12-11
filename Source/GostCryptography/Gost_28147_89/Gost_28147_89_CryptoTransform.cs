@@ -16,7 +16,7 @@ namespace GostCryptography.Gost_28147_89
 	{
 		[SecurityCritical]
 		public Gost_28147_89_CryptoTransform(
-			ProviderTypes providerType,
+			ProviderType providerType,
 			SafeKeyHandleImpl keyHandle,
 			Dictionary<int, object> keyParameters,
 			PaddingMode paddingValue,
@@ -90,7 +90,7 @@ namespace GostCryptography.Gost_28147_89
 			}
 		}
 
-		private readonly ProviderTypes _providerType;
+		private readonly ProviderType _providerType;
 
 		[SecurityCritical]
 		private readonly SafeKeyHandleImpl _keyHandle;

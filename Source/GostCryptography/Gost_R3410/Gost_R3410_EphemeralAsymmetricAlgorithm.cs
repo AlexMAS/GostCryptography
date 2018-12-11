@@ -18,7 +18,7 @@ namespace GostCryptography.Gost_R3410
 	{
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		protected Gost_R3410_EphemeralAsymmetricAlgorithm(ProviderTypes providerType, int keySize) : base(providerType, keySize)
+		protected Gost_R3410_EphemeralAsymmetricAlgorithm(ProviderType providerType, int keySize) : base(providerType, keySize)
 		{
 			_providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
 			_keyHandle = CryptoApiHelper.GenerateKey(_providerHandle, ExchangeAlgId, CspProviderFlags.NoFlags);
@@ -37,7 +37,7 @@ namespace GostCryptography.Gost_R3410
 		/// <see cref="Gost_R3410_KeyExchangeParams.PublicKeyParamSet"/>. Остальные параметры не используются.
 		/// </remarks>
 		[SecuritySafeCritical]
-		protected Gost_R3410_EphemeralAsymmetricAlgorithm(ProviderTypes providerType, TKeyParams keyParameters, int keySize) : base(providerType, keySize)
+		protected Gost_R3410_EphemeralAsymmetricAlgorithm(ProviderType providerType, TKeyParams keyParameters, int keySize) : base(providerType, keySize)
 		{
 			if (keyParameters == null)
 			{

@@ -39,7 +39,7 @@ namespace GostCryptography.Tests
 
 		public const StoreLocation DefaultStoreLocation = StoreLocation.LocalMachine;
 
-		public static IEnumerable<ProviderTypes> Providers { get; }
+		public static IEnumerable<ProviderType> Providers { get; }
 
 		public static IEnumerable<TestCertificateInfo> Gost_R3410_Certificates { get; }
 

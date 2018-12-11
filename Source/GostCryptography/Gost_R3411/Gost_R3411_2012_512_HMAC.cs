@@ -30,7 +30,7 @@ namespace GostCryptography.Gost_R3411
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3411_2012_512_HMAC(ProviderTypes providerType) : base(providerType, Gost_R3411_2012_512_HashAlgorithm.DefaultHashSizeValue)
+		public Gost_R3411_2012_512_HMAC(ProviderType providerType) : base(providerType, Gost_R3411_2012_512_HashAlgorithm.DefaultHashSizeValue)
 		{
 		}
 
@@ -47,7 +47,7 @@ namespace GostCryptography.Gost_R3411
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		protected override SafeHashHandleImpl CreateHashHMAC(ProviderTypes providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle)
+		protected override SafeHashHandleImpl CreateHashHMAC(ProviderType providerType, SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle)
 		{
 			return CryptoApiHelper.CreateHashHMAC_2012_512(providerType, providerHandle, symKeyHandle);
 		}

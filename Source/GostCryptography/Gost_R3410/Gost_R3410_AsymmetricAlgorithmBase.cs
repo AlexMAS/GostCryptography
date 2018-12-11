@@ -15,8 +15,8 @@ namespace GostCryptography.Gost_R3410
 		where TKeyParams : Gost_R3410_KeyExchangeParams
 		where TKeyAlgorithm : Gost_R3410_KeyExchangeAlgorithm
 	{
-		/// <inheritdoc cref="GostAsymmetricAlgorithm(ProviderTypes,int)" />
-		protected Gost_R3410_AsymmetricAlgorithmBase(ProviderTypes providerType, int keySize) : base(providerType, keySize)
+		/// <inheritdoc cref="GostAsymmetricAlgorithm(ProviderType,int)" />
+		protected Gost_R3410_AsymmetricAlgorithmBase(ProviderType providerType, int keySize) : base(providerType, keySize)
 		{
 		}
 
@@ -40,7 +40,7 @@ namespace GostCryptography.Gost_R3410
 		/// Создает экземпляр <typeparamref name="TKeyAlgorithm"/>.
 		/// </summary>
 		[SecuritySafeCritical]
-		protected abstract TKeyAlgorithm CreateKeyExchangeAlgorithm(ProviderTypes providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, TKeyParams keyExchangeParameters);
+		protected abstract TKeyAlgorithm CreateKeyExchangeAlgorithm(ProviderType providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, TKeyParams keyExchangeParameters);
 
 		/// <summary>
 		/// Создает общий секретный ключ.
