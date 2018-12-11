@@ -21,7 +21,7 @@ namespace GostCryptography.Tests.Xml.Sign
 	public class SignedXmlCertificateTest
 	{
 		[Test]
-		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Certificates))]
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Gost_R3410_Certificates))]
 		public void ShouldSignXml(TestCertificateInfo testCase)
 		{
 			// Given

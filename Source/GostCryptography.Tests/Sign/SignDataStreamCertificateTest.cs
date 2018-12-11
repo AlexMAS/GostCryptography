@@ -19,7 +19,7 @@ namespace GostCryptography.Tests.Sign
 	public class SignDataStreamCertificateTest
 	{
 		[Test]
-		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Certificates))]
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Gost_R3410_Certificates))]
 		public void ShouldSignDataStream(TestCertificateInfo testCase)
 		{
 			// Given

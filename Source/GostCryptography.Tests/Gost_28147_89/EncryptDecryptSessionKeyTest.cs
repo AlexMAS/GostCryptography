@@ -23,7 +23,7 @@ namespace GostCryptography.Tests.Gost_28147_89
 	public class EncryptDecryptSessionKeyTest
 	{
 		[Test]
-		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Certificates))]
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Gost_R3410_Certificates))]
 		public void ShouldEncryptAndDecrypt(TestCertificateInfo testCase)
 		{
 			// Given

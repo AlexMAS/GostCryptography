@@ -19,7 +19,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 	public sealed class EncryptedXmlCertificateTest
 	{
 		[Test]
-		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Certificates))]
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Gost_R3410_Certificates))]
 		public void ShouldEncryptXml(TestCertificateInfo testCase)
 		{
 			// Given

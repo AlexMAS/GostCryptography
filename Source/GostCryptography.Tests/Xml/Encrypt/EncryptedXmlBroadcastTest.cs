@@ -27,7 +27,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 	public sealed class EncryptedXmlBroadcastTest
 	{
 		[Test]
-		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Certificates))]
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Gost_R3410_Certificates))]
 		public void ShouldEncryptXml(TestCertificateInfo testCase)
 		{
 			// Given
@@ -185,7 +185,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 
 			GostAsymmetricAlgorithm privateKey = null;
 
-			var store = new X509Store(TestConfig.StoreName, TestConfig.StoreLocation);
+			var store = new X509Store(TestConfig.DefaultStoreName, TestConfig.DefaultStoreLocation);
 			store.Open(OpenFlags.OpenExistingOnly | OpenFlags.ReadOnly);
 			var storeCertificates = store.Certificates;
 			store.Close();

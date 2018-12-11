@@ -23,7 +23,7 @@ namespace GostCryptography.Tests.Sign
 	public class SignDataStreamSignatureDescriptionTest
 	{
 		[Test]
-		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Certificates))]
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Gost_R3410_Certificates))]
 		public void ShouldSignDataStream(TestCertificateInfo testCase)
 		{
 			// Given

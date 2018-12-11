@@ -19,7 +19,7 @@ namespace GostCryptography.Tests.Pkcs
 	public class SignedCmsSignTest
 	{
 		[Test]
-		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Certificates))]
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Gost_R3410_Certificates))]
 		public void ShouldSign(TestCertificateInfo testCase)
 		{
 			// Given

@@ -4,56 +4,50 @@ using System.Security;
 using System.Security.Cryptography.X509Certificates;
 
 using GostCryptography.Base;
+using GostCryptography.Config;
 
 namespace GostCryptography.Tests
 {
 	public static class TestConfig
 	{
+		static TestConfig()
+		{
+			Providers = new[] { GostCryptoConfig.ProviderType, GostCryptoConfig.ProviderType_2012_512, GostCryptoConfig.ProviderType_2012_1024 };
+
+			var gost_R3410_2001 = new TestCertificateInfo("ГОСТ Р 34.10-2001", FindGostCertificate(filter: c => c.IsGost_R3410_2001()));
+			var gost_R3410_2012_256 = new TestCertificateInfo("ГОСТ Р 34.10-2012/256", FindGostCertificate(filter: c => c.IsGost_R3410_2012_256()));
+			var gost_R3410_2012_512 = new TestCertificateInfo("ГОСТ Р 34.10-2012/512", FindGostCertificate(filter: c => c.IsGost_R3410_2012_512()));
+
+			var gost_R3410_Certificates = new List<TestCertificateInfo> { gost_R3410_2001, gost_R3410_2012_256, gost_R3410_2012_512 };
+			var gost_R3410_2001_Certificates = new List<TestCertificateInfo> { gost_R3410_2001 };
+			var gost_R3410_2012_256_Certificates = new List<TestCertificateInfo> { gost_R3410_2012_256 };
+			var gost_R3410_2012_512_Certificates = new List<TestCertificateInfo> { gost_R3410_2012_512 };
+
+			gost_R3410_Certificates.RemoveAll(c => c.Certificate == null);
+			gost_R3410_2001_Certificates.RemoveAll(c => c.Certificate == null);
+			gost_R3410_2012_256_Certificates.RemoveAll(c => c.Certificate == null);
+			gost_R3410_2012_512_Certificates.RemoveAll(c => c.Certificate == null);
+
+			Gost_R3410_Certificates = gost_R3410_Certificates;
+			Gost_R3410_2001_Certificates = gost_R3410_2001_Certificates;
+			Gost_R3410_2012_256_Certificates = gost_R3410_2012_256_Certificates;
+			Gost_R3410_2012_512_Certificates = gost_R3410_2012_512_Certificates;
+		}
+
+
 		public const StoreName DefaultStoreName = StoreName.My;
+
 		public const StoreLocation DefaultStoreLocation = StoreLocation.LocalMachine;
 
-		public static StoreName StoreName => DefaultStoreName;
-		public static StoreLocation StoreLocation => DefaultStoreLocation;
+		public static IEnumerable<ProviderTypes> Providers { get; }
 
-		public static readonly IEnumerable<ProviderTypes> Providers = ProviderTypesExtensions.CryptoProProviders;
+		public static IEnumerable<TestCertificateInfo> Gost_R3410_Certificates { get; }
 
-		public static readonly TestCertificateInfo Gost_R3410_2001 = new TestCertificateInfo("ГОСТ Р 34.10-2001", () => FindGostCertificate(filter: c => c.IsGost_R3410_2001()));
-		public static readonly TestCertificateInfo Gost_R3410_2012_256 = new TestCertificateInfo("ГОСТ Р 34.10-2012/256", () => FindGostCertificate(filter: c => c.IsGost_R3410_2012_256()));
-		public static readonly TestCertificateInfo Gost_R3410_2012_512 = new TestCertificateInfo("ГОСТ Р 34.10-2012/512", () => FindGostCertificate(filter: c => c.IsGost_R3410_2012_512()));
+		public static IEnumerable<TestCertificateInfo> Gost_R3410_2001_Certificates { get; }
 
-		public static IEnumerable<TestCertificateInfo> Gost_R3410_2001_Certificates
-		{
-			get
-			{
-				if (Gost_R3410_2001.Certificate != null) yield return Gost_R3410_2001;
-			}
-		}
+		public static IEnumerable<TestCertificateInfo> Gost_R3410_2012_256_Certificates { get; }
 
-		public static IEnumerable<TestCertificateInfo> Gost_R3410_2012_256_Certificates
-		{
-			get
-			{
-				if (Gost_R3410_2012_256.Certificate != null) yield return Gost_R3410_2012_256;
-			}
-		}
-
-		public static IEnumerable<TestCertificateInfo> Gost_R3410_2012_512_Certificates
-		{
-			get
-			{
-				if (Gost_R3410_2012_512.Certificate != null) yield return Gost_R3410_2012_512;
-			}
-		}
-
-		public static IEnumerable<TestCertificateInfo> Certificates
-		{
-			get
-			{
-				if (Gost_R3410_2001.Certificate != null) yield return Gost_R3410_2001;
-				if (Gost_R3410_2012_256.Certificate != null) yield return Gost_R3410_2012_256;
-				if (Gost_R3410_2012_512.Certificate != null) yield return Gost_R3410_2012_512;
-			}
-		}
+		public static IEnumerable<TestCertificateInfo> Gost_R3410_2012_512_Certificates { get; }
 
 
 		[SecuritySafeCritical]
