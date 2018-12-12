@@ -29,7 +29,7 @@ namespace GostCryptography.Tests.Gost_28147_89
 			// Given
 			var certificate = testCase.Certificate;
 			var privateKey = (GostAsymmetricAlgorithm)certificate.GetPrivateKeyAlgorithm();
-			var publicKey = (GostAsymmetricAlgorithm)certificate.GetPublicKeyAlgorithm(privateKey.ProviderType);
+			var publicKey = (GostAsymmetricAlgorithm)certificate.GetPublicKeyAlgorithm();
 			var dataStream = CreateDataStream();
 
 			// When

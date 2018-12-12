@@ -100,7 +100,7 @@ namespace GostCryptography.Gost_R3410
 				throw ExceptionUtility.NotSupported(Resources.EphemKeyOperationNotSupported);
 			}
 
-			return CryptoApiHelper.ExportPublicKey(_keyHandle, CreateKeyExchangeParams());
+			return CryptoApiHelper.ExportPublicKey(_keyHandle, CreateKeyExchangeParams(), KeySizeValue);
 		}
 
 		/// <inheritdoc />

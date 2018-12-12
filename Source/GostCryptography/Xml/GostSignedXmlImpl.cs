@@ -149,7 +149,7 @@ namespace GostCryptography.Xml
 			{
 				if (X509Enumerable.Current is X509Certificate2 certificate)
 				{
-					return certificate.GetPublicKeyAlgorithm(ProviderType);
+					return certificate.GetPublicKeyAlgorithm();
 				}
 			}
 

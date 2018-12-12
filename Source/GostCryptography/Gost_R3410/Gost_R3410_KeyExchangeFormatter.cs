@@ -160,7 +160,7 @@ namespace GostCryptography.Gost_R3410
 
 
 		/// <summary>
-		/// Созадает экземпляр алгоритма шифрования общего секретного ключа.
+		/// Создает экземпляр алгоритма шифрования общего секретного ключа.
 		/// </summary>
 		protected abstract Gost_R3410_EphemeralAsymmetricAlgorithm<TKeyParams, TKeyAlgorithm> CreateEphemeralAlgorithm(ProviderType providerType, TKeyParams keyExchangeParameters);
 	}

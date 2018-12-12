@@ -1,15 +1,11 @@
 ﻿using System.Reflection;
 
 using GostCryptography;
-using GostCryptography.Asn1.Gost.Gost_R3410;
 using GostCryptography.Asn1.Gost.Gost_R3410_2001;
 using GostCryptography.Asn1.Gost.Gost_R3410_2012_256;
 using GostCryptography.Asn1.Gost.Gost_R3410_2012_512;
 using GostCryptography.Asn1.Gost.Gost_R3410_94;
-using GostCryptography.Base;
-using GostCryptography.Config;
 using GostCryptography.Gost_R3410;
-using GostCryptography.Native;
 
 // ReSharper disable once CheckNamespace
 namespace System.Security.Cryptography.X509Certificates
@@ -207,52 +203,39 @@ namespace System.Security.Cryptography.X509Certificates
 			return certificate.PrivateKey;
 		}
 
-
 		/// <summary>
-		/// Возвращает открытый ключ сертификата с использованием криптографического провайдера по умолчанию, установленного в <see cref="GostCryptoConfig.ProviderType"/>.
+		/// Возвращает открытый ключ сертификата.
 		/// </summary>
 		public static AsymmetricAlgorithm GetPublicKeyAlgorithm(this X509Certificate2 certificate)
 		{
-			return certificate.GetPublicKeyAlgorithm(GostCryptoConfig.ProviderType);
-		}
-
-		/// <summary>
-		/// Возвращает открытый ключ сертификата с использованием заданного типа криптографического провайдера.
-		/// </summary>
-		public static AsymmetricAlgorithm GetPublicKeyAlgorithm(this X509Certificate2 certificate, ProviderType providerType)
-		{
 			if (certificate.IsGost_R3410_2012_512())
 			{
-				var publicKeyBytes = GetPublicKeyBytes(certificate.PublicKey, new Gost_R3410_2012_512_KeyExchangeParams());
-				var publicKey = new Gost_R3410_2012_512_AsymmetricAlgorithm(providerType);
-				publicKey.ImportCspBlob(publicKeyBytes);
+				var publicKey = new Gost_R3410_2012_512_AsymmetricAlgorithm();
+				var encodedParameters = certificate.PublicKey.EncodedParameters.RawData;
+				var encodedKeyValue = certificate.PublicKey.EncodedKeyValue.RawData;
+				publicKey.ImportCspBlob(encodedParameters, encodedKeyValue);
 				return publicKey;
 			}
 
 			if (certificate.IsGost_R3410_2012_256())
 			{
-				var publicKeyBytes = GetPublicKeyBytes(certificate.PublicKey, new Gost_R3410_2012_256_KeyExchangeParams());
-				var publicKey = new Gost_R3410_2012_256_AsymmetricAlgorithm(providerType);
-				publicKey.ImportCspBlob(publicKeyBytes);
+				var publicKey = new Gost_R3410_2012_256_AsymmetricAlgorithm();
+				var encodedParameters = certificate.PublicKey.EncodedParameters.RawData;
+				var encodedKeyValue = certificate.PublicKey.EncodedKeyValue.RawData;
+				publicKey.ImportCspBlob(encodedParameters, encodedKeyValue);
 				return publicKey;
 			}
 
 			if (certificate.IsGost_R3410_2001())
 			{
-				var publicKeyBytes = GetPublicKeyBytes(certificate.PublicKey, new Gost_R3410_2001_KeyExchangeParams());
-				var publicKey = new Gost_R3410_2001_AsymmetricAlgorithm(providerType);
-				publicKey.ImportCspBlob(publicKeyBytes);
+				var publicKey = new Gost_R3410_2001_AsymmetricAlgorithm();
+				var encodedParameters = certificate.PublicKey.EncodedParameters.RawData;
+				var encodedKeyValue = certificate.PublicKey.EncodedKeyValue.RawData;
+				publicKey.ImportCspBlob(encodedParameters, encodedKeyValue);
 				return publicKey;
 			}
 
 			return certificate.PublicKey.Key;
-		}
-
-		private static byte[] GetPublicKeyBytes(PublicKey publicKey, Gost_R3410_KeyExchangeParams publicKeyParameters)
-		{
-			publicKeyParameters.DecodeParameters(publicKey.EncodedParameters.RawData);
-			publicKeyParameters.DecodePublicKey(publicKey.EncodedKeyValue.RawData);
-			return CryptoApiHelper.EncodePublicBlob(publicKeyParameters);
 		}
 	}
 }

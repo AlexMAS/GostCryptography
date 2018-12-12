@@ -189,6 +189,18 @@ namespace GostCryptography.Gost_R3410
 			_isPublicKeyOnly = true;
 		}
 
+		[SecuritySafeCritical]
+		public void ImportCspBlob(byte[] encodedParameters, byte[] encodedKeyValue)
+		{
+			var keyParams = CreateKeyExchangeParams();
+			keyParams.DecodeParameters(encodedParameters);
+			keyParams.DecodePublicKey(encodedKeyValue);
+
+			var keyBytes = CryptoApiHelper.EncodePublicBlob(keyParams, KeySizeValue, SignatureAlgId);
+
+			ImportCspBlob(keyBytes);
+		}
+
 		private static bool IsPublicKeyBlob(byte[] importedKeyBytes)
 		{
 			if ((importedKeyBytes[0] != Constants.PUBLICKEYBLOB) || (importedKeyBytes.Length < 12))
@@ -355,7 +367,7 @@ namespace GostCryptography.Gost_R3410
 
 			GetKeyPair();
 
-			return CryptoApiHelper.ExportPublicKey(_keyHandle, CreateKeyExchangeParams());
+			return CryptoApiHelper.ExportPublicKey(_keyHandle, CreateKeyExchangeParams(), KeySizeValue);
 		}
 
 		/// <inheritdoc />
@@ -369,8 +381,13 @@ namespace GostCryptography.Gost_R3410
 
 			_keyHandle.TryDispose();
 
-			_providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType);
-			_keyHandle = CryptoApiHelper.ImportPublicKey(_providerHandle, keyParameters.Clone());
+			var hProv = CryptoApiHelper.GetProviderHandle(ProviderType);
+
+			var importedKeyBytes = CryptoApiHelper.EncodePublicBlob(keyParameters.Clone(), KeySizeValue, SignatureAlgId);
+
+			_providerParameters.KeyNumber = CryptoApiHelper.ImportCspBlob(importedKeyBytes, hProv, SafeKeyHandleImpl.InvalidHandle, out var keyHandle);
+			_providerHandle = hProv;
+			_keyHandle = keyHandle;
 
 			_isPublicKeyOnly = true;
 		}

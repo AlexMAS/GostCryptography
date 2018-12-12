@@ -185,11 +185,6 @@
 		#region Параметры функций шифрования криптографического провайдера
 
 		/// <summary>
-		/// Размер элемента.
-		/// </summary>
-		public const int EL_SIZE = 512;
-
-		/// <summary>
 		/// Признак ключей ГОСТ 28147-89 и мастер ключей TLS.
 		/// </summary>
 		public const int G28147_MAGIC = 0x374A51FD;

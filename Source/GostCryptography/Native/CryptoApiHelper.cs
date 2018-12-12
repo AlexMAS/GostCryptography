@@ -885,20 +885,20 @@ namespace GostCryptography.Native
 			return exportedKeyBytes;
 		}
 
-		public static T ExportPublicKey<T>(SafeKeyHandleImpl symKeyHandle, T keyExchangeParams) where T : Gost_R3410_KeyExchangeParams
+		public static T ExportPublicKey<T>(SafeKeyHandleImpl symKeyHandle, T keyExchangeParams, int keySize) where T : Gost_R3410_KeyExchangeParams
 		{
 			var exportedKeyBytes = ExportCspBlob(symKeyHandle, SafeKeyHandleImpl.InvalidHandle, Constants.PUBLICKEYBLOB);
-			return DecodePublicBlob(exportedKeyBytes, keyExchangeParams);
+			return DecodePublicBlob(exportedKeyBytes, keyExchangeParams, keySize);
 		}
 
-		private static T DecodePublicBlob<T>(byte[] encodedPublicBlob, T keyExchangeParams) where T : Gost_R3410_KeyExchangeParams
+		private static T DecodePublicBlob<T>(byte[] encodedPublicBlob, T keyExchangeParams, int keySize) where T : Gost_R3410_KeyExchangeParams
 		{
 			if (encodedPublicBlob == null)
 			{
 				throw ExceptionUtility.ArgumentNull(nameof(encodedPublicBlob));
 			}
 
-			if (encodedPublicBlob.Length < 80)
+			if (encodedPublicBlob.Length < 16 + keySize / 8)
 			{
 				throw ExceptionUtility.CryptographicException(Constants.NTE_BAD_DATA);
 			}
@@ -912,17 +912,17 @@ namespace GostCryptography.Native
 
 			var gostKeySize = BitConverter.ToUInt32(encodedPublicBlob, 12);
 
-			if (gostKeySize != 512)
+			if (gostKeySize != keySize)
 			{
 				throw ExceptionUtility.CryptographicException(Constants.NTE_BAD_DATA);
 			}
 
-			var encodeKeyParameters = new byte[(encodedPublicBlob.Length - 16) - 64];
-			Array.Copy(encodedPublicBlob, 16, encodeKeyParameters, 0, (encodedPublicBlob.Length - 16) - 64);
+			var encodeKeyParameters = new byte[encodedPublicBlob.Length - 16 - keySize / 8];
+			Array.Copy(encodedPublicBlob, 16, encodeKeyParameters, 0, encodedPublicBlob.Length - 16 - keySize / 8);
 			keyExchangeParams.DecodeParameters(encodeKeyParameters);
 
-			var publicKey = new byte[64];
-			Array.Copy(encodedPublicBlob, encodedPublicBlob.Length - 64, publicKey, 0, 64);
+			var publicKey = new byte[keySize / 8];
+			Array.Copy(encodedPublicBlob, encodedPublicBlob.Length - keySize / 8, publicKey, 0, keySize / 8);
 			keyExchangeParams.PublicKey = publicKey;
 
 			return keyExchangeParams;
@@ -1007,39 +1007,20 @@ namespace GostCryptography.Native
 			return keyNumber;
 		}
 
-		public static SafeKeyHandleImpl ImportPublicKey(SafeProvHandleImpl providerHandle, Gost_R3410_KeyExchangeParams publicKeyParameters)
+		[SecurityCritical]
+		public static byte[] EncodePublicBlob(Gost_R3410_KeyExchangeParams publicKeyParameters, int keySize, int signatureAlgId)
 		{
-			if (publicKeyParameters == null)
-			{
-				throw ExceptionUtility.ArgumentNull(nameof(publicKeyParameters));
-			}
+			var encodedKeyParams = publicKeyParameters.EncodeParameters();
+			var encodedKeyBlob = new byte[16 + encodedKeyParams.Length + publicKeyParameters.PublicKey.Length];
+			encodedKeyBlob[0] = 6;
+			encodedKeyBlob[1] = 32;
+			Array.Copy(BitConverter.GetBytes(signatureAlgId), 0, encodedKeyBlob, 4, 4);
+			Array.Copy(BitConverter.GetBytes(Constants.GR3410_1_MAGIC), 0, encodedKeyBlob, 8, 4);
+			Array.Copy(BitConverter.GetBytes(keySize), 0, encodedKeyBlob, 12, 4);
+			Array.Copy(encodedKeyParams, 0, encodedKeyBlob, 16, encodedKeyParams.Length);
+			Array.Copy(publicKeyParameters.PublicKey, 0, encodedKeyBlob, 16 + encodedKeyParams.Length, publicKeyParameters.PublicKey.Length);
 
-			var importedKeyBytes = EncodePublicBlob(publicKeyParameters);
-
-			SafeKeyHandleImpl hKeyExchange;
-			ImportCspBlob(importedKeyBytes, providerHandle, SafeKeyHandleImpl.InvalidHandle, out hKeyExchange);
-
-			return hKeyExchange;
-		}
-
-		public static byte[] EncodePublicBlob(Gost_R3410_KeyExchangeParams publicKeyParameters)
-		{
-			if (publicKeyParameters == null)
-			{
-				throw ExceptionUtility.ArgumentNull(nameof(publicKeyParameters));
-			}
-
-			var encodeKeyParameters = publicKeyParameters.EncodeParameters();
-			var importedKeyBytes = new byte[(encodeKeyParameters.Length + 16) + publicKeyParameters.PublicKey.Length];
-			importedKeyBytes[0] = 6;
-			importedKeyBytes[1] = 32;
-			Array.Copy(BitConverter.GetBytes(Constants.CALG_GR3410EL), 0, importedKeyBytes, 4, 4);
-			Array.Copy(BitConverter.GetBytes(Constants.GR3410_1_MAGIC), 0, importedKeyBytes, 8, 4);
-			Array.Copy(BitConverter.GetBytes(Constants.EL_SIZE), 0, importedKeyBytes, 12, 4);
-			Array.Copy(encodeKeyParameters, 0, importedKeyBytes, 16, encodeKeyParameters.Length);
-			Array.Copy(publicKeyParameters.PublicKey, 0, importedKeyBytes, encodeKeyParameters.Length + 16, publicKeyParameters.PublicKey.Length);
-
-			return importedKeyBytes;
+			return encodedKeyBlob;
 		}
 
 		public static SafeKeyHandleImpl ImportKeyExchange(SafeProvHandleImpl providerHandle, Gost_28147_89_KeyExchangeInfo keyExchangeInfo, SafeKeyHandleImpl keyExchangeHandle)
@@ -1155,21 +1136,6 @@ namespace GostCryptography.Native
 			Array.Copy(encryptionParamSet, 0, importedKeyBytes, sourceIndex, encryptionParamSet.Length);
 
 			return importedKeyBytes;
-		}
-
-		public static SafeKeyHandleImpl ImportAndMakeKeyExchange(SafeProvHandleImpl providerHandle, Gost_R3410_KeyExchangeParams keyExchangeParameters, SafeKeyHandleImpl publicKeyHandle)
-		{
-			if (keyExchangeParameters == null)
-			{
-				throw ExceptionUtility.ArgumentNull(nameof(keyExchangeParameters));
-			}
-
-			var importedKeyBytes = EncodePublicBlob(keyExchangeParameters);
-
-			SafeKeyHandleImpl keyExchangeHandle;
-			ImportCspBlob(importedKeyBytes, providerHandle, publicKeyHandle, out keyExchangeHandle);
-
-			return keyExchangeHandle;
 		}
 
 		#endregion

@@ -17,7 +17,7 @@ namespace GostCryptography.Gost_R3410
 	{
 		/// <inheritdoc />
 		[SecurityCritical]
-		protected Gost_R3410_KeyExchangeAlgorithm(ProviderType providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, Gost_R3410_KeyExchangeParams keyExchangeParameters) : base(providerType)
+		protected Gost_R3410_KeyExchangeAlgorithm(ProviderType providerType, SafeProvHandleImpl provHandle, SafeKeyHandleImpl keyHandle, Gost_R3410_KeyExchangeParams keyExchangeParameters, int keySize, int signatureAlgId) : base(providerType)
 		{
 			if (provHandle == null)
 			{
@@ -37,16 +37,20 @@ namespace GostCryptography.Gost_R3410
 			_provHandle = provHandle.DangerousAddRef();
 			_keyHandle = keyHandle.DangerousAddRef();
 			_keyExchangeParameters = keyExchangeParameters;
+			_keySize = keySize;
+			_signatureAlgId = signatureAlgId;
 		}
 
 
 		[SecurityCritical]
 		private readonly SafeProvHandleImpl _provHandle;
-
 		[SecurityCritical]
 		private readonly SafeKeyHandleImpl _keyHandle;
-
+		[SecurityCritical]
 		private readonly Gost_R3410_KeyExchangeParams _keyExchangeParameters;
+
+		private readonly int _keySize;
+		private readonly int _signatureAlgId;
 
 
 		/// <inheritdoc />
@@ -93,7 +97,8 @@ namespace GostCryptography.Gost_R3410
 
 			try
 			{
-				keyExchangeHandle = CryptoApiHelper.ImportAndMakeKeyExchange(_provHandle, _keyExchangeParameters, _keyHandle);
+				var importedKeyBytes = CryptoApiHelper.EncodePublicBlob(_keyExchangeParameters, _keySize, _signatureAlgId);
+				CryptoApiHelper.ImportCspBlob(importedKeyBytes, _provHandle, _keyHandle, out keyExchangeHandle);
 				CryptoApiHelper.SetKeyParameterInt32(keyExchangeHandle, Constants.KP_ALGID, keyExchangeExportAlgId);
 
 				var symKeyHandle = keyExchangeAlgorithm.GetSafeHandle();
@@ -135,7 +140,8 @@ namespace GostCryptography.Gost_R3410
 
 			try
 			{
-				keyExchangeHandle = CryptoApiHelper.ImportAndMakeKeyExchange(_provHandle, _keyExchangeParameters, _keyHandle);
+				var importedKeyBytes = CryptoApiHelper.EncodePublicBlob(_keyExchangeParameters, _keySize, _signatureAlgId);
+				CryptoApiHelper.ImportCspBlob(importedKeyBytes, _provHandle, _keyHandle, out keyExchangeHandle);
 				CryptoApiHelper.SetKeyParameterInt32(keyExchangeHandle, Constants.KP_ALGID, keyExchangeExportAlgId);
 
 				symKeyHandle = CryptoApiHelper.ImportKeyExchange(_provHandle, keyExchangeInfo, keyExchangeHandle);

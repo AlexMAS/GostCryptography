@@ -46,7 +46,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 			var publicKeyInfo = privateKey.ExportParameters(false);
 
 			// Отправитель импортирует от получателя информацию о его открытом ключе
-			var publicKey = new Gost_R3410_2001_AsymmetricAlgorithm(privateKey.ProviderType);
+			var publicKey = new Gost_R3410_2001_AsymmetricAlgorithm();
 			publicKey.ImportParameters(publicKeyInfo);
 
 			var xmlDocument = CreateXmlDocument();
@@ -75,7 +75,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 			var publicKeyInfo = privateKey.ExportParameters(false);
 
 			// Отправитель импортирует от получателя информацию о его открытом ключе
-			var publicKey = new Gost_R3410_2012_256_AsymmetricAlgorithm(privateKey.ProviderType);
+			var publicKey = new Gost_R3410_2012_256_AsymmetricAlgorithm();
 			publicKey.ImportParameters(publicKeyInfo);
 
 			var xmlDocument = CreateXmlDocument();
@@ -104,7 +104,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 			var publicKeyInfo = privateKey.ExportParameters(false);
 
 			// Отправитель импортирует от получателя информацию о его открытом ключе
-			var publicKey = new Gost_R3410_2012_512_AsymmetricAlgorithm(privateKey.ProviderType);
+			var publicKey = new Gost_R3410_2012_512_AsymmetricAlgorithm();
 			publicKey.ImportParameters(publicKeyInfo);
 
 			var xmlDocument = CreateXmlDocument();
