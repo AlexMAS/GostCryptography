@@ -84,7 +84,7 @@ namespace GostCryptography.Tests.Xml.Sign
 			var signingKey = keyValue.PublicKey;
 
 			// Создание подписчика XML-документа
-			var signedXml = new GostSignedXml(signingKey.ProviderType, xmlDocument);
+			var signedXml = new GostSignedXml(xmlDocument);
 
 			// Установка ключа для создания подписи
 			signedXml.SigningKey = signingKey;

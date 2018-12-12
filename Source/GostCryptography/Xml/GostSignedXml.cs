@@ -4,7 +4,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Xml;
 
-using GostCryptography.Base;
 using GostCryptography.Config;
 
 namespace GostCryptography.Xml
@@ -29,46 +28,31 @@ namespace GostCryptography.Xml
 
 
 		/// <inheritdoc cref="SignedXml()"/>
-		public GostSignedXml() : this(GostCryptoConfig.ProviderType)
+		public GostSignedXml()
 		{
-		}
-
-		/// <inheritdoc cref="SignedXml()"/>
-		public GostSignedXml(ProviderType providerType)
-		{
-			_signedXml = new GostSignedXmlImpl(providerType);
+			_signedXml = new GostSignedXmlImpl();
 		}
 
 		/// <inheritdoc cref="SignedXml(XmlElement)"/>
-		public GostSignedXml(XmlElement element) : this(GostCryptoConfig.ProviderType, element)
-		{
-		}
-
-		/// <inheritdoc cref="SignedXml(XmlElement)"/>
-		public GostSignedXml(ProviderType providerType, XmlElement element)
+		public GostSignedXml(XmlElement element)
 		{
 			if (element == null)
 			{
 				throw ExceptionUtility.ArgumentNull(nameof(element));
 			}
 
-			_signedXml = new GostSignedXmlImpl(providerType, element);
+			_signedXml = new GostSignedXmlImpl(element);
 		}
 
 		/// <inheritdoc cref="SignedXml(XmlDocument)"/>
-		public GostSignedXml(XmlDocument document) : this(GostCryptoConfig.ProviderType, document)
-		{
-		}
-
-		/// <inheritdoc cref="SignedXml(XmlDocument)"/>
-		public GostSignedXml(ProviderType providerType, XmlDocument document)
+		public GostSignedXml(XmlDocument document)
 		{
 			if (document == null)
 			{
 				throw ExceptionUtility.ArgumentNull(nameof(document));
 			}
 
-			_signedXml = new GostSignedXmlImpl(providerType, document);
+			_signedXml = new GostSignedXmlImpl(document);
 		}
 
 
