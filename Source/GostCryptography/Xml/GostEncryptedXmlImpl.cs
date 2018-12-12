@@ -66,22 +66,22 @@ namespace GostCryptography.Xml
 				return base.Encrypt(element, certificate);
 			}
 
-			var publicKey = (GostAsymmetricAlgorithm)certificate.GetPublicKeyAlgorithm(ProviderType);
-			var encriptionKey = new Gost_28147_89_SymmetricAlgorithm(ProviderType);
+			var publicKey = (GostAsymmetricAlgorithm)certificate.GetPublicKeyAlgorithm();
+			var encryptionKey = new Gost_28147_89_SymmetricAlgorithm(publicKey.ProviderType);
 
 			var encryptedKey = new EncryptedKey();
 			encryptedKey.KeyInfo.AddClause(new KeyInfoX509Data(certificate));
 			encryptedKey.EncryptionMethod = new EncryptionMethod(publicKey.KeyExchangeAlgorithm);
-			encryptedKey.CipherData.CipherValue = EncryptKey(encriptionKey, publicKey);
+			encryptedKey.CipherData.CipherValue = EncryptKey(encryptionKey, publicKey);
 
 			var encryptedData = new EncryptedData
 			{
 				Type = XmlEncElementUrl,
-				EncryptionMethod = new EncryptionMethod(encriptionKey.AlgorithmName)
+				EncryptionMethod = new EncryptionMethod(encryptionKey.AlgorithmName)
 			};
 
 			encryptedData.KeyInfo.AddClause(new KeyInfoEncryptedKey(encryptedKey));
-			encryptedData.CipherData.CipherValue = EncryptData(element, encriptionKey, false);
+			encryptedData.CipherData.CipherValue = EncryptData(element, encryptionKey, false);
 
 			return encryptedData;
 		}
