@@ -1,7 +1,9 @@
 # GostCryptography
 
-GostCryptography is .NET driver for [ViPNet CSP](http://www.infotecs.ru/) and [CryptoPro CSP](http://www.cryptopro.ru/).
-Provides abstractions for working with russian national cryptographic algorithms (GOST).
+.NET driver for [ViPNet CSP](http://www.infotecs.ru/) and [CryptoPro CSP](http://www.cryptopro.ru/).
+Implements crypto algorithms based on Russian national cryptographic standards `GOST 28147-89`, `GOST R 34.10`
+and `GOST R 34.11`. Also provides abstractions to sign and verify `CMS/PKCS #7` messages, sign, verify and
+encrypt XML documents.
 
 - [NuGet Package](https://www.nuget.org/packages/GostCryptography)
 - [Examples](Source/GostCryptography.Tests)
