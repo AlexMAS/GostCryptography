@@ -671,7 +671,7 @@ namespace GostCryptography.Native
 			return keyHandle;
 		}
 
-		public static SafeKeyHandleImpl GenerateDhEphemeralKey(SafeProvHandleImpl providerHandle, int algId, string digestParamSet, string publicKeyParamSet)
+		public static SafeKeyHandleImpl GenerateDhEphemeralKey(ProviderType providerType, SafeProvHandleImpl providerHandle, int algId, string digestParamSet, string publicKeyParamSet)
 		{
 			var keyHandle = SafeKeyHandleImpl.InvalidHandle;
 			var dwFlags = MapCspKeyFlags(CspProviderFlags.NoFlags) | Constants.CRYPT_PREGEN;
@@ -681,7 +681,11 @@ namespace GostCryptography.Native
 				throw CreateWin32Error();
 			}
 
-			SetKeyParameterString(keyHandle, Constants.KP_HASHOID, digestParamSet);
+			if (!providerType.IsVipNet())
+			{
+				SetKeyParameterString(keyHandle, Constants.KP_HASHOID, digestParamSet);
+			}
+
 			SetKeyParameterString(keyHandle, Constants.KP_DHOID, publicKeyParamSet);
 			SetKeyParameter(keyHandle, Constants.KP_X, null);
 
@@ -831,6 +835,12 @@ namespace GostCryptography.Native
 			}
 
 			return dataBytes;
+		}
+
+		public static void SetKeyExchangeExportAlgId(ProviderType providerType, SafeKeyHandleImpl keyHandle, int keyExchangeExportAlgId)
+		{
+			var keyExchangeExportAlgParamId = providerType.IsVipNet() ? Constants.KP_EXPORTID : Constants.KP_ALGID;
+			SetKeyParameterInt32(keyHandle, keyExchangeExportAlgParamId, keyExchangeExportAlgId);
 		}
 
 		public static void SetKeyParameterInt32(SafeKeyHandleImpl keyHandle, int keyParamId, int keyParamValue)
@@ -1038,7 +1048,7 @@ namespace GostCryptography.Native
 			return hKeyExchange;
 		}
 
-		public static SafeKeyHandleImpl ImportBulkSessionKey(SafeProvHandleImpl providerHandle, byte[] bulkSessionKey, RNGCryptoServiceProvider randomNumberGenerator)
+		public static SafeKeyHandleImpl ImportBulkSessionKey(ProviderType providerType, SafeProvHandleImpl providerHandle, byte[] bulkSessionKey, RNGCryptoServiceProvider randomNumberGenerator)
 		{
 			if (bulkSessionKey == null)
 			{
@@ -1090,7 +1100,7 @@ namespace GostCryptography.Native
 			keyWrap.Mac = EndHashData(hashHandle);
 			keyWrap.EncryptionParamSet = GetKeyParameterString(hSessionKey, Constants.KP_CIPHEROID);
 
-			SetKeyParameterInt32(hSessionKey, Constants.KP_ALGID, Constants.CALG_SIMPLE_EXPORT);
+			SetKeyExchangeExportAlgId(providerType, hSessionKey, Constants.CALG_SIMPLE_EXPORT);
 			SetKeyParameterInt32(hSessionKey, Constants.KP_MODE, Constants.CRYPT_MODE_ECB);
 			SetKeyParameterInt32(hSessionKey, Constants.KP_PADDING, Constants.ZERO_PADDING);
 

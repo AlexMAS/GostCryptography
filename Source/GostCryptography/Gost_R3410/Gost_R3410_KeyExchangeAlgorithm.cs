@@ -99,7 +99,7 @@ namespace GostCryptography.Gost_R3410
 			{
 				var importedKeyBytes = CryptoApiHelper.EncodePublicBlob(_keyExchangeParameters, _keySize, _signatureAlgId);
 				CryptoApiHelper.ImportCspBlob(importedKeyBytes, _provHandle, _keyHandle, out keyExchangeHandle);
-				CryptoApiHelper.SetKeyParameterInt32(keyExchangeHandle, Constants.KP_ALGID, keyExchangeExportAlgId);
+				CryptoApiHelper.SetKeyExchangeExportAlgId(ProviderType, keyExchangeHandle, keyExchangeExportAlgId);
 
 				var symKeyHandle = keyExchangeAlgorithm.GetSafeHandle();
 				keyExchangeInfo = CryptoApiHelper.ExportKeyExchange(symKeyHandle, keyExchangeHandle);
@@ -142,7 +142,7 @@ namespace GostCryptography.Gost_R3410
 			{
 				var importedKeyBytes = CryptoApiHelper.EncodePublicBlob(_keyExchangeParameters, _keySize, _signatureAlgId);
 				CryptoApiHelper.ImportCspBlob(importedKeyBytes, _provHandle, _keyHandle, out keyExchangeHandle);
-				CryptoApiHelper.SetKeyParameterInt32(keyExchangeHandle, Constants.KP_ALGID, keyExchangeExportAlgId);
+				CryptoApiHelper.SetKeyExchangeExportAlgId(ProviderType, keyExchangeHandle, keyExchangeExportAlgId);
 
 				symKeyHandle = CryptoApiHelper.ImportKeyExchange(_provHandle, keyExchangeInfo, keyExchangeHandle);
 			}

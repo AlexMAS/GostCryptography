@@ -45,7 +45,7 @@ namespace GostCryptography.Gost_R3410
 			}
 
 			_providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType).DangerousAddRef();
-			_keyHandle = CryptoApiHelper.GenerateDhEphemeralKey(_providerHandle, ExchangeAlgId, keyParameters.DigestParamSet, keyParameters.PublicKeyParamSet);
+			_keyHandle = CryptoApiHelper.GenerateDhEphemeralKey(providerType, _providerHandle, ExchangeAlgId, keyParameters.DigestParamSet, keyParameters.PublicKeyParamSet);
 		}
 
 

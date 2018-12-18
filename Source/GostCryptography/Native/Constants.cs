@@ -235,6 +235,11 @@
 		public const int KP_ALGID = 7;
 
 		/// <summary>
+		/// Идентификатор алгоритма экспорта для симметричного ключа.
+		/// </summary>
+		public const int KP_EXPORTID = 108;
+
+		/// <summary>
 		/// Строковый идентификатор узла замены.
 		/// </summary>
 		public const int KP_CIPHEROID = 0x68;

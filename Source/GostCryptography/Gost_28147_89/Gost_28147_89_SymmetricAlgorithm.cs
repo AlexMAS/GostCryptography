@@ -141,7 +141,7 @@ namespace GostCryptography.Gost_28147_89
 			var providerHandle = CryptoApiHelper.GetProviderHandle(providerType);
 			var randomNumberGenerator = CryptoApiHelper.GetRandomNumberGenerator(providerType);
 
-			using (var keyHandle = CryptoApiHelper.ImportBulkSessionKey(providerHandle, sessionKey, randomNumberGenerator))
+			using (var keyHandle = CryptoApiHelper.ImportBulkSessionKey(providerType, providerHandle, sessionKey, randomNumberGenerator))
 			{
 				return new Gost_28147_89_SymmetricAlgorithm(providerType, providerHandle, keyHandle);
 			}
@@ -374,7 +374,7 @@ namespace GostCryptography.Gost_28147_89
 
 			using (var keyHandle = CryptoApiHelper.DuplicateKey(this.GetSafeHandle()))
 			{
-				CryptoApiHelper.SetKeyParameterInt32(keyHandle, Constants.KP_ALGID, keyExchangeExportAlgId);
+				CryptoApiHelper.SetKeyExchangeExportAlgId(ProviderType, keyHandle, keyExchangeExportAlgId);
 
 				var keyExchangeHandle = CryptoApiHelper.ImportKeyExchange(providerHandle, keyExchangeInfo, keyHandle);
 
@@ -410,11 +410,11 @@ namespace GostCryptography.Gost_28147_89
 
 			if (currentSessionKey == null)
 			{
-				using (var derivedSessinKey = new Gost_28147_89_SymmetricAlgorithm(ProviderType))
+				using (var derivedSessionKey = new Gost_28147_89_SymmetricAlgorithm(ProviderType))
 				{
-					derivedSessinKey.Key = keyExchangeAlgorithm.Key;
+					derivedSessionKey.Key = keyExchangeAlgorithm.Key;
 
-					return EncodePrivateKeyInternal(derivedSessinKey, keyExchangeExportAlgId);
+					return EncodePrivateKeyInternal(derivedSessionKey, keyExchangeExportAlgId);
 				}
 			}
 
@@ -428,7 +428,7 @@ namespace GostCryptography.Gost_28147_89
 
 			using (var keyHandle = CryptoApiHelper.DuplicateKey(this.GetSafeHandle()))
 			{
-				CryptoApiHelper.SetKeyParameterInt32(keyHandle, Constants.KP_ALGID, keyExchangeExportAlgId);
+				CryptoApiHelper.SetKeyExchangeExportAlgId(ProviderType, keyHandle, keyExchangeExportAlgId);
 				CryptoApiHelper.SetKeyParameter(keyHandle, Constants.KP_IV, IV);
 
 				var keyExchangeInfo = CryptoApiHelper.ExportKeyExchange(hSessionKey, keyHandle);
