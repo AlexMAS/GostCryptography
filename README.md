@@ -32,4 +32,4 @@ Provides abstractions for working with russian national cryptographic algorithms
 ## Tested On
 
 - Windows 10 x64, CryptoPro CSP 4.0.9963
-- Windows 10 x64, ViPNet CSP 4.2
+- Windows 10 x64, ViPNet CSP 4.2.8.51670
