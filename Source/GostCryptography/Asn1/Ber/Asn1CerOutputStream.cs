@@ -2,7 +2,7 @@
 
 namespace GostCryptography.Asn1.Ber
 {
-	class Asn1CerOutputStream : Asn1BerOutputStream
+	public class Asn1CerOutputStream : Asn1BerOutputStream
 	{
 		public Asn1CerOutputStream(Stream outputStream)
 			: base(outputStream)

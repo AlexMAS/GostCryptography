@@ -6,7 +6,7 @@ using GostCryptography.Properties;
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	abstract class Asn1CharString : Asn1Type
+	public abstract class Asn1CharString : Asn1Type
 	{
 		[NonSerialized]
 		protected StringBuilder StringBuffer;

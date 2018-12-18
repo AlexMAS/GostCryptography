@@ -2,7 +2,7 @@
 
 namespace GostCryptography.Asn1.Ber
 {
-	class Asn1BerOutputStream : Asn1OutputStream
+	public class Asn1BerOutputStream : Asn1OutputStream
 	{
 		private static readonly byte[] Eoc = new byte[2];
 

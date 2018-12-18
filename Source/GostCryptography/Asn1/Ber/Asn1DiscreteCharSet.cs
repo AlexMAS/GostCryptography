@@ -2,7 +2,7 @@
 
 namespace GostCryptography.Asn1.Ber
 {
-	class Asn1DiscreteCharSet : Asn1CharSet
+	public class Asn1DiscreteCharSet : Asn1CharSet
 	{
 		private readonly int[] _charSet;
 

@@ -1,14 +1,15 @@
 ﻿using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Base;
 
 using NUnit.Framework;
 
 namespace GostCryptography.Tests.Sign
 {
 	/// <summary>
-	/// Подпись и проверка подписи потока байт с помощью сертификата и классов формтирования.
+	/// Подпись и проверка подписи потока байт с помощью сертификата и классов форматирования.
 	/// </summary>
 	/// <remarks>
 	/// Тест создает поток байт, вычисляет цифровую подпись потока байт с использованием закрытого ключа сертификата,
@@ -16,16 +17,17 @@ namespace GostCryptography.Tests.Sign
 	/// используется класс <see cref="GostSignatureFormatter"/>, для проверки цифровой подписи используется класс
 	/// <see cref="GostSignatureDeformatter"/>.
 	/// </remarks>
-	[TestFixture(Description = "Подпись и проверка подписи потока байт с помощью сертификата и классов формтирования")]
-	public sealed class SignDataStreamSignatureFormatterTest
+	[TestFixture(Description = "Подпись и проверка подписи потока байт с помощью сертификата и классов форматирования")]
+	public class SignDataStreamSignatureFormatterTest
 	{
 		[Test]
-		public void ShouldSignDataStream()
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Gost_R3410_Certificates))]
+		public void ShouldSignDataStream(TestCertificateInfo testCase)
 		{
 			// Given
-			var certificate = TestCertificates.GetCertificate();
-			var privateKey = (Gost3410AsymmetricAlgorithmBase)certificate.GetPrivateKeyAlgorithm();
-			var publicKey = (Gost3410AsymmetricAlgorithmBase)certificate.GetPrivateKeyAlgorithm();
+			var certificate = testCase.Certificate;
+			var privateKey = (GostAsymmetricAlgorithm)certificate.GetPrivateKeyAlgorithm();
+			var publicKey = (GostAsymmetricAlgorithm)certificate.GetPublicKeyAlgorithm();
 			var dataStream = CreateDataStream();
 
 			// When
@@ -44,14 +46,14 @@ namespace GostCryptography.Tests.Sign
 		{
 			// Некоторый поток байт для подписи
 
-			return new MemoryStream(Encoding.UTF8.GetBytes("Some data for sign..."));
+			return new MemoryStream(Encoding.UTF8.GetBytes("Some data to sign..."));
 		}
 
-		private static byte[] CreateSignature(Gost3410AsymmetricAlgorithmBase privateKey, Stream dataStream)
+		private static byte[] CreateSignature(GostAsymmetricAlgorithm privateKey, Stream dataStream)
 		{
 			byte[] hash;
 
-			using (var hashAlg = new Gost3411HashAlgorithm())
+			using (var hashAlg = privateKey.CreateHashAlgorithm())
 			{
 				hash = hashAlg.ComputeHash(dataStream);
 			}
@@ -61,11 +63,11 @@ namespace GostCryptography.Tests.Sign
 			return formatter.CreateSignature(hash);
 		}
 
-		private static bool VerifySignature(Gost3410AsymmetricAlgorithmBase publicKey, Stream dataStream, byte[] signature)
+		private static bool VerifySignature(GostAsymmetricAlgorithm publicKey, Stream dataStream, byte[] signature)
 		{
 			byte[] hash;
 
-			using (var hashAlg = new Gost3411HashAlgorithm())
+			using (var hashAlg = publicKey.CreateHashAlgorithm())
 			{
 				hash = hashAlg.ComputeHash(dataStream);
 			}

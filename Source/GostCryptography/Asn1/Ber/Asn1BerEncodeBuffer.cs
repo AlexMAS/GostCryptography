@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GostCryptography.Asn1.Ber
 {
-	class Asn1BerEncodeBuffer : Asn1EncodeBuffer
+	public class Asn1BerEncodeBuffer : Asn1EncodeBuffer
 	{
 		public Asn1BerEncodeBuffer()
 		{

@@ -6,7 +6,7 @@ using GostCryptography.Properties;
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	class Asn1BmpString : Asn1CharString
+	public class Asn1BmpString : Asn1CharString
 	{
 		public static readonly Asn1Tag Tag = new Asn1Tag(0, 0, BmpStringTypeCode);
 

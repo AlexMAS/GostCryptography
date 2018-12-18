@@ -6,7 +6,7 @@ using GostCryptography.Properties;
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	class Asn1UtcTime : Asn1Time
+	public class Asn1UtcTime : Asn1Time
 	{
 		public static readonly Asn1Tag Tag = new Asn1Tag(0, 0, UtcTimeTypeCode);
 

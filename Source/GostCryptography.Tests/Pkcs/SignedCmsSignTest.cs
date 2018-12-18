@@ -12,32 +12,33 @@ namespace GostCryptography.Tests.Pkcs
 	/// Подпись и проверка подписи сообщения CMS/PKCS#7.
 	/// </summary>
 	/// <remarks>
-	/// Тест создает сообщение, формирует подписанное сообщение в формате CMS/PKCS#7, а затем проверяет
-	/// подпись полученную цифровую подпись.
+	/// Тест создает сообщение, формирует подписанное сообщение в формате CMS/PKCS#7,
+	/// а затем проверяет подпись полученную цифровую подпись.
 	/// </remarks>
 	[TestFixture(Description = "Подпись и проверка подписи сообщения CMS/PKCS#7")]
-	public sealed class SignedCmsSignTest
+	public class SignedCmsSignTest
 	{
 		[Test]
-		public void ShouldSign()
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Gost_R3410_Certificates))]
+		public void ShouldSign(TestCertificateInfo testCase)
 		{
 			// Given
-			var certificate = TestCertificates.GetCertificate();
+			var certificate = testCase.Certificate;
 			var message = CreateMessage();
 
 			// When
 			var signedMessage = SignMessage(certificate, message);
-			var isValudSignedMessage = VerifyMessage(signedMessage);
+			var isValidSignedMessage = VerifyMessage(signedMessage);
 
 			// Then
-			Assert.IsTrue(isValudSignedMessage);
+			Assert.IsTrue(isValidSignedMessage);
 		}
 
 		private static byte[] CreateMessage()
 		{
 			// Некоторое сообщение для подписи
 
-			return Encoding.UTF8.GetBytes("Some message for sign...");
+			return Encoding.UTF8.GetBytes("Some message to sign...");
 		}
 
 		private static byte[] SignMessage(X509Certificate2 certificate, byte[] message)
@@ -45,7 +46,7 @@ namespace GostCryptography.Tests.Pkcs
 			// Создание объекта для подписи сообщения
 			var signedCms = new GostSignedCms(new ContentInfo(message));
 
-			// Создание объектс с информацией о подписчике
+			// Создание объект с информацией о подписчике
 			var signer = new CmsSigner(certificate);
 
 			// Включение информации только о конечном сертификате (только для теста)

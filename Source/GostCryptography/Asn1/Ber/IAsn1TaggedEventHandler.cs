@@ -1,6 +1,6 @@
 ﻿namespace GostCryptography.Asn1.Ber
 {
-	interface IAsn1TaggedEventHandler
+	public interface IAsn1TaggedEventHandler
 	{
 		void Contents(byte[] data);
 		void EndElement(Asn1Tag tag);

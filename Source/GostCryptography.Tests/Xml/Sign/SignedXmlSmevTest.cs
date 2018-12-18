@@ -3,7 +3,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Xml;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Base;
 using GostCryptography.Tests.Properties;
 using GostCryptography.Xml;
 
@@ -25,14 +25,15 @@ namespace GostCryptography.Tests.Xml.Sign
 		private const string WsSecurityUtilityNamespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
 
 		[Test]
-		public void ShouldSignXml()
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Gost_R3410_Certificates))]
+		public void ShouldSignXml(TestCertificateInfo testCase)
 		{
 			// Given
-			var signingCertificate = TestCertificates.GetCertificate();
+			var certificate = testCase.Certificate;
 			var smevRequest = CreateSmevRequest();
 
 			// When
-			var signedXmlDocument = SignSmevRequest(smevRequest, signingCertificate);
+			var signedXmlDocument = SignSmevRequest(smevRequest, certificate);
 
 			// Then
 			Assert.IsTrue(VerifySmevRequestSignature(signedXmlDocument));
@@ -45,16 +46,16 @@ namespace GostCryptography.Tests.Xml.Sign
 			return document;
 		}
 
-		private static XmlDocument SignSmevRequest(XmlDocument smevRequest, X509Certificate2 signingCertificate)
+		private static XmlDocument SignSmevRequest(XmlDocument smevRequest, X509Certificate2 certificate)
 		{
 			// Создание подписчика XML-документа
 			var signedXml = new GostSignedXml(smevRequest) { GetIdElementHandler = GetSmevIdElement };
 
 			// Установка ключа для создания подписи
-			signedXml.SetSigningCertificate(signingCertificate);
+			signedXml.SetSigningCertificate(certificate);
 
-			// Ссылка на узел, который нужно подписать, с указанием алгоритма хэширования ГОСТ Р 34.11-94 (в соответствии с методическими рекомендациями СМЭВ)
-			var dataReference = new Reference { Uri = "#body", DigestMethod = GostSignedXml.XmlDsigGost3411ObsoleteUrl };
+			// Ссылка на узел, который нужно подписать, с указанием алгоритма хэширования
+			var dataReference = new Reference { Uri = "#body", DigestMethod = GetDigestMethod(certificate) };
 
 			// Метод преобразования, применяемый к данным перед их подписью (в соответствии с методическими рекомендациями СМЭВ)
 			var dataTransform = new XmlDsigExcC14NTransform();
@@ -66,8 +67,8 @@ namespace GostCryptography.Tests.Xml.Sign
 			// Установка алгоритма нормализации узла SignedInfo (в соответствии с методическими рекомендациями СМЭВ)
 			signedXml.SignedInfo.CanonicalizationMethod = SignedXml.XmlDsigExcC14NTransformUrl;
 
-			// Установка алгоритма подписи ГОСТ Р 34.10-2001 (в соответствии с методическими рекомендациями СМЭВ)
-			signedXml.SignedInfo.SignatureMethod = GostSignedXml.XmlDsigGost3410ObsoleteUrl;
+			// Установка алгоритма хэширования (в соответствии с методическими рекомендациями СМЭВ)
+			signedXml.SignedInfo.SignatureMethod = GetSignatureMethod(certificate);
 
 			// Вычисление подписи
 			signedXml.ComputeSignature();
@@ -78,7 +79,7 @@ namespace GostCryptography.Tests.Xml.Sign
 			// Добавление подписи в исходный документ
 			smevRequest.GetElementsByTagName("ds:Signature")[0].PrependChild(smevRequest.ImportNode(signatureXml.GetElementsByTagName("SignatureValue")[0], true));
 			smevRequest.GetElementsByTagName("ds:Signature")[0].PrependChild(smevRequest.ImportNode(signatureXml.GetElementsByTagName("SignedInfo")[0], true));
-			smevRequest.GetElementsByTagName("wsse:BinarySecurityToken")[0].InnerText = Convert.ToBase64String(signingCertificate.RawData);
+			smevRequest.GetElementsByTagName("wsse:BinarySecurityToken")[0].InnerText = Convert.ToBase64String(certificate.RawData);
 
 			return smevRequest;
 		}
@@ -102,7 +103,7 @@ namespace GostCryptography.Tests.Xml.Sign
 				// Определение ссылки на сертификат (ссылка на узел документа)
 				var binaryTokenReference = ((XmlElement)references[0]).GetAttribute("URI");
 
-				if (!String.IsNullOrEmpty(binaryTokenReference) && binaryTokenReference[0] == '#')
+				if (!string.IsNullOrEmpty(binaryTokenReference) && binaryTokenReference[0] == '#')
 				{
 					// Поиск элемента с закодированным в Base64 сертификатом
 					var binaryTokenElement = signedXml.GetIdElement(signedSmevRequest, binaryTokenReference.Substring(1));
@@ -110,10 +111,10 @@ namespace GostCryptography.Tests.Xml.Sign
 					if (binaryTokenElement != null)
 					{
 						// Загрузка сертификата, который был использован для подписи
-						var signingCertificate = new X509Certificate2(Convert.FromBase64String(binaryTokenElement.InnerText));
+						var certificate = new X509Certificate2(Convert.FromBase64String(binaryTokenElement.InnerText));
 
 						// Проверка подписи
-						return signedXml.CheckSignature(signingCertificate.GetPublicKeyAlgorithm());
+						return signedXml.CheckSignature(certificate.GetPublicKeyAlgorithm());
 					}
 				}
 			}
@@ -127,6 +128,27 @@ namespace GostCryptography.Tests.Xml.Sign
 			namespaceManager.AddNamespace("wsu", WsSecurityUtilityNamespace);
 
 			return document.SelectSingleNode("//*[@wsu:Id='" + idValue + "']", namespaceManager) as XmlElement;
+		}
+
+		private static string GetSignatureMethod(X509Certificate2 certificate)
+		{
+			// Имя алгоритма вычисляем динамически, чтобы сделать код теста универсальным
+
+			using (var publicKey = (GostAsymmetricAlgorithm)certificate.GetPublicKeyAlgorithm())
+			{
+				return publicKey.SignatureAlgorithm;
+			}
+		}
+
+		private static string GetDigestMethod(X509Certificate2 certificate)
+		{
+			// Имя алгоритма вычисляем динамически, чтобы сделать код теста универсальным
+
+			using (var publicKey = (GostAsymmetricAlgorithm)certificate.GetPublicKeyAlgorithm())
+			using (var hashAlgorithm = publicKey.CreateHashAlgorithm())
+			{
+				return hashAlgorithm.AlgorithmName;
+			}
 		}
 	}
 }

@@ -2,7 +2,7 @@
 
 namespace GostCryptography.Asn1.Ber
 {
-	class Asn1CharRange : Asn1CharSet
+	public class Asn1CharRange : Asn1CharSet
 	{
 		private readonly int _lower;
 		private readonly int _upper;

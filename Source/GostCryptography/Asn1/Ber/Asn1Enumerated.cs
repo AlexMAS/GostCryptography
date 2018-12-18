@@ -3,7 +3,7 @@
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	abstract class Asn1Enumerated : Asn1Type
+	public abstract class Asn1Enumerated : Asn1Type
 	{
 		public const int Undefined = -999;
 		public static readonly Asn1Tag Tag = new Asn1Tag(0, 0, EnumeratedTypeCode);

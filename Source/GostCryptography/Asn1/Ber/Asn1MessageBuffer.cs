@@ -3,7 +3,7 @@ using System.IO;
 
 namespace GostCryptography.Asn1.Ber
 {
-	abstract class Asn1MessageBuffer
+	public abstract class Asn1MessageBuffer
 	{
 		public abstract Stream GetInputStream();
 

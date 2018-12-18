@@ -2,7 +2,7 @@
 
 namespace GostCryptography.Asn1.Ber
 {
-	interface IAsn1Type
+	public interface IAsn1Type
 	{
 		void Decode(Asn1BerDecodeBuffer buffer, bool explicitTagging, int implicitLength);
 		int Encode(Asn1BerEncodeBuffer buffer, bool explicitTagging);

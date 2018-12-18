@@ -6,7 +6,7 @@ using GostCryptography.Properties;
 
 namespace GostCryptography.Asn1.Ber
 {
-	abstract class Asn1DecodeBuffer : Asn1MessageBuffer
+	public abstract class Asn1DecodeBuffer : Asn1MessageBuffer
 	{
 		private readonly ArrayList _captureBufferList;
 		private int _byteCount;

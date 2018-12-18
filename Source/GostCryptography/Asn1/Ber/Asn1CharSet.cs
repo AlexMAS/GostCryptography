@@ -1,6 +1,6 @@
 ﻿namespace GostCryptography.Asn1.Ber
 {
-	abstract class Asn1CharSet
+	public abstract class Asn1CharSet
 	{
 		private readonly int _aBitsPerChar;
 		private readonly int _uBitsPerChar;

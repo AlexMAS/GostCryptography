@@ -1,7 +1,8 @@
 ﻿using System.Security.Cryptography.Xml;
 using System.Xml;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Base;
+using GostCryptography.Gost_28147_89;
 using GostCryptography.Tests.Properties;
 using GostCryptography.Xml;
 
@@ -13,39 +14,19 @@ namespace GostCryptography.Tests.Xml.Encrypt
 	/// Шифрация и дешифрация XML с использованием случайного сессионного ключа.
 	/// </summary>
 	/// <remarks>
-	/// Тест создает XML-документ, выборочно шифрует элементы данного документа с использованием случайного симметричного ключа, 
-	/// а затем дешифрует полученный зашифрованный документ. Случайный симметричного ключ в свою очередь шифруется общим симметричным 
+	/// Тест создает XML-документ, выборочно шифрует элементы данного документа с использованием случайного симметричного ключа,
+	/// а затем дешифрует полученный зашифрованный документ. Случайный симметричного ключ в свою очередь шифруется общим симметричным
 	/// ключом и в зашифрованном виде добавляется в зашифрованный документ.
 	/// </remarks>
 	[TestFixture(Description = "Шифрация и дешифрация XML с использованием случайного сессионного ключа")]
-	public sealed class EncryptedXmlSessionKey
+	public class EncryptedXmlSessionKey
 	{
-		private Gost28147SymmetricAlgorithmBase _sharedKey;
-
-		[SetUp]
-		public void SetUp()
-		{
-			_sharedKey = new Gost28147SymmetricAlgorithm();
-		}
-
-		[TearDown]
-		public void TearDown()
-		{
-			try
-			{
-				_sharedKey.Dispose();
-			}
-			finally
-			{
-				_sharedKey = null;
-			}
-		}
-
 		[Test]
-		public void ShouldEncryptXml()
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Providers))]
+		public void ShouldEncryptXml(ProviderType providerType)
 		{
 			// Given
-			var sharedKey = _sharedKey;
+			var sharedKey = new Gost_28147_89_SymmetricAlgorithm(providerType);
 			var xmlDocument = CreateXmlDocument();
 			var expectedXml = xmlDocument.OuterXml;
 
@@ -65,10 +46,10 @@ namespace GostCryptography.Tests.Xml.Encrypt
 			return document;
 		}
 
-		private static XmlDocument EncryptXmlDocument(XmlDocument xmlDocument, Gost28147SymmetricAlgorithmBase sharedKey)
+		private static XmlDocument EncryptXmlDocument(XmlDocument xmlDocument, Gost_28147_89_SymmetricAlgorithmBase sharedKey)
 		{
 			// Создание объекта для шифрации XML
-			var encryptedXml = new GostEncryptedXml();
+			var encryptedXml = new GostEncryptedXml(sharedKey.ProviderType);
 
 			// Поиск элементов для шифрации
 			var elements = xmlDocument.SelectNodes("//SomeElement[@Encrypt='true']");
@@ -80,7 +61,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 				foreach (XmlElement element in elements)
 				{
 					// Создание случайного сессионного ключа
-					using (var sessionKey = new Gost28147SymmetricAlgorithm())
+					using (var sessionKey = new Gost_28147_89_SymmetricAlgorithm(sharedKey.ProviderType))
 					{
 						// Шифрация элемента
 						var encryptedData = encryptedXml.EncryptData(element, sessionKey, false);
@@ -92,7 +73,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 						var elementEncryptedData = new EncryptedData();
 						elementEncryptedData.Id = "EncryptedElement" + elementIndex++;
 						elementEncryptedData.Type = EncryptedXml.XmlEncElementUrl;
-						elementEncryptedData.EncryptionMethod = new EncryptionMethod(GostEncryptedXml.XmlEncGost28147Url);
+						elementEncryptedData.EncryptionMethod = new EncryptionMethod(sessionKey.AlgorithmName);
 						elementEncryptedData.CipherData.CipherValue = encryptedData;
 						elementEncryptedData.KeyInfo = new KeyInfo();
 
@@ -115,10 +96,10 @@ namespace GostCryptography.Tests.Xml.Encrypt
 			return xmlDocument;
 		}
 
-		private static XmlDocument DecryptXmlDocument(XmlDocument encryptedXmlDocument, Gost28147SymmetricAlgorithmBase sharedKey)
+		private static XmlDocument DecryptXmlDocument(XmlDocument encryptedXmlDocument, Gost_28147_89_SymmetricAlgorithmBase sharedKey)
 		{
 			// Создание объекта для дешифрации XML
-			var encryptedXml = new GostEncryptedXml(encryptedXmlDocument);
+			var encryptedXml = new GostEncryptedXml(sharedKey.ProviderType, encryptedXmlDocument);
 
 			// Добавление ссылки на общий симметричный ключ
 			encryptedXml.AddKeyNameMapping("SharedKey1", sharedKey);

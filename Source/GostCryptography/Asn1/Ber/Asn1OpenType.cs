@@ -5,7 +5,7 @@ using System.Text;
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	class Asn1OpenType : Asn1OctetString
+	public class Asn1OpenType : Asn1OctetString
 	{
 		private const string EncodedDataMessage = "ENCODED DATA";
 

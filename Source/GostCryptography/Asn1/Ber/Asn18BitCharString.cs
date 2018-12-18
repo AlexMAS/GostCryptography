@@ -3,7 +3,7 @@
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	abstract class Asn18BitCharString : Asn1CharString
+	public abstract class Asn18BitCharString : Asn1CharString
 	{
 		public const int BitsPerCharA = 8;
 		public const int BitsPerCharU = 7;

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Reflection;
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -8,43 +6,50 @@ using System.Security.Cryptography.Xml;
 using System.Security.Policy;
 using System.Xml;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Base;
+using GostCryptography.Config;
+using GostCryptography.Gost_28147_89;
 using GostCryptography.Properties;
+using GostCryptography.Reflection;
 
 namespace GostCryptography.Xml
 {
 	sealed class GostEncryptedXmlImpl : EncryptedXml
 	{
-		public GostEncryptedXmlImpl()
+		public GostEncryptedXmlImpl(ProviderType providerType)
 		{
+			ProviderType = providerType;
 		}
 
-		public GostEncryptedXmlImpl(XmlDocument document)
-			: base(document)
+		public GostEncryptedXmlImpl(ProviderType providerType, XmlDocument document) : base(document)
 		{
+			ProviderType = providerType;
 		}
 
-		public GostEncryptedXmlImpl(XmlDocument document, Evidence evidence)
-			: base(document, evidence)
+		public GostEncryptedXmlImpl(ProviderType providerType, XmlDocument document, Evidence evidence) : base(document, evidence)
 		{
+			ProviderType = providerType;
 		}
+
+
+		public ProviderType ProviderType { get; }
 
 
 		public new void AddKeyNameMapping(string keyName, object keyObject)
 		{
 			if (string.IsNullOrEmpty(keyName))
 			{
-				throw ExceptionUtility.ArgumentNull("keyName");
+				throw ExceptionUtility.ArgumentNull(nameof(keyName));
 			}
 
 			if (keyObject == null)
 			{
-				throw ExceptionUtility.ArgumentNull("keyObject");
+				throw ExceptionUtility.ArgumentNull(nameof(keyObject));
 			}
 
-			if (keyObject is Gost3410AsymmetricAlgorithmBase)
+			if (keyObject is GostAsymmetricAlgorithm)
 			{
-				KeyNameMapping.Add(keyName, keyObject);
+				this.GetKeyNameMapping().Add(keyName, keyObject);
 			}
 			else
 			{
@@ -56,70 +61,57 @@ namespace GostCryptography.Xml
 		[SecuritySafeCritical]
 		public new EncryptedData Encrypt(XmlElement element, X509Certificate2 certificate)
 		{
-			if (element == null)
+			if (element == null || certificate == null || !certificate.IsGost())
 			{
 				return base.Encrypt(element, certificate);
 			}
 
-			if (certificate == null)
-			{
-				return base.Encrypt(element, certificate);
-			}
+			var publicKey = (GostAsymmetricAlgorithm)certificate.GetPublicKeyAlgorithm();
+			var encryptionKey = new Gost_28147_89_SymmetricAlgorithm(publicKey.ProviderType);
 
-			if (!string.Equals(certificate.PublicKey.Oid.Value, GostCryptoConfig.DefaultSignOid, StringComparison.OrdinalIgnoreCase))
-			{
-				return base.Encrypt(element, certificate);
-			}
-
-			var encryptedKey = new EncryptedKey
-							   {
-								   EncryptionMethod = new EncryptionMethod(GostEncryptedXml.XmlEncGostKeyTransportUrl)
-							   };
-
+			var encryptedKey = new EncryptedKey();
 			encryptedKey.KeyInfo.AddClause(new KeyInfoX509Data(certificate));
-
-			var encriptionKey = new Gost28147SymmetricAlgorithm();
-			var publicKey = certificate.GetPublicKeyAlgorithm();
-			encryptedKey.CipherData.CipherValue = EncryptKey(encriptionKey, publicKey as Gost3410AsymmetricAlgorithmBase);
+			encryptedKey.EncryptionMethod = new EncryptionMethod(publicKey.KeyExchangeAlgorithm);
+			encryptedKey.CipherData.CipherValue = EncryptKey(encryptionKey, publicKey);
 
 			var encryptedData = new EncryptedData
-								{
-									Type = XmlEncElementUrl,
-									EncryptionMethod = new EncryptionMethod(GostEncryptedXml.XmlEncGost28147Url)
-								};
+			{
+				Type = XmlEncElementUrl,
+				EncryptionMethod = new EncryptionMethod(encryptionKey.AlgorithmName)
+			};
 
 			encryptedData.KeyInfo.AddClause(new KeyInfoEncryptedKey(encryptedKey));
-			encryptedData.CipherData.CipherValue = EncryptData(element, encriptionKey, false);
+			encryptedData.CipherData.CipherValue = EncryptData(element, encryptionKey, false);
 
 			return encryptedData;
 		}
 
-		public static byte[] EncryptKey(Gost28147SymmetricAlgorithmBase sessionKey, Gost3410AsymmetricAlgorithmBase publicKey)
+		public static byte[] EncryptKey(Gost_28147_89_SymmetricAlgorithmBase sessionKey, GostAsymmetricAlgorithm publicKey)
 		{
 			if (sessionKey == null)
 			{
-				throw ExceptionUtility.ArgumentNull("sessionKey");
+				throw ExceptionUtility.ArgumentNull(nameof(sessionKey));
 			}
 
 			if (publicKey == null)
 			{
-				throw ExceptionUtility.ArgumentNull("publicKey");
+				throw ExceptionUtility.ArgumentNull(nameof(publicKey));
 			}
 
-			var formatter = new GostKeyExchangeFormatter(publicKey);
+			var formatter = publicKey.CreateKeyExchangeFormatter();
 			return formatter.CreateKeyExchangeData(sessionKey);
 		}
 
-		public static byte[] EncryptKey(Gost28147SymmetricAlgorithmBase sessionKey, Gost28147SymmetricAlgorithmBase sharedKey, GostKeyExchangeExportMethod exportMethod)
+		public static byte[] EncryptKey(Gost_28147_89_SymmetricAlgorithmBase sessionKey, Gost_28147_89_SymmetricAlgorithmBase sharedKey, GostKeyExchangeExportMethod exportMethod)
 		{
 			if (sessionKey == null)
 			{
-				throw ExceptionUtility.ArgumentNull("sessionKey");
+				throw ExceptionUtility.ArgumentNull(nameof(sessionKey));
 			}
 
 			if (sharedKey == null)
 			{
-				throw ExceptionUtility.ArgumentNull("sharedKey");
+				throw ExceptionUtility.ArgumentNull(nameof(sharedKey));
 			}
 
 			return sharedKey.EncodePrivateKey(sessionKey, exportMethod);
@@ -130,7 +122,7 @@ namespace GostCryptography.Xml
 		{
 			if (encryptedData == null)
 			{
-				throw ExceptionUtility.ArgumentNull("encryptedData");
+				throw ExceptionUtility.ArgumentNull(nameof(encryptedData));
 			}
 
 			if (symmetricAlgorithmUri == null)
@@ -143,10 +135,10 @@ namespace GostCryptography.Xml
 				symmetricAlgorithmUri = encryptedData.EncryptionMethod.KeyAlgorithm;
 			}
 
-			if (string.Equals(symmetricAlgorithmUri, GostEncryptedXml.XmlEncGost28147Url, StringComparison.OrdinalIgnoreCase))
+			if (Gost_28147_89_SymmetricAlgorithm.AlgorithmNameValue.Equals(symmetricAlgorithmUri, StringComparison.OrdinalIgnoreCase))
 			{
 				var iv = new byte[8];
-				Buffer.BlockCopy(GetCipherValue(encryptedData.CipherData), 0, iv, 0, iv.Length);
+				Buffer.BlockCopy(this.GetCipherValue(encryptedData.CipherData), 0, iv, 0, iv.Length);
 
 				return iv;
 			}
@@ -158,7 +150,7 @@ namespace GostCryptography.Xml
 		{
 			if (encryptedData == null)
 			{
-				throw ExceptionUtility.ArgumentNull("encryptedData");
+				throw ExceptionUtility.ArgumentNull(nameof(encryptedData));
 			}
 
 			SymmetricAlgorithm decryptionKey = null;
@@ -173,14 +165,14 @@ namespace GostCryptography.Xml
 					if (keyInfo is KeyInfoName)
 					{
 						var keyName = ((KeyInfoName)keyInfo).Value;
-						var keyAlgorithm = KeyNameMapping[keyName];
+						var keyAlgorithm = this.GetKeyNameMapping()[keyName];
 
 						if (keyAlgorithm == null)
 						{
-							var nsManager = new XmlNamespaceManager(Document.NameTable);
+							var nsManager = new XmlNamespaceManager(this.GetDocument().NameTable);
 							nsManager.AddNamespace("enc", XmlEncNamespaceUrl);
 
-							var encryptedKeyNodes = Document.SelectNodes("//enc:EncryptedKey", nsManager);
+							var encryptedKeyNodes = this.GetDocument().SelectNodes("//enc:EncryptedKey", nsManager);
 
 							if (encryptedKeyNodes != null)
 							{
@@ -208,8 +200,8 @@ namespace GostCryptography.Xml
 					// Извлечение ключа по ссылке
 					if (keyInfo is KeyInfoRetrievalMethod)
 					{
-						var idValue = GostXmlUtils.ExtractIdFromLocalUri(((KeyInfoRetrievalMethod)keyInfo).Uri);
-						var idElement = GetIdElement(Document, idValue);
+						var idValue = CryptographyXmlUtils.ExtractIdFromLocalUri(((KeyInfoRetrievalMethod)keyInfo).Uri);
+						var idElement = GetIdElement(this.GetDocument(), idValue);
 
 						if (idElement != null)
 						{
@@ -252,7 +244,7 @@ namespace GostCryptography.Xml
 		{
 			if (encryptedKey == null)
 			{
-				throw ExceptionUtility.ArgumentNull("encryptedKey");
+				throw ExceptionUtility.ArgumentNull(nameof(encryptedKey));
 			}
 
 			SymmetricAlgorithm decryptionKey = null;
@@ -265,7 +257,7 @@ namespace GostCryptography.Xml
 					if (keyInfo is KeyInfoName)
 					{
 						var keyName = ((KeyInfoName)keyInfo).Value;
-						var keyAlgorithm = KeyNameMapping[keyName];
+						var keyAlgorithm = this.GetKeyNameMapping()[keyName];
 
 						if (keyAlgorithm != null)
 						{
@@ -278,9 +270,9 @@ namespace GostCryptography.Xml
 								var useOaep = (encryptedKey.EncryptionMethod != null) && (encryptedKey.EncryptionMethod.KeyAlgorithm == XmlEncRSAOAEPUrl);
 								decryptionKey = DecryptKeyClass(encryptedKey.CipherData.CipherValue, (RSA)keyAlgorithm, useOaep, symmetricAlgorithmUri);
 							}
-							else if (keyAlgorithm is Gost3410AsymmetricAlgorithmBase)
+							else if (keyAlgorithm is GostAsymmetricAlgorithm)
 							{
-								decryptionKey = DecryptKeyClass(encryptedKey.CipherData.CipherValue, (Gost3410AsymmetricAlgorithmBase)keyAlgorithm);
+								decryptionKey = DecryptKeyClass(encryptedKey.CipherData.CipherValue, (GostAsymmetricAlgorithm)keyAlgorithm);
 							}
 						}
 
@@ -290,7 +282,7 @@ namespace GostCryptography.Xml
 					// Извлечение ключа из сертификата
 					if (keyInfo is KeyInfoX509Data)
 					{
-						var certificates = GostXmlUtils.BuildBagOfCertsDecryption((KeyInfoX509Data)keyInfo);
+						var certificates = CryptographyXmlUtils.BuildBagOfCertsDecryption((KeyInfoX509Data)keyInfo);
 
 						foreach (var certificate in certificates)
 						{
@@ -301,9 +293,9 @@ namespace GostCryptography.Xml
 								var useOaep = (encryptedKey.EncryptionMethod != null) && (encryptedKey.EncryptionMethod.KeyAlgorithm == XmlEncRSAOAEPUrl);
 								decryptionKey = DecryptKeyClass(encryptedKey.CipherData.CipherValue, (RSA)privateKey, useOaep, symmetricAlgorithmUri);
 							}
-							else if (privateKey is Gost3410AsymmetricAlgorithmBase)
+							else if (privateKey is GostAsymmetricAlgorithm)
 							{
-								decryptionKey = DecryptKeyClass(encryptedKey.CipherData.CipherValue, (Gost3410AsymmetricAlgorithmBase)privateKey);
+								decryptionKey = DecryptKeyClass(encryptedKey.CipherData.CipherValue, (GostAsymmetricAlgorithm)privateKey);
 							}
 						}
 
@@ -313,8 +305,8 @@ namespace GostCryptography.Xml
 					// Извлечение ключа по ссылке
 					if (keyInfo is KeyInfoRetrievalMethod)
 					{
-						var idValue = GostXmlUtils.ExtractIdFromLocalUri(((KeyInfoRetrievalMethod)keyInfo).Uri);
-						var idElement = GetIdElement(Document, idValue);
+						var idValue = CryptographyXmlUtils.ExtractIdFromLocalUri(((KeyInfoRetrievalMethod)keyInfo).Uri);
+						var idElement = GetIdElement(this.GetDocument(), idValue);
 
 						if (idElement != null)
 						{
@@ -350,19 +342,17 @@ namespace GostCryptography.Xml
 		{
 			if (keyData == null)
 			{
-				throw ExceptionUtility.ArgumentNull("keyData");
+				throw ExceptionUtility.ArgumentNull(nameof(keyData));
 			}
 
 			if (algorithm == null)
 			{
-				throw ExceptionUtility.ArgumentNull("algorithm");
+				throw ExceptionUtility.ArgumentNull(nameof(algorithm));
 			}
 
 			SymmetricAlgorithm decryptionKey = null;
 
-			var gost28147 = algorithm as Gost28147SymmetricAlgorithmBase;
-
-			if (gost28147 != null)
+			if (algorithm is Gost_28147_89_SymmetricAlgorithmBase gost28147)
 			{
 				if (string.Equals(encryptionKeyAlgorithm, GostEncryptedXml.XmlEncGostKeyExportUrl, StringComparison.OrdinalIgnoreCase))
 				{
@@ -397,12 +387,12 @@ namespace GostCryptography.Xml
 		{
 			if (keyData == null)
 			{
-				throw ExceptionUtility.ArgumentNull("keyData");
+				throw ExceptionUtility.ArgumentNull(nameof(keyData));
 			}
 
 			if (algorithm == null)
 			{
-				throw ExceptionUtility.ArgumentNull("algorithm");
+				throw ExceptionUtility.ArgumentNull(nameof(algorithm));
 			}
 
 			SymmetricAlgorithm decryptionKey = null;
@@ -423,131 +413,22 @@ namespace GostCryptography.Xml
 			return decryptionKey;
 		}
 
-		public static SymmetricAlgorithm DecryptKeyClass(byte[] keyData, Gost3410AsymmetricAlgorithmBase privateKey)
+		public static SymmetricAlgorithm DecryptKeyClass(byte[] keyData, GostAsymmetricAlgorithm privateKey)
 		{
 			if (keyData == null)
 			{
-				throw ExceptionUtility.ArgumentNull("keyData");
+				throw ExceptionUtility.ArgumentNull(nameof(keyData));
 			}
 
 			if (privateKey == null)
 			{
-				throw ExceptionUtility.ArgumentNull("privateKey");
+				throw ExceptionUtility.ArgumentNull(nameof(privateKey));
 			}
 
-			var deformatter = new GostKeyExchangeDeformatter(privateKey);
+			var deformatter = privateKey.CreateKeyExchangeDeformatter();
 			var decryptionKey = deformatter.DecryptKeyExchangeAlgorithm(keyData);
 
 			return decryptionKey;
 		}
-
-
-		#region EncryptedXml Reflection
-
-		// Document
-
-		private static readonly object DocumentFieldSync = new object();
-		private static volatile FieldInfo _documentField;
-
-		private static FieldInfo DocumentField
-		{
-			get
-			{
-				if (_documentField == null)
-				{
-					lock (DocumentFieldSync)
-					{
-						if (_documentField == null)
-						{
-							_documentField = typeof(EncryptedXml).GetField("m_document", BindingFlags.Instance | BindingFlags.NonPublic);
-						}
-					}
-				}
-
-				if (_documentField == null)
-				{
-					throw ExceptionUtility.CryptographicException(Resources.XmlCannotFindPrivateMember, "m_document");
-				}
-
-				return _documentField;
-			}
-		}
-
-		private XmlDocument Document
-		{
-			get { return (XmlDocument)DocumentField.GetValue(this); }
-		}
-
-
-		// KeyNameMapping
-
-		private static readonly object KeyNameMappingFieldSync = new object();
-		private static volatile FieldInfo _keyNameMappingField;
-
-		private static FieldInfo KeyNameMappingField
-		{
-			get
-			{
-				if (_keyNameMappingField == null)
-				{
-					lock (KeyNameMappingFieldSync)
-					{
-						if (_keyNameMappingField == null)
-						{
-							_keyNameMappingField = typeof(EncryptedXml).GetField("m_keyNameMapping", BindingFlags.Instance | BindingFlags.NonPublic);
-						}
-					}
-				}
-
-				if (_keyNameMappingField == null)
-				{
-					throw ExceptionUtility.CryptographicException(Resources.XmlCannotFindPrivateMember, "m_keyNameMapping");
-				}
-
-				return _keyNameMappingField;
-			}
-		}
-
-		private Hashtable KeyNameMapping
-		{
-			get { return (Hashtable)KeyNameMappingField.GetValue(this); }
-		}
-
-
-		// GetCipherValue()
-
-		private static readonly object GetCipherValueMethodSync = new object();
-		private static volatile MethodInfo _getCipherValueMethod;
-
-		private static MethodInfo GetCipherValueMethod
-		{
-			get
-			{
-				if (_getCipherValueMethod == null)
-				{
-					lock (GetCipherValueMethodSync)
-					{
-						if (_getCipherValueMethod == null)
-						{
-							_getCipherValueMethod = typeof(EncryptedXml).GetMethod("GetCipherValue", BindingFlags.Instance | BindingFlags.NonPublic);
-						}
-					}
-				}
-
-				if (_getCipherValueMethod == null)
-				{
-					throw ExceptionUtility.CryptographicException(Resources.XmlCannotFindPrivateMember, "GetCipherValue()");
-				}
-
-				return _getCipherValueMethod;
-			}
-		}
-
-		private byte[] GetCipherValue(CipherData cipherData)
-		{
-			return (byte[])GetCipherValueMethod.Invoke(this, new object[] { cipherData });
-		}
-
-		#endregion
 	}
 }

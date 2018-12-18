@@ -6,7 +6,7 @@ using GostCryptography.Properties;
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	class Asn1Real : Asn1Type
+	public class Asn1Real : Asn1Type
 	{
 		private const int MinusInfinity = 0x41;
 		private const int PlusInfinity = 0x40;

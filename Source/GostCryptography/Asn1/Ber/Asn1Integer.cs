@@ -3,7 +3,7 @@
 namespace GostCryptography.Asn1.Ber
 {
 	[Serializable]
-	class Asn1Integer : Asn1Type
+	public class Asn1Integer : Asn1Type
 	{
 		public const int SizeOfInt = 4;
 		public const int SizeOfLong = 8;

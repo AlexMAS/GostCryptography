@@ -2,7 +2,7 @@
 
 namespace GostCryptography.Asn1.Ber
 {
-	class Asn1DerInputStream : Asn1DerDecodeBuffer, IAsn1InputStream
+	public class Asn1DerInputStream : Asn1DerDecodeBuffer, IAsn1InputStream
 	{
 		public Asn1DerInputStream(Stream inputStream)
 			: base(inputStream)

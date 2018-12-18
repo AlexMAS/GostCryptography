@@ -1,8 +1,10 @@
 ﻿using System.IO;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Base;
+using GostCryptography.Config;
 
 using NUnit.Framework;
 
@@ -14,19 +16,20 @@ namespace GostCryptography.Tests.Sign
 	/// <remarks>
 	/// Тест создает поток байт, вычисляет цифровую подпись потока байт с использованием закрытого ключа сертификата,
 	/// а затем с помощью открытого ключа сертификата проверяет полученную подпись. Для вычисления цифровой подписи
-	/// и ее проверки используется информация об алгоритме цифровой подписи <see cref="SignatureDescription"/> 
-	/// (<see cref="GostSignatureDescription"/>), получаемая с помощью метода <see cref="GostCryptoConfig.CreateFromName"/>.
+	/// и ее проверки используется информация об алгоритме цифровой подписи <see cref="SignatureDescription"/>,
+	/// получаемая с помощью метода <see cref="GostCryptoConfig.CreateFromName"/>.
 	/// </remarks>
 	[TestFixture(Description = "Подпись и проверка подписи потока байт с помощью сертификата и информации об алгоритме цифровой подписи")]
-	public sealed class SignDataStreamSignatureDescriptionTest
+	public class SignDataStreamSignatureDescriptionTest
 	{
 		[Test]
-		public void ShouldSignDataStream()
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Gost_R3410_Certificates))]
+		public void ShouldSignDataStream(TestCertificateInfo testCase)
 		{
 			// Given
-			var certificate = TestCertificates.GetCertificate();
-			var privateKey = certificate.GetPrivateKeyAlgorithm();
-			var publicKey = certificate.GetPrivateKeyAlgorithm();
+			var certificate = testCase.Certificate;
+			var privateKey = (GostAsymmetricAlgorithm)certificate.GetPrivateKeyAlgorithm();
+			var publicKey = (GostAsymmetricAlgorithm)certificate.GetPublicKeyAlgorithm();
 			var dataStream = CreateDataStream();
 
 			// When
@@ -45,7 +48,7 @@ namespace GostCryptography.Tests.Sign
 		{
 			// Некоторый поток байт для подписи
 
-			return new MemoryStream(Encoding.UTF8.GetBytes("Some data for sign..."));
+			return new MemoryStream(Encoding.UTF8.GetBytes("Some data to sign..."));
 		}
 
 		private static byte[] CreateSignature(AsymmetricAlgorithm privateKey, Stream dataStream)

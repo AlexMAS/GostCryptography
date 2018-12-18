@@ -7,34 +7,29 @@ Provides abstractions for working with russian national cryptographic algorithms
 - [Examples](Source/GostCryptography.Tests)
 - [License](LICENSE)
 
-## Implemented algorithms
+## Implemented Algorithms
 
-- [Symmetric algorithm based on the GOST 28147](Source/GostCryptography/Cryptography/Gost28147SymmetricAlgorithm.cs)
-- [Hash-based Message Authentication Code (HMAC) based on the GOST 28147](Source/GostCryptography/Cryptography/Gost28147ImitHashAlgorithm.cs)
+- [Symmetric algorithm based on GOST 28147-89](Source/GostCryptography/Gost_28147_89/Gost_28147_89_SymmetricAlgorithm.cs)
+- [Hash-based Message Authentication Code (HMAC) based on GOST 28147-89](Source/GostCryptography/Gost_28147_89/Gost_28147_89_ImitHashAlgorithm.cs)
 
-- [Asymmetric algorithm based on the GOST R 34.10](Source/GostCryptography/Cryptography/Gost3410AsymmetricAlgorithm.cs)
-- [Asymmetric algorithm with an ephemeral key based on the GOST R 34.10](Source/GostCryptography/Cryptography/Gost3410EphemeralAsymmetricAlgorithm.cs)
+- [Hash algorithm based on GOST R 34.11-94](Source/GostCryptography/Gost_R3411/Gost_R3411_94_HashAlgorithm.cs), [2012/256](Source/GostCryptography/Gost_R3411/Gost_R3411_2012_256_HashAlgorithm.cs), [2012/512](Source/GostCryptography/Gost_R3411/Gost_R3411_2012_512_HashAlgorithm.cs)
+- [Hash-based Message Authentication Code (HMAC) based on GOST R 34.11-94](Source/GostCryptography/Gost_R3411/Gost_R3411_94_HMAC.cs), [2012/256](Source/GostCryptography/Gost_R3411/Gost_R3411_2012_256_HMAC.cs), [2012/512](Source/GostCryptography/Gost_R3411/Gost_R3411_2012_512_HMAC.cs)
+- [Pseudorandom Function (PRF) based on GOST R 34.11-94](Source/GostCryptography/Gost_R3411/Gost_R3411_94_PRF.cs), [2012/256](Source/GostCryptography/Gost_R3411/Gost_R3411_2012_256_PRF.cs), [2012/512](Source/GostCryptography/Gost_R3411/Gost_R3411_2012_512_PRF.cs)
 
-- [Hash algorithm based on the GOST R 34.11](Source/GostCryptography/Cryptography/Gost3411HashAlgorithm.cs)
-- [Hash-based Message Authentication Code (HMAC) based on the GOST R 34.11](Source/GostCryptography/Cryptography/Gost3411Hmac.cs)
+- [Asymmetric algorithm based on GOST R 34.10-2001](Source/GostCryptography/Gost_R3410/Gost_R3410_2001_AsymmetricAlgorithm.cs), [2012/256](Source/GostCryptography/Gost_R3410/Gost_R3410_2012_256_AsymmetricAlgorithm.cs), [2012/512](Source/GostCryptography/Gost_R3410/Gost_R3410_2012_512_AsymmetricAlgorithm.cs)
+- [Asymmetric algorithm with an ephemeral key based on GOST R 34.10-2001](Source/GostCryptography/Gost_R3410/Gost_R3410_2001_EphemeralAsymmetricAlgorithm.cs), [2012/256](Source/GostCryptography/Gost_R3410/Gost_R3410_2012_256_EphemeralAsymmetricAlgorithm.cs), [2012/512](Source/GostCryptography/Gost_R3410/Gost_R3410_2012_512_EphemeralAsymmetricAlgorithm.cs)
 
-- [Asymmetric key exchange deformatter based on the GOST R 34.10](Source/GostCryptography/Cryptography/GostKeyExchangeDeformatter.cs)
-- [Asymmetric key exchange formatter based on the GOST R 34.10](Source/GostCryptography/Cryptography/GostKeyExchangeFormatter.cs)
+- [Asymmetric key exchange formatter based on GOST R 34.10-2001](Source/GostCryptography/Gost_R3410/Gost_R3410_2001_KeyExchangeFormatter.cs), [2012/256](Source/GostCryptography/Gost_R3410/Gost_R3410_2012_256_KeyExchangeFormatter.cs), [2012/512](Source/GostCryptography/Gost_R3410/Gost_R3410_2012_512_KeyExchangeFormatter.cs)
+- [Asymmetric key exchange deformatter based on GOST R 34.10-2001](Source/GostCryptography/Gost_R3410/Gost_R3410_2001_KeyExchangeDeformatter.cs), [2012/256](Source/GostCryptography/Gost_R3410/Gost_R3410_2012_256_KeyExchangeDeformatter.cs), [2012/512](Source/GostCryptography/Gost_R3410/Gost_R3410_2012_512_KeyExchangeDeformatter.cs)
 
-- [Asymmetric signature deformatter based on the GOST R 34.10](Source/GostCryptography/Cryptography/GostSignatureDeformatter.cs)
-- [Asymmetric signature formatter based on the GOST R 34.10](Source/GostCryptography/Cryptography/GostSignatureFormatter.cs)
+- [Asymmetric signature formatter based on GOST R 34.10-2001, 2012/256, 2012/512](Source/GostCryptography/Base/GostSignatureFormatter.cs)
+- [Asymmetric signature deformatter based on GOST R 34.10-2001, 2012/256, 2012/512](Source/GostCryptography/Base/GostSignatureDeformatter.cs)
 
-- [Pseudorandom Function (PRF) based on the GOST R 34.11](Source/GostCryptography/Cryptography/Gost3411Prf.cs)
+- [XML encryption based on GOST R 34.10-2001, 2012/256, 2012/512](Source/GostCryptography/Xml/GostEncryptedXml.cs)
+- [XML signing based on XML-DSig and GOST R 34.10-2001, 2012/256, 2012/512](Source/GostCryptography/Xml/GostSignedXml.cs)
+- [Signing and verifying of CMS/PKCS #7 messages based on GOST R 34.10-2001, 2012/256, 2012/512](Source/GostCryptography/Pkcs/GostSignedCms.cs)
 
-- [XML encryption based on the GOST R 34.10](Source/GostCryptography/Xml/GostEncryptedXml.cs)
-- [XML signing based on XML-DSig and the GOST R 34.10](Source/GostCryptography/Xml/GostSignedXml.cs)
+## Tested On
 
-## Select CSP
-
-```C#
-// ViPNet CSP (by default)
-GostCryptoConfig.ProviderType = ProviderTypes.VipNet;
-
-// CryptoPro CSP
-GostCryptoConfig.ProviderType = ProviderTypes.CryptoPro;
-```
+- Windows 10 x64, CryptoPro CSP 4.0.9963
+- Windows 10 x64, ViPNet CSP 4.2.8.51670

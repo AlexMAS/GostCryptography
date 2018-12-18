@@ -1,8 +1,8 @@
-﻿using System.Security.Cryptography;
-using System.Security.Cryptography.Xml;
+﻿using System.Security.Cryptography.Xml;
 using System.Xml;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Base;
+using GostCryptography.Gost_28147_89;
 using GostCryptography.Tests.Properties;
 using GostCryptography.Xml;
 
@@ -20,32 +20,12 @@ namespace GostCryptography.Tests.Xml.Encrypt
 	[TestFixture(Description = "Шифрация и дешифрация XML с использованием общего симметричного ключа")]
 	public sealed class EncryptedXmlSharedKeyTest
 	{
-		private Gost28147SymmetricAlgorithm _sharedKey;
-
-		[SetUp]
-		public void SetUp()
-		{
-			_sharedKey = new Gost28147SymmetricAlgorithm();
-		}
-
-		[TearDown]
-		public void TearDown()
-		{
-			try
-			{
-				_sharedKey.Dispose();
-			}
-			finally
-			{
-				_sharedKey = null;
-			}
-		}
-
 		[Test]
-		public void EncryptXml()
+		[TestCaseSource(typeof(TestConfig), nameof(TestConfig.Providers))]
+		public void ShouldEncryptXml(ProviderType providerType)
 		{
 			// Given
-			var sharedKey = _sharedKey;
+			var sharedKey = new Gost_28147_89_SymmetricAlgorithm(providerType);
 			var xmlDocument = CreateXmlDocument();
 			var expectedXml = xmlDocument.OuterXml;
 
@@ -65,10 +45,10 @@ namespace GostCryptography.Tests.Xml.Encrypt
 			return document;
 		}
 
-		private static XmlDocument EncryptXmlDocument(XmlDocument xmlDocument, SymmetricAlgorithm sharedKey)
+		private static XmlDocument EncryptXmlDocument(XmlDocument xmlDocument, Gost_28147_89_SymmetricAlgorithm sharedKey)
 		{
 			// Создание объекта для шифрации XML
-			var encryptedXml = new GostEncryptedXml();
+			var encryptedXml = new GostEncryptedXml(sharedKey.ProviderType);
 
 			// Поиск элементов для шифрации
 			var elements = xmlDocument.SelectNodes("//SomeElement[@Encrypt='true']");
@@ -83,7 +63,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 					// Формирование элемента EncryptedData
 					var elementEncryptedData = new EncryptedData();
 					elementEncryptedData.Type = EncryptedXml.XmlEncElementUrl;
-					elementEncryptedData.EncryptionMethod = new EncryptionMethod(GostEncryptedXml.XmlEncGost28147Url);
+					elementEncryptedData.EncryptionMethod = new EncryptionMethod(sharedKey.AlgorithmName);
 					elementEncryptedData.CipherData.CipherValue = encryptedData;
 
 					// Замена элемента его зашифрованным представлением
@@ -94,10 +74,10 @@ namespace GostCryptography.Tests.Xml.Encrypt
 			return xmlDocument;
 		}
 
-		private static XmlDocument DecryptXmlDocument(XmlDocument encryptedXmlDocument, SymmetricAlgorithm sharedKey)
+		private static XmlDocument DecryptXmlDocument(XmlDocument encryptedXmlDocument, Gost_28147_89_SymmetricAlgorithm sharedKey)
 		{
 			// Создание объекта для дешифрации XML
-			var encryptedXml = new GostEncryptedXml(encryptedXmlDocument);
+			var encryptedXml = new GostEncryptedXml(sharedKey.ProviderType, encryptedXmlDocument);
 
 			var nsManager = new XmlNamespaceManager(encryptedXmlDocument.NameTable);
 			nsManager.AddNamespace("enc", EncryptedXml.XmlEncNamespaceUrl);

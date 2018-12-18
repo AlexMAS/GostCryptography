@@ -2,7 +2,7 @@
 
 namespace GostCryptography.Asn1.Ber
 {
-	class Asn1BerDecodeContext
+	public class Asn1BerDecodeContext
 	{
 		private readonly int _decBufByteCount;
 		private readonly Asn1BerDecodeBuffer _decodeBuffer;

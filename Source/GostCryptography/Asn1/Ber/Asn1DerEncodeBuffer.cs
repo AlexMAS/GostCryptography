@@ -1,6 +1,6 @@
 ﻿namespace GostCryptography.Asn1.Ber
 {
-	class Asn1DerEncodeBuffer : Asn1BerEncodeBuffer
+	public class Asn1DerEncodeBuffer : Asn1BerEncodeBuffer
 	{
 		public Asn1DerEncodeBuffer()
 		{

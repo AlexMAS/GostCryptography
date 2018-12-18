@@ -5,7 +5,9 @@ using System.Security.Policy;
 using System.Text;
 using System.Xml;
 
-using GostCryptography.Cryptography;
+using GostCryptography.Base;
+using GostCryptography.Config;
+using GostCryptography.Gost_28147_89;
 
 namespace GostCryptography.Xml
 {
@@ -17,42 +19,17 @@ namespace GostCryptography.Xml
 		/// <summary>
 		/// URI пространства имен для синтаксиса и правил обработки при шифровании XML по ГОСТ.
 		/// </summary>
-		/// <remarks>
-		/// Значение равно "urn:ietf:params:xml:ns:cpxmlsec:algorithms:".
-		/// </remarks>
 		public const string XmlEncGostNamespaceUrl = "urn:ietf:params:xml:ns:cpxmlsec:algorithms:";
 
 		/// <summary>
 		/// URI алгоритма экспорта ключа по ГОСТ 28147-89.
 		/// </summary>
-		/// <remarks>
-		/// Значение равно "urn:ietf:params:xml:ns:cpxmlsec:algorithms:kw-gost".
-		/// </remarks>
 		public const string XmlEncGostKeyExportUrl = XmlEncGostNamespaceUrl + "kw-gost";
 
 		/// <summary>
 		/// URI алгоритма экспорта ключа КриптоПро.
 		/// </summary>
-		/// <remarks>
-		/// Значение равно "urn:ietf:params:xml:ns:cpxmlsec:algorithms:kw-cp".
-		/// </remarks>
 		public const string XmlEncGostCryptoProKeyExportUrl = XmlEncGostNamespaceUrl + "kw-cp";
-
-		/// <summary>
-		/// URI алгоритма симметричного шифрования по ГОСТ 28147.
-		/// </summary>
-		/// <remarks>
-		/// Значение равно "urn:ietf:params:xml:ns:cpxmlsec:algorithms:gost28147".
-		/// </remarks>
-		public const string XmlEncGost28147Url = XmlEncGostNamespaceUrl + "gost28147";
-
-		/// <summary>
-		/// URI алгоритма транспортировки ключей шифрования.
-		/// </summary>
-		/// <remarks>
-		/// Значение равно "urn:ietf:params:xml:ns:cpxmlsec:algorithms:transport-gost2001".
-		/// </remarks>
-		public const string XmlEncGostKeyTransportUrl = XmlEncGostNamespaceUrl + "transport-gost2001";
 
 
 		static GostEncryptedXml()
@@ -60,97 +37,84 @@ namespace GostCryptography.Xml
 			GostCryptoConfig.Initialize();
 		}
 
-		public GostEncryptedXml()
+
+		/// <inheritdoc cref="EncryptedXml()"/>
+		public GostEncryptedXml() : this(GostCryptoConfig.ProviderType)
 		{
-			_encryptedXml = new GostEncryptedXmlImpl();
 		}
 
-		public GostEncryptedXml(XmlDocument document)
+		/// <inheritdoc cref="EncryptedXml()"/>
+		public GostEncryptedXml(ProviderType providerType)
 		{
-			_encryptedXml = new GostEncryptedXmlImpl(document);
+			_encryptedXml = new GostEncryptedXmlImpl(providerType);
 		}
 
-		public GostEncryptedXml(XmlDocument document, Evidence evidence)
+		/// <inheritdoc cref="EncryptedXml(XmlDocument)"/>
+		public GostEncryptedXml(XmlDocument document) : this(GostCryptoConfig.ProviderType, document)
 		{
-			_encryptedXml = new GostEncryptedXmlImpl(document, evidence);
+		}
+
+		/// <inheritdoc cref="EncryptedXml(XmlDocument)"/>
+		public GostEncryptedXml(ProviderType providerType, XmlDocument document)
+		{
+			_encryptedXml = new GostEncryptedXmlImpl(providerType, document);
+		}
+
+		/// <inheritdoc cref="EncryptedXml(XmlDocument,Evidence)"/>
+		public GostEncryptedXml(XmlDocument document, Evidence evidence) : this(GostCryptoConfig.ProviderType, document, evidence)
+		{
+		}
+
+		/// <inheritdoc cref="EncryptedXml(XmlDocument,Evidence)"/>
+		public GostEncryptedXml(ProviderType providerType, XmlDocument document, Evidence evidence)
+		{
+			_encryptedXml = new GostEncryptedXmlImpl(providerType, document, evidence);
 		}
 
 
 		private readonly GostEncryptedXmlImpl _encryptedXml;
 
 
-		// Properties
-
-		/// <summary>
-		/// Сведения безопасности документа.
-		/// </summary>
-		/// <remarks>
-		/// Имеет тот же смысл, что и <see cref="EncryptedXml.DocumentEvidence"/>.
-		/// </remarks>
+		/// <inheritdoc cref="EncryptedXml.DocumentEvidence"/>
 		public Evidence DocumentEvidence
 		{
-			get { return _encryptedXml.DocumentEvidence; }
-			set { _encryptedXml.DocumentEvidence = value; }
+			get => _encryptedXml.DocumentEvidence;
+			set => _encryptedXml.DocumentEvidence = value;
 		}
 
-		/// <summary>
-		/// Объект для разрешения внешних XML-ссылок.
-		/// </summary>
-		/// <remarks>
-		/// Имеет тот же смысл, что и <see cref="EncryptedXml.Resolver"/>.
-		/// </remarks>
+		/// <inheritdoc cref="EncryptedXml.Resolver"/>
 		public XmlResolver Resolver
 		{
-			get { return _encryptedXml.Resolver; }
-			set { _encryptedXml.Resolver = value; }
+			get => _encryptedXml.Resolver;
+			set => _encryptedXml.Resolver = value;
 		}
 
-		/// <summary>
-		/// Режим дополнения.
-		/// </summary>
-		/// <remarks>
-		/// Имеет тот же смысл, что и <see cref="EncryptedXml.Padding"/>.
-		/// </remarks>
+		/// <inheritdoc cref="EncryptedXml.Padding"/>
 		public PaddingMode Padding
 		{
-			get { return _encryptedXml.Padding; }
-			set { _encryptedXml.Padding = value; }
+			get => _encryptedXml.Padding;
+			set => _encryptedXml.Padding = value;
 		}
 
-		/// <summary>
-		/// Режим шифрования.
-		/// </summary>
-		/// <remarks>
-		/// Имеет тот же смысл, что и <see cref="EncryptedXml.Mode"/>.
-		/// </remarks>
+		/// <inheritdoc cref="EncryptedXml.Mode"/>
 		public CipherMode Mode
 		{
-			get { return _encryptedXml.Mode; }
-			set { _encryptedXml.Mode = value; }
+			get => _encryptedXml.Mode;
+			set => _encryptedXml.Mode = value;
 		}
 
-		/// <summary>
-		/// Кодировка символов.
-		/// </summary>
-		/// <remarks>
-		/// Имеет тот же смысл, что и <see cref="EncryptedXml.Encoding"/>.
-		/// </remarks>
+		/// <inheritdoc cref="EncryptedXml.Encoding"/>
 		public Encoding Encoding
 		{
-			get { return _encryptedXml.Encoding; }
-			set { _encryptedXml.Encoding = value; }
+			get => _encryptedXml.Encoding;
+			set => _encryptedXml.Encoding = value;
 		}
 
-		/// <summary>
-		/// Получатель данных о зашифрованном ключе.
-		/// </summary>
-		/// <remarks>
-		/// Имеет тот же смысл, что и <see cref="EncryptedXml.Recipient"/>.
-		/// </remarks>
+		/// <inheritdoc cref="EncryptedXml.Recipient"/>
 		public string Recipient
 		{
-			get { return _encryptedXml.Recipient; }
-			set { _encryptedXml.Recipient = value; }
+			get => _encryptedXml.Recipient;
+			set => _encryptedXml.Recipient = value;
 		}
 
 
@@ -233,7 +197,7 @@ namespace GostCryptography.Xml
 		/// <param name="publicKey">Открытый ключ ГОСТ Р 34.10 для шифрования сессионного ключа.</param>
 		/// <returns>Массив байт, содержащий зашифрованный сессионный ключ.</returns>
 		/// <remarks>Как правило сессионный ключ используется для шифрования данных и в свою очередь так же шифруется.</remarks>
-		public static byte[] EncryptKey(Gost28147SymmetricAlgorithmBase sessionKey, Gost3410AsymmetricAlgorithmBase publicKey)
+		public static byte[] EncryptKey(Gost_28147_89_SymmetricAlgorithmBase sessionKey, GostAsymmetricAlgorithm publicKey)
 		{
 			return GostEncryptedXmlImpl.EncryptKey(sessionKey, publicKey);
 		}
@@ -246,13 +210,11 @@ namespace GostCryptography.Xml
 		/// <param name="exportMethod">Алгоритм экспорта сессионного ключа.</param>
 		/// <returns>Массив байт, содержащий зашифрованный сессионный ключ.</returns>
 		/// <remarks>Как правило сессионный ключ используется для шифрования данных и в свою очередь так же шифруется.</remarks>
-		public static byte[] EncryptKey(Gost28147SymmetricAlgorithmBase sessionKey, Gost28147SymmetricAlgorithmBase sharedKey, GostKeyExchangeExportMethod exportMethod = GostKeyExchangeExportMethod.GostKeyExport)
+		public static byte[] EncryptKey(Gost_28147_89_SymmetricAlgorithmBase sessionKey, Gost_28147_89_SymmetricAlgorithmBase sharedKey, GostKeyExchangeExportMethod exportMethod = GostKeyExchangeExportMethod.GostKeyExport)
 		{
 			return GostEncryptedXmlImpl.EncryptKey(sessionKey, sharedKey, exportMethod);
 		}
 
-
-		// Decryption
 
 		/// <summary>
 		/// Расшифровывает зашифрованный XML-элемент с помощью указанного симметричного ключа.
@@ -337,13 +299,11 @@ namespace GostCryptography.Xml
 		/// <param name="privateKey">Закрытый ключ ГОСТ Р 34.10 для расшифровки сессионного ключа.</param>
 		/// <returns>Сессионный ключ.</returns>
 		/// <remarks>Как правило сессионный ключ используется для шифрования данных и в свою очередь так же шифруется.</remarks>
-		public static SymmetricAlgorithm DecryptKey(byte[] keyData, Gost3410AsymmetricAlgorithmBase privateKey)
+		public static SymmetricAlgorithm DecryptKey(byte[] keyData, GostAsymmetricAlgorithm privateKey)
 		{
 			return GostEncryptedXmlImpl.DecryptKeyClass(keyData, privateKey);
 		}
 
-
-		// Other
 
 		/// <summary>
 		/// Заменяет указанный зашифрованный XML-элемент его расшифрованным представлением.

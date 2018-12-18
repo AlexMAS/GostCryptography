@@ -2,7 +2,7 @@
 
 namespace GostCryptography.Asn1.Ber
 {
-	static class Asn1RunTime
+	public static class Asn1RunTime
 	{
 		public const int LicBer = 1;
 		public const int LicPer = 2;
