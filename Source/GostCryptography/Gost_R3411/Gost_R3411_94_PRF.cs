@@ -16,14 +16,14 @@ namespace GostCryptography.Gost_R3411
 		public const string WsTrustAlgorithmNameValue = "http://docs.oasis-open.org/ws-sx/ws-trust/200512/CK/PGOSTR3411";
 
 		/// <summary>
-		/// Наименование алгоритма PRF на базе ГОСТ Р 34.11-94 для использования в протоколах на базе WS-SecureCoveration.
+		/// Наименование алгоритма PRF на базе ГОСТ Р 34.11-94 для использования в протоколах на базе WS-SecureConversation.
 		/// </summary>
-		public const string WsSecureCoverationAlgorithmNameValue = "http://docs.oasis-open.org/ws-sx/ws-secureconversation/200512/dk/p_gostr3411";
+		public const string WsSecureConversationAlgorithmNameValue = "http://docs.oasis-open.org/ws-sx/ws-secureconversation/200512/dk/p_gostr3411";
 
 		/// <summary>
 		/// Известные наименования алгоритма PRF на базе ГОСТ Р 34.11-94.
 		/// </summary>
-		public static readonly string[] KnownAlgorithmNames = { WsTrustAlgorithmNameValue, WsSecureCoverationAlgorithmNameValue };
+		public static readonly string[] KnownAlgorithmNames = { WsTrustAlgorithmNameValue, WsSecureConversationAlgorithmNameValue };
 
 
 		/// <inheritdoc />

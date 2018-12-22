@@ -7,7 +7,7 @@ using GostCryptography.Gost_28147_89;
 namespace GostCryptography.Gost_R3411
 {
 	/// <summary>
-	/// Базовый класс для всех реализаций генераТора псевдослучайной последовательности (Pseudorandom Function, PRF) на базе алгоритма хэширования ГОСТ Р 34.11.
+	/// Базовый класс для всех реализаций генератора псевдослучайной последовательности (Pseudorandom Function, PRF) на базе алгоритма хэширования ГОСТ Р 34.11.
 	/// </summary>
 	/// <typeparam name="THMAC">Тип HMAC.</typeparam>
 	public abstract class Gost_R3411_PRF<THMAC> : GostPRF where THMAC : GostHMAC
@@ -94,7 +94,7 @@ namespace GostCryptography.Gost_R3411
 
 
 		/// <summary>
-		/// Возаращает очередной набор псевдослучайной последовательности.
+		/// Возвращает очередной набор псевдослучайной последовательности.
 		/// </summary>
 		/// <remarks>
 		/// Размер последовательности зависит от алгоритма хэширования.
