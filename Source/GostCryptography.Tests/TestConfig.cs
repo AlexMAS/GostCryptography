@@ -49,6 +49,8 @@ namespace GostCryptography.Tests
 
 		public static IEnumerable<TestCertificateInfo> Gost_R3410_2012_512_Certificates { get; }
 
+		public const string ContainerPassword = "GostCryptography";
+
 
 		[SecuritySafeCritical]
 		public static X509Certificate2 FindGostCertificate(StoreName storeName = DefaultStoreName, StoreLocation storeLocation = DefaultStoreLocation, Predicate<X509Certificate2> filter = null)

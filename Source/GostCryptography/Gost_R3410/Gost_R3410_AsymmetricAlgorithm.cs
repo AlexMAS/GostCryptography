@@ -217,9 +217,7 @@ namespace GostCryptography.Gost_R3410
 		}
 
 
-		/// <summary>
-		/// Вычисляет цифровую подпись.
-		/// </summary>
+		/// <inheritdoc />
 		public override byte[] CreateSignature(byte[] hash)
 		{
 			return SignHash(hash);
@@ -283,9 +281,7 @@ namespace GostCryptography.Gost_R3410
 		}
 
 
-		/// <summary>
-		/// Проверяет цифровую подпись.
-		/// </summary>
+		/// <inheritdoc />
 		public override bool VerifySignature(byte[] hash, byte[] signature)
 		{
 			return VerifyHash(hash, signature);
@@ -553,6 +549,7 @@ namespace GostCryptography.Gost_R3410
 			return providerHandle;
 		}
 
+		[SecuritySafeCritical]
 		private static void SetSignatureKeyPassword(SafeProvHandleImpl hProv, SecureString keyPassword, int keyNumber)
 		{
 			if (keyPassword == null)
