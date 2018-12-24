@@ -21,14 +21,19 @@ namespace GostCryptography.Gost_R3410
 		public const int DefaultKeySizeValue = 1024;
 
 		/// <summary>
-		/// Наименование алгоритма цифровой подписи ГОСТ Р 34.10-2012 для ключей длины 512 бит.
+		/// Наименование алгоритма цифровой подписи ГОСТ Р 34.10-2012/512.
 		/// </summary>
 		public const string SignatureAlgorithmValue = "urn:ietf:params:xml:ns:cpxmlsec:algorithms:gostr34102012-gostr34112012-512";
 
 		/// <summary>
-		/// Наименование алгоритма обмена ключами ГОСТ Р 34.10-2012 для ключей длины 512 бит.
+		/// Наименование алгоритма обмена ключами ГОСТ Р 34.10-2012/512.
 		/// </summary>
 		public const string KeyExchangeAlgorithmValue = "urn:ietf:params:xml:ns:cpxmlsec:algorithms:transport-gost2012-512";
+
+		/// <summary>
+		/// Известные наименования алгоритма цифровой подписи ГОСТ Р 34.10-2012/512.
+		/// </summary>
+		public static readonly string[] KnownSignatureAlgorithmNames = { SignatureAlgorithmValue };
 
 
 		/// <inheritdoc />

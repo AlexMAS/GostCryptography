@@ -46,9 +46,9 @@ namespace GostCryptography.Config
 
 		private static void AddKnownAlgorithms()
 		{
-			AddAlgorithm<Gost_R3410_2001_SignatureDescription>(Gost_R3410_2001_AsymmetricAlgorithm.SignatureAlgorithmValue);
-			AddAlgorithm<Gost_R3410_2012_256_SignatureDescription>(Gost_R3410_2012_256_AsymmetricAlgorithm.SignatureAlgorithmValue);
-			AddAlgorithm<Gost_R3410_2012_512_SignatureDescription>(Gost_R3410_2012_512_AsymmetricAlgorithm.SignatureAlgorithmValue);
+			AddAlgorithm<Gost_R3410_2001_SignatureDescription>(Gost_R3410_2001_AsymmetricAlgorithm.KnownSignatureAlgorithmNames);
+			AddAlgorithm<Gost_R3410_2012_256_SignatureDescription>(Gost_R3410_2012_256_AsymmetricAlgorithm.KnownSignatureAlgorithmNames);
+			AddAlgorithm<Gost_R3410_2012_512_SignatureDescription>(Gost_R3410_2012_512_AsymmetricAlgorithm.KnownSignatureAlgorithmNames);
 
 			AddAlgorithm<Gost_R3411_94_HashAlgorithm>(Gost_R3411_94_HashAlgorithm.KnownAlgorithmNames);
 			AddAlgorithm<Gost_R3411_2012_256_HashAlgorithm>(Gost_R3411_2012_256_HashAlgorithm.KnownAlgorithmNames);

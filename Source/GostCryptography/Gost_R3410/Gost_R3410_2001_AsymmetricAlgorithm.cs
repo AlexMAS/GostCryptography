@@ -26,9 +26,19 @@ namespace GostCryptography.Gost_R3410
 		public const string SignatureAlgorithmValue = "urn:ietf:params:xml:ns:cpxmlsec:algorithms:gostr34102001-gostr3411";
 
 		/// <summary>
+		/// Устаревшее наименование алгоритма цифровой подписи ГОСТ Р 34.10-2001.
+		/// </summary>
+		public const string ObsoleteSignatureAlgorithmValue = "http://www.w3.org/2001/04/xmldsig-more#gostr34102001-gostr3411";
+
+		/// <summary>
 		/// Наименование алгоритма обмена ключами ГОСТ Р 34.10-2001.
 		/// </summary>
 		public const string KeyExchangeAlgorithmValue = "urn:ietf:params:xml:ns:cpxmlsec:algorithms:transport-gost2001";
+
+		/// <summary>
+		/// Известные наименования алгоритма цифровой подписи ГОСТ Р 34.10-2001.
+		/// </summary>
+		public static readonly string[] KnownSignatureAlgorithmNames = { SignatureAlgorithmValue, ObsoleteSignatureAlgorithmValue };
 
 
 		/// <inheritdoc />
