@@ -99,19 +99,31 @@ namespace GostCryptography.Config
 
 
 		/// <summary>
-		/// Возвращает провайдер по умолчанию для ключей ГОСТ Р 34.10-2001.
+		/// Возвращает или устанавливает провайдер по умолчанию для ключей ГОСТ Р 34.10-2001.
 		/// </summary>
-		public static ProviderType ProviderType => _providerType_2001.Value;
+		public static ProviderType ProviderType
+		{
+			get => _providerType_2001.Value;
+			set => _providerType_2001 = new Lazy<ProviderType>(() => value);
+		}
 
 		/// <summary>
-		/// Возвращает провайдер по умолчанию для ключей ГОСТ Р 34.10-2012/512.
+		/// Возвращает или устанавливает провайдер по умолчанию для ключей ГОСТ Р 34.10-2012/512.
 		/// </summary>
-		public static ProviderType ProviderType_2012_512 => _providerType_2012_512.Value;
+		public static ProviderType ProviderType_2012_512
+		{
+			get => _providerType_2012_512.Value;
+			set => _providerType_2012_512 = new Lazy<ProviderType>(() => value);
+		}
 
 		/// <summary>
-		/// Возвращает провайдер по умолчанию для ключей ГОСТ Р 34.10-2012/1024.
+		/// Возвращает или устанавливает провайдер по умолчанию для ключей ГОСТ Р 34.10-2012/1024.
 		/// </summary>
-		public static ProviderType ProviderType_2012_1024 => _providerType_2012_1024.Value;
+		public static ProviderType ProviderType_2012_1024
+		{
+			get => _providerType_2012_1024.Value;
+			set => _providerType_2012_1024 = new Lazy<ProviderType>(() => value);
+		}
 
 
 		/// <summary>
