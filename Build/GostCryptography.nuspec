@@ -3,17 +3,15 @@
   <metadata>
     <id>GostCryptography</id>
     <title>GostCryptography</title>
-    <description>.NET driver for ViPNet CSP and CryptoPro CSP</description>
-    <summary>
+    <description>
       .NET driver for ViPNet CSP and CryptoPro CSP. Implements crypto algorithms
       based on Russian national cryptographic standards GOST 28147-89, GOST R 34.10
       and GOST R 34.11. Also provides abstractions to sign and verify CMS/PKCS #7
       messages, sign, verify and encrypt XML documents.
-    </summary>
-    <version>2.0.2</version>
+    </description>
+    <version>2.0.3</version>
     <authors>Alexander Mezhov</authors>
     <license type="expression">MIT</license>
-    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <language>en-US</language>
     <tags>GOST GOST-2012 Cryptography ViPNet CryptoPro</tags>
