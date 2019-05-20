@@ -170,6 +170,7 @@
     <Compile Include="Base\GostKeyExchangeFormatter.cs" />
     <Compile Include="Base\GostSignatureDescription.cs" />
     <Compile Include="Base\IGostAlgorithm.cs" />
+    <Compile Include="Base\GostExternalAsymmetricAlgorithm.cs" />
     <Compile Include="Gost_R3410\Gost_R3410_2001_KeyExchangeXmlSerializer.cs" />
     <Compile Include="Gost_R3410\Gost_R3410_2012_256_KeyExchangeDeformatter.cs" />
     <Compile Include="Gost_R3410\Gost_R3410_2012_256_KeyExchangeXmlSerializer.cs" />

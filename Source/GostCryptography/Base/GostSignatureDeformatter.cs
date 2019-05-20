@@ -42,7 +42,12 @@ namespace GostCryptography.Base
 
 			if (!(publicKey is GostAsymmetricAlgorithm gostPublicKey))
 			{
-				throw ExceptionUtility.ArgumentOutOfRange(nameof(publicKey), Resources.ShouldSupportGost3410);
+				if (publicKey.SignatureAlgorithm.IndexOf("gost", StringComparison.OrdinalIgnoreCase) < 0)
+				{
+					throw ExceptionUtility.ArgumentOutOfRange(nameof(publicKey), Resources.ShouldSupportGost3410);
+				}
+
+				gostPublicKey = new GostExternalAsymmetricAlgorithm(publicKey);
 			}
 
 			_publicKey = gostPublicKey;
