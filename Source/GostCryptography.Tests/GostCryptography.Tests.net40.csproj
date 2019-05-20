@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\NUnit.3.11.0\build\NUnit.props" Condition="Exists('..\..\packages\NUnit.3.11.0\build\NUnit.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8B8700FF-449A-4801-8668-C620D1A9561E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GostCryptography.Tests</RootNamespace>
+    <AssemblyName>GostCryptography.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <LangVersion>7</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Assemblies\net40</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Assemblies\net40</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=3.11.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Gost_28147_89\EncryptDecryptSessionKeyTest.cs" />
+    <Compile Include="Gost_28147_89\Gost_28147_89_SymmetricAlgorithmTest.cs" />
+    <Compile Include="Gost_28147_89\Gost_28147_89_ImitHashAlgorithmTest.cs" />
+    <Compile Include="Gost_R3410\SetContainerPasswordTest.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_2012_256_HashAlgorithmTest.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_2012_256_HMACTest.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_2012_256_PRFTest.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_2012_512_HMACTest.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_2012_512_PRFTest.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_94_HashAlgorithmTest.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_94_HMACTest.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_2012_512_HashAlgorithmTest.cs" />
+    <Compile Include="Gost_R3411\Gost_R3411_94_PRFTest.cs" />
+    <Compile Include="Pkcs\SignedCmsDetachedSignTest.cs" />
+    <Compile Include="Pkcs\EnvelopedCmsEncryptTest.cs" />
+    <Compile Include="Pkcs\SignedCmsSignTest.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Sign\SignDataStreamSignatureDescriptionTest.cs" />
+    <Compile Include="Sign\SignDataStreamSignatureFormatterTest.cs" />
+    <Compile Include="Sign\SignDataStreamCertificateTest.cs" />
+    <Compile Include="TestCertificateInfo.cs" />
+    <Compile Include="TestConfig.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Xml\Encrypt\EncryptedXmlSessionKey.cs" />
+    <Compile Include="Xml\Encrypt\EncryptedXmlKeyContainerTest.cs" />
+    <Compile Include="Xml\Encrypt\EncryptedXmlSharedKeyTest.cs" />
+    <Compile Include="Xml\Encrypt\EncryptedXmlBroadcastTest.cs" />
+    <Compile Include="Xml\Encrypt\EncryptedXmlCertificateTest.cs" />
+    <Compile Include="Xml\Sign\SignedXmlDocumentTest.cs" />
+    <Compile Include="Xml\Sign\SignedXmlSmevTest.cs" />
+    <Compile Include="Xml\Sign\SignedXmlTransformTest.cs" />
+    <Compile Include="Xml\Sign\SignedXmlKeyContainerTest.cs" />
+    <Compile Include="Xml\Sign\SignedXmlCertificateTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\EncryptedXmlExample.xml" />
+    <Content Include="Data\SmevExample.xml" />
+    <Content Include="Data\SignedXmlExample.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GostCryptography\GostCryptography.net40.csproj">
+      <Project>{1520a79f-03eb-4290-aa4a-027806890a9d}</Project>
+      <Name>GostCryptography.net40</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\NUnit.3.11.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NUnit.3.11.0\build\NUnit.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

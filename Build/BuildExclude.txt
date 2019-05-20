@@ -1,5 +1,0 @@
-﻿\bin\
-\obj\
-.Tests\
-.config
-.csproj

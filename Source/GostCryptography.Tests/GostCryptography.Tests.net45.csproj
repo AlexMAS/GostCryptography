@@ -10,16 +10,17 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GostCryptography.Tests</RootNamespace>
     <AssemblyName>GostCryptography.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <LangVersion>7</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Assemblies\</OutputPath>
+    <OutputPath>..\..\Assemblies\net45</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -27,7 +28,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Assemblies\</OutputPath>
+    <OutputPath>..\..\Assemblies\net45</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -42,6 +43,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class1.cs" />
     <Compile Include="Gost_28147_89\EncryptDecryptSessionKeyTest.cs" />
     <Compile Include="Gost_28147_89\Gost_28147_89_SymmetricAlgorithmTest.cs" />
     <Compile Include="Gost_28147_89\Gost_28147_89_ImitHashAlgorithmTest.cs" />
@@ -92,9 +94,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GostCryptography\GostCryptography.csproj">
+    <ProjectReference Include="..\GostCryptography\GostCryptography.net45.csproj">
       <Project>{1520a79f-03eb-4290-aa4a-027806890a9d}</Project>
-      <Name>GostCryptography</Name>
+      <Name>GostCryptography.net45</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
