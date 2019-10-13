@@ -164,6 +164,36 @@
 		/// </summary>
 		public const int PP_PROVTYPE = 0x10;
 
+		/// <summary>
+		/// Перечисление контейнеров криптопровайдера.
+		/// </summary>
+		public const int PP_ENUMCONTAINERS = 0x2;
+
+		/// <summary>
+		/// Получение первого элемента в перечислении.
+		/// </summary>
+		public const uint CRYPT_FIRST = 0x1;
+
+		/// <summary>
+		/// Получение следующего элемента в перечислении.
+		/// </summary>
+		public const uint CRYPT_NEXT = 0x2;
+
+		/// <summary>
+		/// Возвращает FQCN (Fully Qualified Container Name) контейнера VipNet.
+		/// </summary>
+		public const uint CRYPT_UNIQUE = 0x8;
+
+		/// <summary>
+		/// Возвращает FQCN (Fully Qualified Container Name) контейнера CryptoPro.
+		/// </summary>
+		public const uint CRYPT_FQCN = 0x10;
+
+		/// <summary>
+		/// В перечислении нет больше элементов.
+		/// </summary>
+		public const uint ERROR_NO_MORE_ITEMS = 0x103;
+
 		#endregion
 
 

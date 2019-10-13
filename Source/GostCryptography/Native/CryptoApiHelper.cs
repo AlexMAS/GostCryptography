@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 
@@ -251,6 +252,71 @@ namespace GostCryptography.Native
 			var providerType = BitConverter.ToUInt32(dwData, 0);
 
 			return (ProviderType)providerType;
+		}
+
+		/// <summary>
+		/// Возвращает список имен контейнеров указанного криптопровайдера.
+		/// </summary>
+		/// <param name="providerType">Тип криптопровайдера.</param>
+		/// <param name="fullContainerName">Вернуть полное имя контейнера.</param>
+		/// <param name="storeLocation">Область поиска контейнеров.</param>
+		public static IEnumerable<string> GetContainers(ProviderType providerType, bool fullContainerName = true, StoreLocation storeLocation = StoreLocation.LocalMachine)
+		{
+			var containers = new List<string>();
+
+			var providerParameters = new CspParameters((int) providerType);
+
+			if (storeLocation == StoreLocation.LocalMachine)
+			{
+				providerParameters.Flags |= CspProviderFlags.UseMachineKeyStore;
+			}
+
+			using (var providerHandle = AcquireProvider(providerParameters))
+			{
+				var containerNameMaxLength = 0U;
+				var flag = Constants.CRYPT_FIRST;
+
+				if (fullContainerName)
+				{
+					flag |= (providerType.IsVipNet() ? Constants.CRYPT_UNIQUE : Constants.CRYPT_FQCN);
+				}
+
+				if (!CryptoApi.CryptGetProvParam(providerHandle, Constants.PP_ENUMCONTAINERS, (StringBuilder) null, ref containerNameMaxLength, flag))
+				{
+					if (Marshal.GetLastWin32Error() != Constants.ERROR_NO_MORE_ITEMS)
+					{
+						throw CreateWin32Error();
+					}
+
+					return containers;
+				}
+
+				while (true)
+				{
+					var containerName = new StringBuilder((int) containerNameMaxLength);
+
+					if (!CryptoApi.CryptGetProvParam(providerHandle, Constants.PP_ENUMCONTAINERS, containerName, ref containerNameMaxLength, flag))
+					{
+						if (Marshal.GetLastWin32Error() != Constants.ERROR_NO_MORE_ITEMS)
+						{
+							throw CreateWin32Error();
+						}
+
+						break;
+					}
+
+					containers.Add(containerName.ToString());
+
+					flag = Constants.CRYPT_NEXT;
+
+					if (fullContainerName)
+					{
+						flag |= (providerType.IsVipNet() ? Constants.CRYPT_UNIQUE : Constants.CRYPT_FQCN);
+					}
+				}
+			}
+
+			return containers;
 		}
 
 		#endregion
