@@ -319,6 +319,34 @@ namespace GostCryptography.Native
 			return containers;
 		}
 
+		/// <summary>
+		/// Возвращает сертификат X.509 для указанного ключа.
+		/// </summary>
+		/// <param name="keyHandle">Дескриптор ключа сертификата.</param>
+		public static X509Certificate2 GetKeyCertificate(SafeKeyHandleImpl keyHandle)
+		{
+			uint certDataLength = 0;
+
+			if (!CryptoApi.CryptGetKeyParam(keyHandle, Constants.KP_CERTIFICATE, null, ref certDataLength, 0))
+			{
+				if (Marshal.GetLastWin32Error() != Constants.ERROR_NO_SUCH_CERTIFICATE)
+				{
+					throw CreateWin32Error();
+				}
+
+				return null;
+			}
+
+			var certData = new byte[certDataLength];
+
+			if (!CryptoApi.CryptGetKeyParam(keyHandle, Constants.KP_CERTIFICATE, certData, ref certDataLength, 0))
+			{
+				throw CreateWin32Error();
+			}
+
+			return new X509Certificate2(certData);
+		}
+
 		#endregion
 
 

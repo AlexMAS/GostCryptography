@@ -6,6 +6,7 @@ using GostCryptography.Asn1.Gost.Gost_R3410_2012_256;
 using GostCryptography.Asn1.Gost.Gost_R3410_2012_512;
 using GostCryptography.Asn1.Gost.Gost_R3410_94;
 using GostCryptography.Gost_R3410;
+using GostCryptography.Native;
 
 // ReSharper disable once CheckNamespace
 namespace System.Security.Cryptography.X509Certificates
@@ -121,7 +122,7 @@ namespace System.Security.Cryptography.X509Certificates
 
 				if (_getPrivateKeyInfoMethod != null)
 				{
-					object certContext = GetCertContext(certificate);
+					var certContext = GetCertContext(certificate);
 
 					if (certContext != null)
 					{
@@ -129,7 +130,7 @@ namespace System.Security.Cryptography.X509Certificates
 						{
 							var parameters = new CspParameters();
 
-							object success = _getPrivateKeyInfoMethod.Invoke(null, new[] { certContext, parameters });
+							var success = _getPrivateKeyInfoMethod.Invoke(null, new[] {certContext, parameters});
 
 							if (Equals(success, true))
 							{
@@ -138,12 +139,47 @@ namespace System.Security.Cryptography.X509Certificates
 						}
 						catch
 						{
+							// ignored
 						}
 					}
 				}
 			}
 
 			return null;
+		}
+
+		private static volatile MethodInfo _setPrivateKeyPropertyMethod;
+		private static readonly object SetPrivateKeyPropertyMethodSync = new object();
+
+		private static void SetPrivateKeyProperty(X509Certificate2 certificate, ICspAsymmetricAlgorithm privateKey)
+		{
+			if (_setPrivateKeyPropertyMethod == null)
+			{
+				lock (SetPrivateKeyPropertyMethodSync)
+				{
+					if (_setPrivateKeyPropertyMethod == null)
+					{
+						_setPrivateKeyPropertyMethod = typeof(X509Certificate2).GetMethod("SetPrivateKeyProperty", BindingFlags.Static | BindingFlags.NonPublic);
+					}
+				}
+			}
+
+			if (_setPrivateKeyPropertyMethod != null)
+			{
+				var certContext = GetCertContext(certificate);
+
+				if (certContext != null)
+				{
+					try
+					{
+						_setPrivateKeyPropertyMethod.Invoke(null, new[] {certContext, privateKey});
+					}
+					catch
+					{
+						// ignored
+					}
+				}
+			}
 		}
 
 		private static volatile FieldInfo _certContextField;
@@ -170,6 +206,7 @@ namespace System.Security.Cryptography.X509Certificates
 				}
 				catch
 				{
+					// ignored
 				}
 			}
 
@@ -236,6 +273,28 @@ namespace System.Security.Cryptography.X509Certificates
 			}
 
 			return certificate.PublicKey.Key;
+		}
+
+		/// <summary>
+		/// Возвращает сертификат для указанного ключа.
+		/// </summary>
+		/// <param name="key">Ключ сертификата.</param>
+		/// <param name="useAsPrivateKey">Использовать ключ, как приватный.</param>
+		public static X509Certificate2 GetCertificate(this AsymmetricAlgorithm key, bool useAsPrivateKey = false)
+		{
+			X509Certificate2 certificate = null;
+
+			if (key is ISafeHandleProvider<SafeKeyHandleImpl> keyHandleProvider)
+			{
+				certificate = CryptoApiHelper.GetKeyCertificate(keyHandleProvider.SafeHandle);
+			}
+
+			if (useAsPrivateKey && (certificate != null) && (key is ICspAsymmetricAlgorithm privateKey))
+			{
+				SetPrivateKeyProperty(certificate, privateKey);
+			}
+
+			return certificate;
 		}
 	}
 }

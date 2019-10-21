@@ -194,6 +194,11 @@
 		/// </summary>
 		public const uint ERROR_NO_MORE_ITEMS = 0x103;
 
+		/// <summary>
+		/// Искомый сертификат не найден.
+		/// </summary>
+		public const int ERROR_NO_SUCH_CERTIFICATE = -2146435028; // 8010002C
+
 		#endregion
 
 
@@ -288,6 +293,11 @@
 		/// Закрытый ключ в ключевой паре.
 		/// </summary>
 		public const int KP_X = 14;
+
+		/// <summary>
+		/// Сертификат X.509 в формате Distinguished Encoding Rules (DER).
+		/// </summary>
+		public const int KP_CERTIFICATE = 0x1a;
 
 		/// <summary>
 		/// Произведенный ключ может быть передан из криптопровайдера в ключевой блоб при экспорте ключа независимо от сессии криптопровайдера (исключает CRYPT_ARCHIVABLE).
