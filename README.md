@@ -35,3 +35,9 @@ encrypt XML documents.
 
 - Windows 10 x64, CryptoPro CSP 4.0.9963
 - Windows 10 x64, ViPNet CSP 4.2.8.51670
+
+# Build instructions
+To build package run in repository root:
+```
+dotnet build --configuration Release
+```
