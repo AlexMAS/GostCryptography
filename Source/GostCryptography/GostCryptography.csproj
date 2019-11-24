@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net40;net452</TargetFrameworks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <AssemblyTitle>GostCryptography</AssemblyTitle>
+    <Product>GostCryptography</Product>
+    <AssemblyVersion>2.0.7.0</AssemblyVersion>
+    <FileVersion>2.0.7.0</FileVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NoWarn>1701;1702;1591</NoWarn>
+    <PackageId>GostCryptography</PackageId>
+
+    <Title>GostCryptography</Title>
+    <Version>2.0.7</Version>
+    <Authors>Alexander Mezhov</Authors>
+    <Company />
+    <Description>.NET driver for ViPNet CSP and CryptoPro CSP. Implements crypto algorithms based on Russian national cryptographic standards GOST 28147-89, GOST R 34.10 and GOST R 34.11. Also provides abstractions to sign and verify CMS/PKCS #7 messages, sign, verify and encrypt XML documents.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/AlexMAS/GostCryptography</PackageProjectUrl>
+    <NeutralLanguage></NeutralLanguage>
+    <PackageTags>GOST GOST-2012 Cryptography ViPNet CryptoPro</PackageTags>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/AlexMAS/GostCryptography</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Security" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
