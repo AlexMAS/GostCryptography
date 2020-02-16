@@ -76,6 +76,13 @@ namespace GostCryptography.Xml
 			set => _signedXml.SigningKey = value;
 		}
 
+#if !NET40
+		/// <inheritdoc cref="SignedXml.SafeCanonicalizationMethods"/>
+		public System.Collections.ObjectModel.Collection<string> SafeCanonicalizationMethods
+		{
+			get => _signedXml.SafeCanonicalizationMethods;
+		}
+#endif
 
 		/// <summary>
 		/// Обработчик для перекрытия метода <see cref="GetIdElement"/>.
