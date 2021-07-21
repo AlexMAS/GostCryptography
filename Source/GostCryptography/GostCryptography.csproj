@@ -5,8 +5,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AssemblyTitle>GostCryptography</AssemblyTitle>
     <Product>GostCryptography</Product>
-    <AssemblyVersion>2.0.8.0</AssemblyVersion>
-    <FileVersion>2.0.8.0</FileVersion>
+    <AssemblyVersion>2.0.9.0</AssemblyVersion>
+    <FileVersion>2.0.9.0</FileVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
@@ -14,7 +14,7 @@
     <NoWarn>1701;1702;1591</NoWarn>
     <PackageId>GostCryptography</PackageId>
     <Title>GostCryptography</Title>
-    <Version>2.0.8</Version>
+    <Version>2.0.9</Version>
     <Authors>Alexander Mezhov</Authors>
     <Company />
     <Description>.NET driver for ViPNet CSP and CryptoPro CSP. Implements crypto algorithms based on Russian national cryptographic standards GOST 28147-89, GOST R 34.10 and GOST R 34.11. Also provides abstractions to sign and verify CMS/PKCS #7 messages, sign, verify and encrypt XML documents.</Description>
