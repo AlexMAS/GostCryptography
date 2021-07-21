@@ -7,7 +7,7 @@ namespace GostCryptography.Asn1.Gost.Gost_R3410
 {
 	public sealed class Gost_R3410_TransportParams : Asn1Type
 	{
-		public Gost_28147_89_ParamSet EncryptionParamSet { get; set; }
+		public Asn1ObjectIdentifier EncryptionParamSet { get; set; }
 
 		public SubjectPublicKeyInfo EphemeralPublicKey { get; set; }
 
@@ -30,7 +30,7 @@ namespace GostCryptography.Asn1.Gost.Gost_R3410
 				throw ExceptionUtility.CryptographicException(Resources.Asn1MissingRequiredException, buffer.ByteCount);
 			}
 
-			EncryptionParamSet = new Gost_28147_89_ParamSet();
+			EncryptionParamSet = new Asn1ObjectIdentifier();
 			EncryptionParamSet.Decode(buffer, true, parsedLen.Value);
 
 			if (context.MatchElemTag(0x80, 0x20, EocTypeCode, parsedLen, true))

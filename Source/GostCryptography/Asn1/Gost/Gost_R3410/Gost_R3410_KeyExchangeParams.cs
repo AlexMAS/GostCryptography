@@ -1,7 +1,6 @@
 ﻿using System;
 
 using GostCryptography.Asn1.Ber;
-using GostCryptography.Asn1.Gost.Gost_28147_89;
 using GostCryptography.Properties;
 
 namespace GostCryptography.Asn1.Gost.Gost_R3410
@@ -11,12 +10,10 @@ namespace GostCryptography.Asn1.Gost.Gost_R3410
 	/// </summary>
 	public abstract class Gost_R3410_KeyExchangeParams
 	{
-		/// <inheritdoc />
 		protected Gost_R3410_KeyExchangeParams()
 		{
 		}
 
-		/// <inheritdoc />
 		protected Gost_R3410_KeyExchangeParams(Gost_R3410_KeyExchangeParams other)
 		{
 			DigestParamSet = other.DigestParamSet;
@@ -76,8 +73,8 @@ namespace GostCryptography.Asn1.Gost.Gost_R3410
 				var publicKeyParams = CreatePublicKeyParams();
 				publicKeyParams.Decode(asnDecoder);
 
-				DigestParamSet = publicKeyParams.DigestParamSet.Oid.Value;
 				PublicKeyParamSet = publicKeyParams.PublicKeyParamSet.Oid.Value;
+				DigestParamSet = publicKeyParams.DigestParamSet?.Oid.Value;
 				EncryptionParamSet = publicKeyParams.EncryptionParamSet?.Oid.Value;
 			}
 			catch (Exception exception)
@@ -96,9 +93,9 @@ namespace GostCryptography.Asn1.Gost.Gost_R3410
 			try
 			{
 				var publicKeyParams = CreatePublicKeyParams();
-				publicKeyParams.DigestParamSet = new Asn1ObjectIdentifier(OidValue.FromString(DigestParamSet));
-				publicKeyParams.PublicKeyParamSet = new Asn1ObjectIdentifier(OidValue.FromString(PublicKeyParamSet));
-				publicKeyParams.EncryptionParamSet = Gost_28147_89_ParamSet.FromString(EncryptionParamSet);
+				publicKeyParams.PublicKeyParamSet = Asn1ObjectIdentifier.FromString(PublicKeyParamSet);
+				publicKeyParams.DigestParamSet = Asn1ObjectIdentifier.FromString(DigestParamSet);
+				publicKeyParams.EncryptionParamSet = Asn1ObjectIdentifier.FromString(EncryptionParamSet);
 
 				var asnEncoder = new Asn1BerEncodeBuffer();
 				publicKeyParams.Encode(asnEncoder);

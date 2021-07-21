@@ -27,6 +27,12 @@ namespace GostCryptography.Asn1.Ber
 		}
 
 
+		public static Asn1ObjectIdentifier FromString(string value)
+		{
+			return string.IsNullOrEmpty(value) ? null : new Asn1ObjectIdentifier(OidValue.FromString(value));
+		}
+
+
 		public override void Decode(Asn1BerDecodeBuffer buffer, bool explicitTagging, int implicitLength)
 		{
 			var len = explicitTagging ? MatchTag(buffer, Tag) : implicitLength;

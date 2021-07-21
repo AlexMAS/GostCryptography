@@ -94,8 +94,8 @@ namespace GostCryptography.Asn1.Gost.Gost_R3410
 			publicKey.Decode(asnDecoder);
 
 			TransportParameters = CreateKeyExchangeParams();
-			TransportParameters.DigestParamSet = publicKeyParams.DigestParamSet.Oid.Value;
 			TransportParameters.PublicKeyParamSet = publicKeyParams.PublicKeyParamSet.Oid.Value;
+			TransportParameters.DigestParamSet = publicKeyParams.DigestParamSet?.Oid.Value;
 			TransportParameters.EncryptionParamSet = publicKeyParams.EncryptionParamSet?.Oid.Value;
 			TransportParameters.PublicKey = publicKey.Value;
 			TransportParameters.PrivateKey = null;
@@ -120,7 +120,7 @@ namespace GostCryptography.Asn1.Gost.Gost_R3410
 
 				keyTransport.TransportParams = new Gost_R3410_TransportParams
 				{
-					EncryptionParamSet = Gost_28147_89_ParamSet.FromString(SessionEncryptedKey.EncryptionParamSet),
+					EncryptionParamSet = Asn1ObjectIdentifier.FromString(SessionEncryptedKey.EncryptionParamSet),
 					EphemeralPublicKey = EncodePublicKey(TransportParameters),
 					Ukm = new Asn1OctetString(SessionEncryptedKey.Ukm)
 				};
@@ -149,9 +149,9 @@ namespace GostCryptography.Asn1.Gost.Gost_R3410
 			};
 
 			var publicKeyParams = CreatePublicKeyParams();
-			publicKeyParams.PublicKeyParamSet = new Asn1ObjectIdentifier(OidValue.FromString(transportParameters.PublicKeyParamSet));
-			publicKeyParams.DigestParamSet = new Asn1ObjectIdentifier(OidValue.FromString(transportParameters.DigestParamSet));
-			publicKeyParams.EncryptionParamSet = Gost_28147_89_ParamSet.FromString(transportParameters.EncryptionParamSet);
+			publicKeyParams.PublicKeyParamSet = Asn1ObjectIdentifier.FromString(transportParameters.PublicKeyParamSet);
+			publicKeyParams.DigestParamSet = Asn1ObjectIdentifier.FromString(transportParameters.DigestParamSet);
+			publicKeyParams.EncryptionParamSet = Asn1ObjectIdentifier.FromString(transportParameters.EncryptionParamSet);
 
 			asnEncoder.Reset();
 			publicKeyParams.Encode(asnEncoder);

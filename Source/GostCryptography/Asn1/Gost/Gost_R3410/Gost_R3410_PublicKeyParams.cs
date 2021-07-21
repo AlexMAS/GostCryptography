@@ -1,49 +1,58 @@
 ﻿using GostCryptography.Asn1.Ber;
-using GostCryptography.Asn1.Gost.Gost_28147_89;
 using GostCryptography.Properties;
 
 namespace GostCryptography.Asn1.Gost.Gost_R3410
 {
 	public abstract class Gost_R3410_PublicKeyParams : Asn1Type
 	{
-		public Asn1ObjectIdentifier DigestParamSet { get; set; }
-
 		public Asn1ObjectIdentifier PublicKeyParamSet { get; set; }
 
-		public Gost_28147_89_ParamSet EncryptionParamSet { get; set; }
+		public Asn1ObjectIdentifier DigestParamSet { get; set; }
+
+		public Asn1ObjectIdentifier EncryptionParamSet { get; set; }
 
 
 		public override void Decode(Asn1BerDecodeBuffer buffer, bool explicitTagging, int implicitLength)
 		{
 			var elemLength = explicitTagging ? MatchTag(buffer, Asn1Tag.Sequence) : implicitLength;
 
-			DigestParamSet = null;
 			PublicKeyParamSet = null;
+			DigestParamSet = null;
 			EncryptionParamSet = null;
 
 			var context = new Asn1BerDecodeContext(buffer, elemLength);
 			var parsedLen = new IntHolder();
 
-			if (!context.MatchElemTag(0, 0, ObjectIdentifierTypeCode, parsedLen, false))
+			if (context.MatchElemTag(0, 0, ObjectIdentifierTypeCode, parsedLen, false))
+			{
+				PublicKeyParamSet = new Asn1ObjectIdentifier();
+				PublicKeyParamSet.Decode(buffer, true, parsedLen.Value);
+			}
+			else
 			{
 				throw ExceptionUtility.CryptographicException(Resources.Asn1MissingRequiredException, buffer.ByteCount);
 			}
-
-			PublicKeyParamSet = new Asn1ObjectIdentifier();
-			PublicKeyParamSet.Decode(buffer, true, parsedLen.Value);
-
-			if (!context.MatchElemTag(0, 0, ObjectIdentifierTypeCode, parsedLen, false))
-			{
-				throw ExceptionUtility.CryptographicException(Resources.Asn1MissingRequiredException, buffer.ByteCount);
-			}
-
-			DigestParamSet = new Asn1ObjectIdentifier();
-			DigestParamSet.Decode(buffer, true, parsedLen.Value);
 
 			if (context.MatchElemTag(0, 0, ObjectIdentifierTypeCode, parsedLen, false))
 			{
-				EncryptionParamSet = new Gost_28147_89_ParamSet();
+				DigestParamSet = new Asn1ObjectIdentifier();
+				DigestParamSet.Decode(buffer, true, parsedLen.Value);
+			}
+
+			if (context.MatchElemTag(0, 0, ObjectIdentifierTypeCode, parsedLen, false))
+			{
+				EncryptionParamSet = new Asn1ObjectIdentifier();
 				EncryptionParamSet.Decode(buffer, true, parsedLen.Value);
+			}
+
+			if (!context.Expired())
+			{
+				var lastTag = buffer.PeekTag();
+
+				if (lastTag.Equals(0, 0, ObjectIdentifierTypeCode))
+				{
+					throw ExceptionUtility.CryptographicException(Resources.Asn1SeqOrderException);
+				}
 			}
 		}
 
@@ -56,7 +65,11 @@ namespace GostCryptography.Asn1.Gost.Gost_R3410
 				len += EncryptionParamSet.Encode(buffer, true);
 			}
 
-			len += DigestParamSet.Encode(buffer, true);
+			if (DigestParamSet != null)
+			{
+				len += DigestParamSet.Encode(buffer, true);
+			}
+
 			len += PublicKeyParamSet.Encode(buffer, true);
 
 			if (explicitTagging)

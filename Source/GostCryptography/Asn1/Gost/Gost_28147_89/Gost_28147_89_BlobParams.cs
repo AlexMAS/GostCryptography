@@ -5,7 +5,7 @@ namespace GostCryptography.Asn1.Gost.Gost_28147_89
 {
 	public sealed class Gost_28147_89_BlobParams : Asn1Type
 	{
-		public Gost_28147_89_ParamSet EncryptionParamSet { get; set; }
+		public Asn1ObjectIdentifier EncryptionParamSet { get; set; }
 
 		public Asn1OpenExt ExtElement { get; set; }
 
@@ -25,7 +25,7 @@ namespace GostCryptography.Asn1.Gost.Gost_28147_89
 				throw ExceptionUtility.CryptographicException(Resources.Asn1MissingRequiredException, buffer.ByteCount);
 			}
 
-			EncryptionParamSet = new Gost_28147_89_ParamSet();
+			EncryptionParamSet = new Asn1ObjectIdentifier();
 			EncryptionParamSet.Decode(buffer, true, parsedLen.Value);
 
 			if (!context.Expired())

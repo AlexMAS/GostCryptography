@@ -77,7 +77,7 @@ namespace GostCryptography.Asn1.Gost.Gost_28147_89
 
 				keyWrap.EncryptedParams = new Gost_28147_89_KeyWrapParams
 				{
-					EncryptionParamSet = Gost_28147_89_ParamSet.FromString(EncryptionParamSet),
+					EncryptionParamSet = Asn1ObjectIdentifier.FromString(EncryptionParamSet),
 					Ukm = new Asn1OctetString(Ukm)
 				};
 
@@ -136,7 +136,7 @@ namespace GostCryptography.Asn1.Gost.Gost_28147_89
 
 			try
 			{
-				var parameters = new Gost_28147_89_BlobParams { EncryptionParamSet = Gost_28147_89_ParamSet.FromString(encryptionParamSet) };
+				var parameters = new Gost_28147_89_BlobParams { EncryptionParamSet = Asn1ObjectIdentifier.FromString(encryptionParamSet) };
 
 				var asnEncoder = new Asn1BerEncodeBuffer();
 				parameters.Encode(asnEncoder);
