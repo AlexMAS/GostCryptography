@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net40;net452</TargetFrameworks>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AssemblyTitle>GostCryptography</AssemblyTitle>
     <Product>GostCryptography</Product>
@@ -28,11 +28,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="System.Security" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-preview.2" PrivateAssets="All" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="4.6.0" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="4.5.0" />
+
   </ItemGroup>
 
   <ItemGroup>

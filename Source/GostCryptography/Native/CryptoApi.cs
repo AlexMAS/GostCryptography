@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GostCryptography.Base;
+using System;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -6,153 +7,200 @@ using System.Text;
 
 namespace GostCryptography.Native
 {
-	/// <summary>
-	/// Функции для работы с Microsoft CryptoAPI.
-	/// </summary>
-	[SecurityCritical]
-	public static class CryptoApi
-	{
-		// ReSharper disable InconsistentNaming
+    /// <summary>
+    /// Функции для работы с Microsoft CryptoAPI.
+    /// </summary>
+    [SecurityCritical]
+    internal static class CryptoApi
+    {
+        private static INativeApi _api;
 
-		#region Для работы с криптографическим провайдером
+        internal static ProviderType ProviderType { get; set; }
+        internal static NativeApiFactory Factory { get; set; }
+        public static INativeApi Api
+        {
+            get
+            {
+                return Factory.CreateApi(ProviderType);
+            }
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-		public static extern bool CryptAcquireContext([In] [Out] ref SafeProvHandleImpl hProv, [In] string pszContainer, [In] string pszProvider, [In] uint dwProvType, [In] uint dwFlags);
+        public static bool CertCloseStore(SafeStore hCertStore, uint dwFlags)
+        {
+            return Api.CertCloseStore(hCertStore, dwFlags);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptReleaseContext(IntPtr hCryptProv, uint dwFlags);
+        public static bool CryptAcquireContext(ref SafeProvHandleImpl hProv, string pszContainer, string pszProvider, uint dwProvType, uint dwFlags)
+        {
+            return Api.CryptAcquireContext(ref hProv, pszContainer, pszProvider, dwProvType, dwFlags);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-		[DllImport("advapi32.dll", CharSet = CharSet.Ansi, SetLastError = true)]
-		public static extern bool CryptContextAddRef([In] IntPtr hProv, [In] byte[] pdwReserved, [In] uint dwFlags);
+        public static bool CryptContextAddRef(IntPtr hProv, byte[] pdwReserved, uint dwFlags)
+        {
+            return Api.CryptContextAddRef(hProv, pdwReserved, dwFlags);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-		public static extern bool CryptGetProvParam([In] SafeProvHandleImpl hProv, [In] uint dwParam, [In] [Out] byte[] pbData, ref uint dwDataLen, [In] uint dwFlags);
+        public static bool CryptCreateHash(SafeProvHandleImpl hProv, uint Algid, SafeKeyHandleImpl hKey, uint dwFlags, ref SafeHashHandleImpl phHash)
+        {
+            return Api.CryptCreateHash(hProv, Algid, hKey, dwFlags, ref phHash);
+        }
 
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptGetProvParam([In]SafeProvHandleImpl hProv, [In] uint dwParam, [MarshalAs(UnmanagedType.LPStr)] StringBuilder pbData, ref uint dwDataLen, uint dwFlags);
+        public static bool CryptDecrypt(SafeKeyHandleImpl hKey, SafeHashHandleImpl hHash, bool Final, uint dwFlags, byte[] pbData, ref uint pdwDataLen)
+        {
+            return Api.CryptDecrypt(hKey, hHash, Final, dwFlags, pbData, ref pdwDataLen);
+        }
 
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptGetProvParam([In]SafeProvHandleImpl hProv, [In] uint dwParam, [MarshalAs(UnmanagedType.U8)] long pbData, ref uint dwDataLen, uint dwFlags);
+        public static bool CryptDeriveKey(SafeProvHandleImpl hProv, uint Algid, SafeHashHandleImpl hBaseData, uint dwFlags, ref SafeKeyHandleImpl phKey)
+        {
+            return Api.CryptDeriveKey(hProv, Algid, hBaseData, dwFlags, ref phKey);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptSetProvParam([In] SafeProvHandleImpl hProv, [In] uint dwParam, [In] IntPtr pbData, [In] uint dwFlags);
+        public static bool CryptDestroyHash(IntPtr pHashCtx)
+        {
+            return Api.CryptDestroyHash(pHashCtx);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-		[DllImport("advapi32.dll", EntryPoint = "CryptSetProvParam", SetLastError = true)]
-		public static extern bool CryptSetProvParam2(IntPtr hCryptProv, [In] uint dwParam, [In] byte[] pbData, [In] uint dwFlags);
+        public static bool CryptDestroyKey(IntPtr pKeyCtx)
+        {
+            return Api.CryptDestroyKey(pKeyCtx);
+        }
 
-		#endregion
+        public static bool CryptDuplicateKey(IntPtr hKey, byte[] pdwReserved, uint dwFlags, ref SafeKeyHandleImpl phKey)
+        {
+            return Api.CryptDuplicateKey(hKey, pdwReserved, dwFlags, ref phKey);
+        }
 
+        public static bool CryptEncrypt(SafeKeyHandleImpl hKey, SafeHashHandleImpl hHash, bool Final, uint dwFlags, byte[] pbData, ref uint pdwDataLen, uint dwBufLen)
+        {
+            return Api.CryptEncrypt(hKey, hHash, Final, dwFlags, pbData, ref pdwDataLen, dwBufLen);
+        }
 
-		#region Для работы с функцией хэширования криптографического провайдера
+        public static bool CryptExportKey(SafeKeyHandleImpl hKey, SafeKeyHandleImpl hExpKey, uint dwBlobType, uint dwFlags, byte[] pbData, ref uint pdwDataLen)
+        {
+            return Api.CryptExportKey(hKey, hExpKey, dwBlobType, dwFlags, pbData, ref pdwDataLen);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptCreateHash([In] SafeProvHandleImpl hProv, [In] uint Algid, [In] SafeKeyHandleImpl hKey, [In] uint dwFlags, [In] [Out] ref SafeHashHandleImpl phHash);
+        public static bool CryptGenKey(SafeProvHandleImpl hProv, uint Algid, uint dwFlags, ref SafeKeyHandleImpl phKey)
+        {
+            return Api.CryptGenKey(hProv, Algid, dwFlags, ref phKey);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptDestroyHash(IntPtr pHashCtx);
+        public static bool CryptGetHashParam(SafeHashHandleImpl hHash, uint dwParam, byte[] pbData, ref uint pdwDataLen, uint dwFlags)
+        {
+            return Api.CryptGetHashParam(hHash, dwParam, pbData, ref pdwDataLen, dwFlags);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptGetHashParam([In] SafeHashHandleImpl hHash, [In] uint dwParam, [In] [Out] byte[] pbData, ref uint pdwDataLen, [In] uint dwFlags);
+        public static bool CryptGetKeyParam(SafeKeyHandleImpl hKey, uint dwParam, byte[] pbData, ref uint pdwDataLen, uint dwFlags)
+        {
+            return Api.CryptGetKeyParam(hKey, dwParam, pbData, ref pdwDataLen, dwFlags);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptSetHashParam([In] SafeHashHandleImpl hHash, [In] uint dwParam, [In] [Out] byte[] pbData, [In] uint dwFlags);
+        public static bool CryptGetProvParam(SafeProvHandleImpl hProv, uint dwParam, byte[] pbData, ref uint dwDataLen, uint dwFlags)
+        {
+            return Api.CryptGetProvParam(hProv, dwParam, pbData, ref dwDataLen, dwFlags);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptHashData([In] SafeHashHandleImpl hHash, [In] [Out] byte[] pbData, [In] uint dwDataLen, [In] uint dwFlags);
+        public static bool CryptGetProvParam(SafeProvHandleImpl hProv, uint dwParam, StringBuilder pbData, ref uint dwDataLen, uint dwFlags)
+        {
+            return Api.CryptGetProvParam(hProv, dwParam, pbData, ref dwDataLen, dwFlags);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern unsafe bool CryptHashData([In] SafeHashHandleImpl hHash, byte* pbData, [In] uint dwDataLen, [In] uint dwFlags);
+        public static bool CryptGetProvParam(SafeProvHandleImpl hProv, uint dwParam, long pbData, ref uint dwDataLen, uint dwFlags)
+        {
+            return Api.CryptGetProvParam(hProv, dwParam, pbData, ref dwDataLen, dwFlags);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptHashSessionKey([In] SafeHashHandleImpl hHash, [In] SafeKeyHandleImpl hKey, [In] uint dwFlags);
+        public static bool CryptGetUserKey(SafeProvHandleImpl hProv, uint dwKeySpec, ref SafeKeyHandleImpl phUserKey)
+        {
+            return Api.CryptGetUserKey(hProv, dwKeySpec, ref phUserKey);
+        }
 
-		#endregion
+        public static bool CryptHashData(SafeHashHandleImpl hHash, byte[] pbData, uint dwDataLen, uint dwFlags)
+        {
+            return Api.CryptHashData(hHash, pbData, dwDataLen, dwFlags);
+        }
 
+        public static unsafe bool CryptHashData(SafeHashHandleImpl hHash, byte* pbData, uint dwDataLen, uint dwFlags)
+        {
+            return Api.CryptHashData(hHash, pbData, dwDataLen, dwFlags);
+        }
 
-		#region Для работы с функцией шифрования криптографического провайдера
+        public static bool CryptHashSessionKey(SafeHashHandleImpl hHash, SafeKeyHandleImpl hKey, uint dwFlags)
+        {
+            return Api.CryptHashSessionKey(hHash, hKey, dwFlags);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptDecrypt([In] SafeKeyHandleImpl hKey, [In] SafeHashHandleImpl hHash, [In] [MarshalAs(UnmanagedType.Bool)] bool Final, [In] uint dwFlags, [In] [Out] byte[] pbData, ref uint pdwDataLen);
+        public static bool CryptImportKey(SafeProvHandleImpl hCryptProv, byte[] pbData, uint dwDataLen, SafeKeyHandleImpl hPubKey, uint dwFlags, ref SafeKeyHandleImpl phKey)
+        {
+            return Api.CryptImportKey(hCryptProv, pbData, dwDataLen, hPubKey, dwFlags, ref phKey);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptEncrypt([In] SafeKeyHandleImpl hKey, [In] SafeHashHandleImpl hHash, [In] [MarshalAs(UnmanagedType.Bool)] bool Final, [In] uint dwFlags, [In] [Out] byte[] pbData, ref uint pdwDataLen, [In] uint dwBufLen);
+        public static bool CryptReleaseContext(IntPtr hCryptProv, uint dwFlags)
+        {
+            return Api.CryptReleaseContext(hCryptProv, dwFlags);
+        }
 
-		#endregion
+        public static bool CryptSetHashParam(SafeHashHandleImpl hHash, uint dwParam, byte[] pbData, uint dwFlags)
+        {
+            return Api.CryptSetHashParam(hHash, dwParam, pbData, dwFlags);
+        }
 
+        public static bool CryptSetKeyParam(SafeKeyHandleImpl hKey, uint dwParam, byte[] pbData, uint dwFlags)
+        {
+            return Api.CryptSetKeyParam(hKey, dwParam, pbData, dwParam);
+        }
 
-		#region Для работы с ключами криптографического провайдера
+        public static bool CryptSetProvParam(SafeProvHandleImpl hProv, uint dwParam, IntPtr pbData, uint dwFlags)
+        {
+            return Api.CryptSetProvParam(hProv, dwParam, pbData, dwFlags);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptGenKey([In] SafeProvHandleImpl hProv, [In] uint Algid, [In] uint dwFlags, [In] [Out] ref SafeKeyHandleImpl phKey);
+        public static bool CryptSetProvParam2(IntPtr hCryptProv, uint dwParam, byte[] pbData, uint dwFlags)
+        {
+            return Api.CryptSetProvParam2(hCryptProv, dwParam, pbData, dwFlags);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptGetUserKey([In] SafeProvHandleImpl hProv, [In] uint dwKeySpec, [In] [Out] ref SafeKeyHandleImpl phUserKey);
+        public static bool CryptSignHash(SafeHashHandleImpl hHash, uint dwKeySpec, StringBuilder sDescription, uint dwFlags, byte[] pbSignature, ref uint pdwSigLen)
+        {
+            return Api.CryptSignHash(hHash, dwKeySpec, sDescription, dwFlags, pbSignature, ref pdwSigLen);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptDeriveKey([In] SafeProvHandleImpl hProv, [In] uint Algid, [In] SafeHashHandleImpl hBaseData, [In] uint dwFlags, [In] [Out] ref SafeKeyHandleImpl phKey);
+        public static bool CryptVerifySignature(SafeHashHandleImpl hHash, byte[] pbSignature, uint pdwSigLen, SafeKeyHandleImpl hPubKey, StringBuilder sDescription, uint dwFlags)
+        {
+            return Api.CryptVerifySignature(hHash, pbSignature, pdwSigLen, hPubKey, sDescription, dwFlags);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptDuplicateKey([In] IntPtr hKey, [In] byte[] pdwReserved, [In] uint dwFlags, [In] [Out] ref SafeKeyHandleImpl phKey);
+        public static SafeStore CertOpenSystemStore(SafeStore hCertStore, string pszStoreName)
+        {
+            return Api.CertOpenSystemStore(hCertStore, pszStoreName);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptDestroyKey(IntPtr pKeyCtx);
+        public static IntPtr CertEnumCertificatesInStore(SafeStore hCertStore, IntPtr pPrevCertContext)
+        {
+            return Api.CertEnumCertificatesInStore(hCertStore, pPrevCertContext);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptGetKeyParam([In] SafeKeyHandleImpl hKey, [In] uint dwParam, [In] [Out] byte[] pbData, ref uint pdwDataLen, [In] uint dwFlags);
+        public static uint CertGetNameString(IntPtr pCertContext, uint dwType, uint dwFlags, IntPtr pvTypePara, byte[] pszNameString, uint cchNameString)
+        {
+            return Api.CertGetNameString(pCertContext, dwType, dwFlags, pvTypePara, pszNameString, cchNameString);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptSetKeyParam([In] SafeKeyHandleImpl hKey, [In] uint dwParam, [In] byte[] pbData, [In] uint dwFlags);
+        public static bool CertGetCertificateContextProperty(IntPtr pCertContext, uint dwPropId, IntPtr pvData, ref uint pcbData)
+        {
+            return Api.CertGetCertificateContextProperty(pCertContext, dwPropId, pvData, ref pcbData);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptExportKey([In] SafeKeyHandleImpl hKey, [In] SafeKeyHandleImpl hExpKey, [In] uint dwBlobType, [In] uint dwFlags, [Out] byte[] pbData, ref uint pdwDataLen);
+        public static bool CryptImportPublicKeyInfo([In] SafeProvHandleImpl hCryptProv,
+          [In] uint dwCertEncodingType,
+          [In] IntPtr pSubjectPublicKeyInfo,
+          [Out][In]ref SafeKeyHandleImpl phKey)
+        {
+            return Api.CryptImportPublicKeyInfo(hCryptProv, dwCertEncodingType, pSubjectPublicKeyInfo, ref phKey);
+        }
 
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", SetLastError = true)]
-		public static extern bool CryptImportKey([In] SafeProvHandleImpl hCryptProv, [In] byte[] pbData, [In] uint dwDataLen, [In] SafeKeyHandleImpl hPubKey, [In] uint dwFlags, [In] [Out] ref SafeKeyHandleImpl phKey);
-
-		#endregion
-
-
-		#region Для работы с цифровой подписью
-
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", CharSet = CharSet.Ansi, SetLastError = true)]
-		public static extern bool CryptSignHash([In] SafeHashHandleImpl hHash, [In] uint dwKeySpec, [MarshalAs(UnmanagedType.LPStr)] StringBuilder sDescription, [In] uint dwFlags, [In] [Out] byte[] pbSignature, ref uint pdwSigLen);
-
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("advapi32.dll", CharSet = CharSet.Ansi, SetLastError = true)]
-		public static extern bool CryptVerifySignature([In] SafeHashHandleImpl hHash, [In] [Out] byte[] pbSignature, uint pdwSigLen, [In] SafeKeyHandleImpl hPubKey, [MarshalAs(UnmanagedType.LPStr)] StringBuilder sDescription, [In] uint dwFlags);
-
-		#endregion
-
-		// ReSharper restore InconsistentNaming
-	}
+        public static IntPtr CertCreateCertificateContext(uint dwCertEncodingType, byte[] pCertEncoded, int cbCertEncoded)
+        {
+            return Api.CertCreateCertificateContext(dwCertEncodingType, pCertEncoded, cbCertEncoded);
+        }
+    }
 }
