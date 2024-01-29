@@ -1300,6 +1300,19 @@ namespace GostCryptography.Native
 		#endregion
 
 
+		#region Для работы с сообщениями PKCS #7
+
+		public static void RemoveCertificate(SafeHandle cmsMessageHandle, int certIndex)
+		{
+            if (!CryptoApi.CryptMsgControl(cmsMessageHandle, 0, Constants.CMSG_CTRL_DEL_CERT, (IntPtr)certIndex))
+			{
+				throw CreateWin32Error();
+			}
+		}
+
+		#endregion
+
+
 		public static T DangerousAddRef<T>(this T handle) where T : SafeHandle
 		{
 			var success = false;
