@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Security.Cryptography.Pkcs;
 
 using GostCryptography.Native;
@@ -18,11 +19,13 @@ namespace GostCryptography.Reflection
             return field ?? throw ExceptionUtility.CryptographicException(Resources.SignedCmsCannotFindPrivateMember, MessageHandleFieldName);
         });
 
+        [SecuritySafeCritical]
         private static SafeHandle GetMessageHandle(SignedCms signedCms)
         {
             return MessageHandleField.Value.GetValue(signedCms) as SafeHandle;
         }
 
+        [SecuritySafeCritical]
         public static void RemoveCertificates(this SignedCms signedCms)
         {
             var messageHandle = GetMessageHandle(signedCms);

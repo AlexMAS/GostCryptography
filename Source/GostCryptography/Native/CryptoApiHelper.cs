@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography;
@@ -1304,9 +1305,12 @@ namespace GostCryptography.Native
 
 		public static void RemoveCertificate(SafeHandle cmsMessageHandle, int certIndex)
 		{
-            if (!CryptoApi.CryptMsgControl(cmsMessageHandle, 0, Constants.CMSG_CTRL_DEL_CERT, (IntPtr)certIndex))
+			unsafe
 			{
-				throw CreateWin32Error();
+				if (!CryptoApi.CryptMsgControl(cmsMessageHandle, 0, Constants.CMSG_CTRL_DEL_CERT, new IntPtr(&certIndex)))
+				{
+					throw CreateWin32Error();
+				}
 			}
 		}
 
