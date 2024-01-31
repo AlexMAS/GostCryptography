@@ -155,8 +155,16 @@ namespace GostCryptography.Pkcs
 			_signedCms.CheckHash();
 		}
 
+ 		/// <summary>
+ 		/// Удаляет из сообщения указанный сертификат.
+ 		/// </summary>
+		public void RemoveCertificate(X509Certificate2 certificate)
+		{
+			_signedCms.RemoveCertificate(certificate);
+		}
+
 		/// <summary>
-		/// Удаляет из сообщения данные о сертификатах.
+		/// Удаляет из сообщения все сертификаты.
 		/// </summary>
 		public void RemoveCertificates()
 		{
