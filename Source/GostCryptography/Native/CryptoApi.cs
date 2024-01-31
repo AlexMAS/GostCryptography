@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Security;
 using System.Text;
 
@@ -152,6 +153,16 @@ namespace GostCryptography.Native
 		public static extern bool CryptVerifySignature([In] SafeHashHandleImpl hHash, [In] [Out] byte[] pbSignature, uint pdwSigLen, [In] SafeKeyHandleImpl hPubKey, [MarshalAs(UnmanagedType.LPStr)] StringBuilder sDescription, [In] uint dwFlags);
 
 		#endregion
+
+
+		#region Для работы с сообщениями PKCS #7
+
+		[ResourceExposure(ResourceScope.None)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		[DllImport("crypt32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		public extern static bool CryptMsgControl([In] SafeHandle hCryptMsg, [In] uint dwFlags, [In] uint dwCtrlType, [In] IntPtr pvCtrlPara);
+
+ 		#endregion
 
 		// ReSharper restore InconsistentNaming
 	}

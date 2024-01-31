@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography;
@@ -1294,6 +1295,22 @@ namespace GostCryptography.Native
 			if (!CryptoApi.CryptSetHashParam(hashHandle, Constants.HP_HASHVAL, hashValue, 0))
 			{
 				throw CreateWin32Error();
+			}
+		}
+
+		#endregion
+
+
+		#region Для работы с сообщениями PKCS #7
+
+		public static void RemoveCertificate(SafeHandle cmsMessageHandle, int certIndex)
+		{
+			unsafe
+			{
+				if (!CryptoApi.CryptMsgControl(cmsMessageHandle, 0, Constants.CMSG_CTRL_DEL_CERT, new IntPtr(&certIndex)))
+				{
+					throw CreateWin32Error();
+				}
 			}
 		}
 

@@ -3,6 +3,7 @@ using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 
 using GostCryptography.Config;
+using GostCryptography.Reflection;
 
 namespace GostCryptography.Pkcs
 {
@@ -154,6 +155,21 @@ namespace GostCryptography.Pkcs
 			_signedCms.CheckHash();
 		}
 
+ 		/// <summary>
+ 		/// Удаляет из сообщения указанный сертификат.
+ 		/// </summary>
+		public void RemoveCertificate(X509Certificate2 certificate)
+		{
+			_signedCms.RemoveCertificate(certificate);
+		}
+
+		/// <summary>
+		/// Удаляет из сообщения все сертификаты.
+		/// </summary>
+		public void RemoveCertificates()
+		{
+			_signedCms.RemoveCertificates();
+		}
 
 		private static SubjectIdentifierType InitSubjectIdentifierType(SubjectIdentifierType signerIdentifierType)
 		{

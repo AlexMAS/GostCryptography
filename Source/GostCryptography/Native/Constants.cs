@@ -419,6 +419,21 @@
 		/// </summary>
 		public const int SCARD_W_CANCELLED_BY_USER = -2146434962;
 
+        #endregion
+
+
+		#region Типы операций над сообщениями PKCS #7
+
+		/// <summary>
+		/// Добавление сертификата в сообщение.
+		/// </summary>
+		public const uint CMSG_CTRL_ADD_CERT = 10;
+
+		/// <summary>
+		/// Удаление сертификата из сообщения (по индексу).
+		/// </summary>
+		public const uint CMSG_CTRL_DEL_CERT = 11;
+
 		#endregion
 
 
