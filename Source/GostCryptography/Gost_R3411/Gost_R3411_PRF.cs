@@ -21,8 +21,8 @@ namespace GostCryptography.Gost_R3411
 		/// <exception cref="ArgumentException"></exception>
 		/// <exception cref="ArgumentNullException"></exception>
 		[SecuritySafeCritical]
-		protected Gost_R3411_PRF(Gost_28147_89_SymmetricAlgorithmBase key, byte[] label, byte[] seed)
-			: this(key.ProviderType, Gost_28147_89_SymmetricAlgorithm.CreateFromKey(key), label, seed)
+		protected Gost_R3411_PRF(GostSymmetricAlgorithm key, byte[] label, byte[] seed)
+			: this(key.ProviderType, key.Clone(), label, seed)
 		{
 		}
 
@@ -51,7 +51,7 @@ namespace GostCryptography.Gost_R3411
 		/// <exception cref="ArgumentException"></exception>
 		/// <exception cref="ArgumentNullException"></exception>
 		[SecuritySafeCritical]
-		private Gost_R3411_PRF(ProviderType providerType, Gost_28147_89_SymmetricAlgorithm key, byte[] label, byte[] seed) : base(providerType)
+		private Gost_R3411_PRF(ProviderType providerType, GostSymmetricAlgorithm key, byte[] label, byte[] seed) : base(providerType)
 		{
 			if (label == null)
 			{
@@ -78,7 +78,7 @@ namespace GostCryptography.Gost_R3411
 		}
 
 
-		private readonly Gost_28147_89_SymmetricAlgorithm _key;
+		private readonly GostSymmetricAlgorithm _key;
 		private readonly GostHMAC _hmac;
 		private readonly byte[] _labelAndSeed;
 		private readonly byte[] _buffer;
@@ -90,7 +90,7 @@ namespace GostCryptography.Gost_R3411
 		/// Создает экземпляр <typeparamref name="THMAC"/> на основе заданного ключа.
 		/// </summary>
 		[SecuritySafeCritical]
-		protected abstract THMAC CreateHMAC(Gost_28147_89_SymmetricAlgorithm key);
+		protected abstract THMAC CreateHMAC(GostSymmetricAlgorithm key);
 
 
 		/// <summary>

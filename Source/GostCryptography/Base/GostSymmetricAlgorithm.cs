@@ -37,5 +37,28 @@ namespace GostCryptography.Base
 
 		/// <inheritdoc />
 		public abstract string AlgorithmName { get; }
+
+
+		/// <summary>
+		/// Хэширует секретный ключ.
+		/// </summary>
+		public abstract byte[] ComputeHash(HashAlgorithm hash);
+
+		/// <summary>
+		/// Экспортирует (шифрует) секретный ключ.
+		/// </summary>
+		/// <param name="keyExchangeAlgorithm">Общий секретный ключ.</param>
+		/// <param name="keyExchangeExportMethod">Алгоритм экспорта общего секретного ключа.</param>
+		public abstract byte[] EncodePrivateKey(GostSymmetricAlgorithm keyExchangeAlgorithm, GostKeyExchangeExportMethod keyExchangeExportMethod);
+
+		/// <summary>
+		/// Импортирует (дешифрует) секретный ключ.
+		/// </summary>
+		/// <param name="encodedKeyExchangeData">Зашифрованный общий секретный ключ.</param>
+		/// <param name="keyExchangeExportMethod">Алгоритм экспорта общего секретного ключа.</param>
+		public abstract SymmetricAlgorithm DecodePrivateKey(byte[] encodedKeyExchangeData, GostKeyExchangeExportMethod keyExchangeExportMethod);
+
+
+		public abstract GostSymmetricAlgorithm Clone();
 	}
 }

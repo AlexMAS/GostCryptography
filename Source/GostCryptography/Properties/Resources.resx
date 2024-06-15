@@ -387,4 +387,13 @@
   <data name="SignedCmsCannotFindPrivateMember" xml:space="preserve">
     <value>Cannot find private member '{0}'.</value>
   </data>
+  <data name="RequiredGost3412_K" xml:space="preserve">
+    <value>Required GOST R 34.12 Kuznyechik key handle.</value>
+  </data>
+  <data name="RequiredGost3412_M" xml:space="preserve">
+    <value>Required GOST R 34.12 Magma key handle.</value>
+  </data>
+  <data name="UnsupportedSymmetricAlgorithm" xml:space="preserve">
+    <value>Unsupported symmetric algorithm: '{0}'.</value>
+  </data>
 </root>

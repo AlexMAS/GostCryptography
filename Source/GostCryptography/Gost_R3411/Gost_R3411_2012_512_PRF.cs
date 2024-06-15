@@ -1,7 +1,6 @@
 ﻿using System.Security;
 
 using GostCryptography.Base;
-using GostCryptography.Gost_28147_89;
 
 namespace GostCryptography.Gost_R3411
 {
@@ -28,7 +27,7 @@ namespace GostCryptography.Gost_R3411
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3411_2012_512_PRF(Gost_28147_89_SymmetricAlgorithmBase key, byte[] label, byte[] seed) : base(key, label, seed)
+		public Gost_R3411_2012_512_PRF(GostSymmetricAlgorithm key, byte[] label, byte[] seed) : base(key, label, seed)
 		{
 		}
 
@@ -45,7 +44,7 @@ namespace GostCryptography.Gost_R3411
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		protected override Gost_R3411_2012_512_HMAC CreateHMAC(Gost_28147_89_SymmetricAlgorithm key)
+		protected override Gost_R3411_2012_512_HMAC CreateHMAC(GostSymmetricAlgorithm key)
 		{
 			return new Gost_R3411_2012_512_HMAC(key);
 		}

@@ -46,7 +46,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 			return document;
 		}
 
-		private static XmlDocument EncryptXmlDocument(XmlDocument xmlDocument, Gost_28147_89_SymmetricAlgorithmBase sharedKey)
+		private static XmlDocument EncryptXmlDocument(XmlDocument xmlDocument, GostSymmetricAlgorithm sharedKey)
 		{
 			// Создание объекта для шифрации XML
 			var encryptedXml = new GostEncryptedXml(sharedKey.ProviderType);
@@ -96,7 +96,7 @@ namespace GostCryptography.Tests.Xml.Encrypt
 			return xmlDocument;
 		}
 
-		private static XmlDocument DecryptXmlDocument(XmlDocument encryptedXmlDocument, Gost_28147_89_SymmetricAlgorithmBase sharedKey)
+		private static XmlDocument DecryptXmlDocument(XmlDocument encryptedXmlDocument, GostSymmetricAlgorithm sharedKey)
 		{
 			// Создание объекта для дешифрации XML
 			var encryptedXml = new GostEncryptedXml(sharedKey.ProviderType, encryptedXmlDocument);

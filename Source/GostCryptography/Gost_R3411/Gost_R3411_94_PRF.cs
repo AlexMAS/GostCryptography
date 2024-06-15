@@ -28,7 +28,7 @@ namespace GostCryptography.Gost_R3411
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3411_94_PRF(Gost_28147_89_SymmetricAlgorithmBase key, byte[] label, byte[] seed) : base(key, label, seed)
+		public Gost_R3411_94_PRF(GostSymmetricAlgorithm key, byte[] label, byte[] seed) : base(key, label, seed)
 		{
 		}
 
@@ -45,7 +45,7 @@ namespace GostCryptography.Gost_R3411
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		protected override Gost_R3411_94_HMAC CreateHMAC(Gost_28147_89_SymmetricAlgorithm key)
+		protected override Gost_R3411_94_HMAC CreateHMAC(GostSymmetricAlgorithm key)
 		{
 			return new Gost_R3411_94_HMAC(key);
 		}

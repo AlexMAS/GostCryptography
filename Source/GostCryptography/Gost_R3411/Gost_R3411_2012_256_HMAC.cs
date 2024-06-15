@@ -1,7 +1,6 @@
 ﻿using System.Security;
 
 using GostCryptography.Base;
-using GostCryptography.Gost_28147_89;
 using GostCryptography.Native;
 
 namespace GostCryptography.Gost_R3411
@@ -36,7 +35,7 @@ namespace GostCryptography.Gost_R3411
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public Gost_R3411_2012_256_HMAC(Gost_28147_89_SymmetricAlgorithmBase keyAlgorithm) : base(keyAlgorithm, Gost_R3411_2012_256_HashAlgorithm.DefaultHashSizeValue)
+		public Gost_R3411_2012_256_HMAC(GostSymmetricAlgorithm keyAlgorithm) : base(keyAlgorithm, Gost_R3411_2012_256_HashAlgorithm.DefaultHashSizeValue)
 		{
 		}
 

@@ -380,11 +380,11 @@ namespace GostCryptography.Native
 			return hashHandle;
 		}
 
-		public static SafeHashHandleImpl CreateHashImit(SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle)
+		public static SafeHashHandleImpl CreateHashImit(SafeProvHandleImpl providerHandle, SafeKeyHandleImpl symKeyHandle, uint imitAlgId)
 		{
 			var hashImitHandle = SafeHashHandleImpl.InvalidHandle;
 
-			if (!CryptoApi.CryptCreateHash(providerHandle, Constants.CALG_G28147_IMIT, symKeyHandle, 0, ref hashImitHandle))
+			if (!CryptoApi.CryptCreateHash(providerHandle, imitAlgId, symKeyHandle, 0, ref hashImitHandle))
 			{
 				throw CreateWin32Error();
 			}
@@ -821,11 +821,11 @@ namespace GostCryptography.Native
 			return keyHandle;
 		}
 
-		public static SafeKeyHandleImpl DeriveSymKey(SafeProvHandleImpl providerHandle, SafeHashHandleImpl hashHandle)
+		public static SafeKeyHandleImpl DeriveSymKey(SafeProvHandleImpl providerHandle, SafeHashHandleImpl hashHandle, uint symAlgId)
 		{
 			var symKeyHandle = SafeKeyHandleImpl.InvalidHandle;
 
-			if (!CryptoApi.CryptDeriveKey(providerHandle, Constants.CALG_G28147, hashHandle, Constants.CRYPT_EXPORTABLE, ref symKeyHandle))
+			if (!CryptoApi.CryptDeriveKey(providerHandle, symAlgId, hashHandle, Constants.CRYPT_EXPORTABLE, ref symKeyHandle))
 			{
 				throw CreateWin32Error();
 			}
@@ -1052,7 +1052,9 @@ namespace GostCryptography.Native
 				throw ExceptionUtility.CryptographicException(Constants.NTE_BAD_DATA);
 			}
 
-			if (BitConverter.ToUInt32(exportedKeyBytes, 4) != Constants.CALG_G28147)
+			var symKeyAlgId = BitConverter.ToUInt32(exportedKeyBytes, 4);
+
+			if (symKeyAlgId != Constants.CALG_G28147 && symKeyAlgId != Constants.CALG_GR3412_2015_M && symKeyAlgId != Constants.CALG_GR3412_2015_K)
 			{
 				throw ExceptionUtility.CryptographicException(Constants.NTE_BAD_DATA);
 			}
@@ -1143,7 +1145,13 @@ namespace GostCryptography.Native
 			return hKeyExchange;
 		}
 
-		public static SafeKeyHandleImpl ImportBulkSessionKey(ProviderType providerType, SafeProvHandleImpl providerHandle, byte[] bulkSessionKey, RNGCryptoServiceProvider randomNumberGenerator)
+		public static SafeKeyHandleImpl ImportBulkSessionKey(
+			ProviderType providerType, 
+			SafeProvHandleImpl providerHandle, 
+			byte[] bulkSessionKey, 
+			RNGCryptoServiceProvider randomNumberGenerator,
+			uint symAlgId,
+			uint imitAlgId)
 		{
 			if (bulkSessionKey == null)
 			{
@@ -1157,7 +1165,7 @@ namespace GostCryptography.Native
 
 			var hSessionKey = SafeKeyHandleImpl.InvalidHandle;
 
-			if (!CryptoApi.CryptGenKey(providerHandle, Constants.CALG_G28147, 0, ref hSessionKey))
+			if (!CryptoApi.CryptGenKey(providerHandle, symAlgId, 0, ref hSessionKey))
 			{
 				throw CreateWin32Error();
 			}
@@ -1165,7 +1173,7 @@ namespace GostCryptography.Native
 			var keyWrap = new Gost_28147_89_KeyExchangeInfo { EncryptedKey = new byte[32] };
 			Array.Copy(bulkSessionKey, keyWrap.EncryptedKey, 32);
 			SetKeyParameterInt32(hSessionKey, Constants.KP_MODE, Constants.CRYPT_MODE_ECB);
-			SetKeyParameterInt32(hSessionKey, Constants.KP_ALGID, Constants.CALG_G28147);
+			SetKeyParameterInt32(hSessionKey, Constants.KP_ALGID, (int)symAlgId);
 			SetKeyParameterInt32(hSessionKey, Constants.KP_PADDING, Constants.ZERO_PADDING);
 
 			uint sessionKeySize = 32;
@@ -1177,7 +1185,7 @@ namespace GostCryptography.Native
 
 			SetKeyParameterInt32(hSessionKey, Constants.KP_MODE, Constants.CRYPT_MODE_CFB);
 
-			var hashHandle = CreateHashImit(providerHandle, hSessionKey);
+			var hashHandle = CreateHashImit(providerHandle, hSessionKey, imitAlgId);
 
 			keyWrap.Ukm = new byte[8];
 			randomNumberGenerator.GetBytes(keyWrap.Ukm);
@@ -1220,7 +1228,26 @@ namespace GostCryptography.Native
 			sourceIndex++;
 			sourceIndex += 2;
 
-			Array.Copy(BitConverter.GetBytes(Constants.CALG_G28147), 0, importedKeyBytes, sourceIndex, 4);
+			int symAlgId;
+
+			if (keyExchangeInfo.EncryptionParamSet == Gost_28147_89_Constants.EncryptAlgorithm.Value)
+			{
+				symAlgId = Constants.CALG_G28147;
+			}
+			else if (keyExchangeInfo.EncryptionParamSet == Gost_28147_89_Constants.EncryptAlgorithmMagma.Value)
+			{
+				symAlgId = Constants.CALG_GR3412_2015_M;
+			}
+			else if (keyExchangeInfo.EncryptionParamSet == Gost_28147_89_Constants.EncryptAlgorithmKuznyechik.Value)
+			{
+				symAlgId = Constants.CALG_GR3412_2015_K;
+			}
+			else
+			{
+				symAlgId = Constants.CALG_G28147;
+			}
+
+			Array.Copy(BitConverter.GetBytes(symAlgId), 0, importedKeyBytes, sourceIndex, 4);
 			sourceIndex += 4;
 
 			Array.Copy(BitConverter.GetBytes(Constants.G28147_MAGIC), 0, importedKeyBytes, sourceIndex, 4);

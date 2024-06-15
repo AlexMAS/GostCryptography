@@ -57,39 +57,35 @@ namespace GostCryptography.Gost_R3410
 		[SecuritySafeCritical]
 		public override byte[] EncodeKeyExchange(SymmetricAlgorithm keyExchangeAlgorithm, GostKeyExchangeExportMethod keyExchangeExportMethod)
 		{
-			if (keyExchangeAlgorithm is Gost_28147_89_SymmetricAlgorithm symAlg)
-			{
-				return EncodeKeyExchangeInternal(symAlg, keyExchangeExportMethod);
-			}
+			int exportAlgId;
 
-			if (keyExchangeAlgorithm is Gost_28147_89_SymmetricAlgorithmBase symAlgBase)
+			if (keyExchangeAlgorithm is ISafeHandleProvider<SafeKeyHandleImpl> exportKey)
 			{
-				using (var gostKeyExchangeAlgorithm = new Gost_28147_89_SymmetricAlgorithm(symAlgBase.ProviderType))
+				switch (keyExchangeExportMethod)
 				{
-					return gostKeyExchangeAlgorithm.EncodePrivateKey(symAlgBase, keyExchangeExportMethod);
+					case GostKeyExchangeExportMethod.GostKeyExport:
+						exportAlgId = Constants.CALG_SIMPLE_EXPORT;
+						break;
+					case GostKeyExchangeExportMethod.CryptoProKeyExport:
+						exportAlgId = Constants.CALG_PRO_EXPORT;
+						break;
+					case GostKeyExchangeExportMethod.CryptoProTk26KeyExport:
+						exportAlgId = Constants.CALG_PRO12_EXPORT;
+						break;
+					default:
+						throw ExceptionUtility.ArgumentOutOfRange(nameof(keyExchangeExportMethod));
 				}
 			}
-
-			throw ExceptionUtility.Argument(nameof(keyExchangeAlgorithm), Resources.RequiredGost28147);
-		}
-
-		[SecurityCritical]
-		private byte[] EncodeKeyExchangeInternal(Gost_28147_89_SymmetricAlgorithm keyExchangeAlgorithm, GostKeyExchangeExportMethod keyExchangeExportMethod)
-		{
-			switch (keyExchangeExportMethod)
+			else
 			{
-				case GostKeyExchangeExportMethod.GostKeyExport:
-					return EncodeKeyExchangeInternal(keyExchangeAlgorithm, Constants.CALG_SIMPLE_EXPORT);
-
-				case GostKeyExchangeExportMethod.CryptoProKeyExport:
-					return EncodeKeyExchangeInternal(keyExchangeAlgorithm, Constants.CALG_PRO_EXPORT);
+				throw ExceptionUtility.Argument(nameof(keyExchangeAlgorithm), Resources.RequiredGost28147);
 			}
 
-			throw ExceptionUtility.ArgumentOutOfRange(nameof(keyExchangeExportMethod));
+			return EncodeKeyExchangeInternal(exportKey, exportAlgId);
 		}
 
 		[SecurityCritical]
-		private byte[] EncodeKeyExchangeInternal(Gost_28147_89_SymmetricAlgorithm keyExchangeAlgorithm, int keyExchangeExportAlgId)
+		private byte[] EncodeKeyExchangeInternal(ISafeHandleProvider<SafeKeyHandleImpl> exportKey, int exportAlgId)
 		{
 			Gost_28147_89_KeyExchangeInfo keyExchangeInfo;
 
@@ -99,9 +95,9 @@ namespace GostCryptography.Gost_R3410
 			{
 				var importedKeyBytes = CryptoApiHelper.EncodePublicBlob(_keyExchangeParameters, _keySize, _signatureAlgId);
 				CryptoApiHelper.ImportCspBlob(importedKeyBytes, _provHandle, _keyHandle, out keyExchangeHandle);
-				CryptoApiHelper.SetKeyExchangeExportAlgId(ProviderType, keyExchangeHandle, keyExchangeExportAlgId);
+				CryptoApiHelper.SetKeyExchangeExportAlgId(ProviderType, keyExchangeHandle, exportAlgId);
 
-				var symKeyHandle = keyExchangeAlgorithm.GetSafeHandle();
+				var symKeyHandle = exportKey.GetSafeHandle();
 				keyExchangeInfo = CryptoApiHelper.ExportKeyExchange(symKeyHandle, keyExchangeHandle);
 			}
 			finally
@@ -121,12 +117,13 @@ namespace GostCryptography.Gost_R3410
 			{
 				case GostKeyExchangeExportMethod.GostKeyExport:
 					return DecodeKeyExchangeInternal(encodedKeyExchangeData, Constants.CALG_SIMPLE_EXPORT);
-
 				case GostKeyExchangeExportMethod.CryptoProKeyExport:
 					return DecodeKeyExchangeInternal(encodedKeyExchangeData, Constants.CALG_PRO_EXPORT);
+				case GostKeyExchangeExportMethod.CryptoProTk26KeyExport:
+					return DecodeKeyExchangeInternal(encodedKeyExchangeData, Constants.CALG_PRO12_EXPORT);
+				default:
+					throw ExceptionUtility.ArgumentOutOfRange(nameof(keyExchangeExportMethod));
 			}
-
-			throw ExceptionUtility.ArgumentOutOfRange(nameof(keyExchangeExportMethod));
 		}
 
 		[SecurityCritical]
@@ -151,7 +148,22 @@ namespace GostCryptography.Gost_R3410
 				keyExchangeHandle.TryDispose();
 			}
 
-			return new Gost_28147_89_SymmetricAlgorithm(ProviderType, _provHandle, symKeyHandle);
+			if (keyExchangeInfo.EncryptionParamSet == Gost_28147_89_Constants.EncryptAlgorithm.Value)
+			{
+				return new Gost_28147_89_SymmetricAlgorithm(ProviderType, _provHandle, symKeyHandle);
+			}
+			else if (keyExchangeInfo.EncryptionParamSet == Gost_28147_89_Constants.EncryptAlgorithmMagma.Value)
+			{
+				return new Gost_3412_M_SymmetricAlgorithm(ProviderType, _provHandle, symKeyHandle);
+			}
+			else if (keyExchangeInfo.EncryptionParamSet == Gost_28147_89_Constants.EncryptAlgorithmKuznyechik.Value)
+			{
+				return new Gost_3412_K_SymmetricAlgorithm(ProviderType, _provHandle, symKeyHandle);
+			}
+			else
+			{
+				return new Gost_28147_89_SymmetricAlgorithm(ProviderType, _provHandle, symKeyHandle);
+			}
 		}
 
 
