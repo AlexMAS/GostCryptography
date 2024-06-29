@@ -66,9 +66,9 @@ namespace GostCryptography.Tests.Gost_R3411
 
 			// When
 
-			Gost_28147_89_SymmetricAlgorithmBase randomKey1;
-			Gost_28147_89_SymmetricAlgorithmBase randomKey2;
-			Gost_28147_89_SymmetricAlgorithmBase randomKey3;
+			GostSymmetricAlgorithm randomKey1;
+			GostSymmetricAlgorithm randomKey2;
+			GostSymmetricAlgorithm randomKey3;
 
 			using (var prf = new Gost_R3411_2012_512_PRF(initKey, Label, Seed))
 			{
@@ -90,14 +90,14 @@ namespace GostCryptography.Tests.Gost_R3411
 		}
 
 
-		public static void AssertKeyIsValid(Gost_28147_89_SymmetricAlgorithmBase key)
+		public static void AssertKeyIsValid(GostSymmetricAlgorithm key)
 		{
 			var encryptedData = EncryptData(key, TestData);
 			var decryptedData = DecryptData(key, encryptedData);
 			CollectionAssert.AreEqual(TestData, decryptedData);
 		}
 
-		public static void AssertKeysAreNotEqual(Gost_28147_89_SymmetricAlgorithmBase key1, Gost_28147_89_SymmetricAlgorithmBase key2)
+		public static void AssertKeysAreNotEqual(GostSymmetricAlgorithm key1, GostSymmetricAlgorithm key2)
 		{
 			var encryptedData1 = EncryptData(key1, TestData);
 			var encryptedData2 = EncryptData(key2, TestData);
@@ -105,13 +105,13 @@ namespace GostCryptography.Tests.Gost_R3411
 		}
 
 
-		public static byte[] EncryptData(Gost_28147_89_SymmetricAlgorithmBase key, byte[] data)
+		public static byte[] EncryptData(GostSymmetricAlgorithm key, byte[] data)
 		{
 			var transform = key.CreateEncryptor();
 			return transform.TransformFinalBlock(data, 0, data.Length);
 		}
 
-		public static byte[] DecryptData(Gost_28147_89_SymmetricAlgorithmBase key, byte[] data)
+		public static byte[] DecryptData(GostSymmetricAlgorithm key, byte[] data)
 		{
 			var transform = key.CreateDecryptor();
 			return transform.TransformFinalBlock(data, 0, data.Length);

@@ -33,24 +33,24 @@ namespace GostCryptography.Gost_R3411
 		/// <param name="hashSize">Размер хэш-кода в битах.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		[SecuritySafeCritical]
-		protected Gost_R3411_HMAC(Gost_28147_89_SymmetricAlgorithmBase keyAlgorithm, int hashSize) : base(keyAlgorithm.ProviderType, hashSize)
+		protected Gost_R3411_HMAC(GostSymmetricAlgorithm keyAlgorithm, int hashSize) : base(keyAlgorithm.ProviderType, hashSize)
 		{
 			if (keyAlgorithm == null)
 			{
 				throw ExceptionUtility.ArgumentNull(nameof(keyAlgorithm));
 			}
 
-			InitDefaults(Gost_28147_89_SymmetricAlgorithm.CreateFromKey(keyAlgorithm));
+			InitDefaults(keyAlgorithm.Clone());
 		}
 
 
 		[SecuritySafeCritical]
-		private void InitDefaults(Gost_28147_89_SymmetricAlgorithm keyAlgorithm)
+		private void InitDefaults(GostSymmetricAlgorithm keyAlgorithm)
 		{
 			HashName = typeof(THash).Name;
 
 			_keyAlgorithm = keyAlgorithm;
-			_hmacHandle = CreateHashHMAC(keyAlgorithm.ProviderType, CryptoApiHelper.GetProviderHandle(keyAlgorithm.ProviderType), keyAlgorithm.GetSafeHandle());
+			_hmacHandle = CreateHashHMAC(keyAlgorithm.ProviderType, CryptoApiHelper.GetProviderHandle(keyAlgorithm.ProviderType), ((ISafeHandleProvider<SafeKeyHandleImpl>)keyAlgorithm).GetSafeHandle());
 		}
 
 
@@ -63,7 +63,7 @@ namespace GostCryptography.Gost_R3411
 
 		[SecurityCritical]
 		private SafeHashHandleImpl _hmacHandle;
-		private Gost_28147_89_SymmetricAlgorithm _keyAlgorithm;
+		private GostSymmetricAlgorithm _keyAlgorithm;
 
 
 		/// <inheritdoc />
@@ -77,7 +77,7 @@ namespace GostCryptography.Gost_R3411
 		/// <summary>
 		/// Алгоритм для вычисления HMAC.
 		/// </summary>
-		public Gost_28147_89_SymmetricAlgorithmBase KeyAlgorithm
+		public GostSymmetricAlgorithm KeyAlgorithm
 		{
 			get
 			{
@@ -86,7 +86,7 @@ namespace GostCryptography.Gost_R3411
 			[SecuritySafeCritical]
 			set
 			{
-				_keyAlgorithm = Gost_28147_89_SymmetricAlgorithm.CreateFromKey(value);
+				_keyAlgorithm = value.Clone();
 			}
 		}
 
@@ -110,7 +110,7 @@ namespace GostCryptography.Gost_R3411
 		[SecuritySafeCritical]
 		public override void Initialize()
 		{
-			var hmacHandle = CreateHashHMAC(ProviderType, CryptoApiHelper.GetProviderHandle(ProviderType), _keyAlgorithm.GetSafeHandle());
+			var hmacHandle = CreateHashHMAC(ProviderType, CryptoApiHelper.GetProviderHandle(ProviderType), ((ISafeHandleProvider<SafeKeyHandleImpl>)_keyAlgorithm).GetSafeHandle());
 			_hmacHandle.TryDispose();
 			_hmacHandle = hmacHandle;
 		}

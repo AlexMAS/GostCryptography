@@ -62,6 +62,10 @@ namespace GostCryptography.Config
 
 			AddAlgorithm<Gost_28147_89_SymmetricAlgorithm>(Gost_28147_89_SymmetricAlgorithm.KnownAlgorithmNames);
 			AddAlgorithm<Gost_28147_89_ImitHashAlgorithm>(Gost_28147_89_ImitHashAlgorithm.KnownAlgorithmNames);
+			AddAlgorithm<Gost_3412_M_SymmetricAlgorithm>(Gost_3412_M_SymmetricAlgorithm.KnownAlgorithmNames);
+			AddAlgorithm<Gost_3412_M_ImitHashAlgorithm>(Gost_3412_M_ImitHashAlgorithm.KnownAlgorithmNames);
+			AddAlgorithm<Gost_3412_K_SymmetricAlgorithm>(Gost_3412_K_SymmetricAlgorithm.KnownAlgorithmNames);
+			AddAlgorithm<Gost_3412_K_ImitHashAlgorithm>(Gost_3412_K_ImitHashAlgorithm.KnownAlgorithmNames);
 
 			AddAlgorithm<Gost_R3410_2001_AsymmetricAlgorithm>();
 			AddAlgorithm<Gost_R3410_2012_256_AsymmetricAlgorithm>();
@@ -86,6 +90,8 @@ namespace GostCryptography.Config
 			AddOID<Gost_R3411_2012_512_HashAlgorithm>(Gost_R3410_2012_512_Constants.HashAlgorithm.Value, Gost_R3411_2012_512_HashAlgorithm.KnownAlgorithmNames);
 
 			AddOID<Gost_28147_89_SymmetricAlgorithm>(Gost_28147_89_Constants.EncryptAlgorithm.Value, Gost_28147_89_SymmetricAlgorithm.KnownAlgorithmNames);
+			AddOID<Gost_3412_M_SymmetricAlgorithm>(Gost_28147_89_Constants.EncryptAlgorithmMagma.Value, Gost_3412_M_SymmetricAlgorithm.KnownAlgorithmNames);
+			AddOID<Gost_3412_K_SymmetricAlgorithm>(Gost_28147_89_Constants.EncryptAlgorithmKuznyechik.Value, Gost_3412_K_SymmetricAlgorithm.KnownAlgorithmNames);
 		}
 
 

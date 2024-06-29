@@ -117,7 +117,7 @@ namespace GostCryptography.Gost_28147_89
 
 			var providerType = gostHashAlgorithm.ProviderType;
 			var providerHandle = CryptoApiHelper.GetProviderHandle(providerType);
-			var symKeyHandle = CryptoApiHelper.DeriveSymKey(providerHandle, hashHandleProvider.SafeHandle);
+			var symKeyHandle = CryptoApiHelper.DeriveSymKey(providerHandle, hashHandleProvider.SafeHandle, Constants.CALG_G28147);
 
 			return new Gost_28147_89_SymmetricAlgorithm(providerType, providerHandle, symKeyHandle);
 		}
@@ -141,7 +141,7 @@ namespace GostCryptography.Gost_28147_89
 			var providerHandle = CryptoApiHelper.GetProviderHandle(providerType);
 			var randomNumberGenerator = CryptoApiHelper.GetRandomNumberGenerator(providerType);
 
-			using (var keyHandle = CryptoApiHelper.ImportBulkSessionKey(providerType, providerHandle, sessionKey, randomNumberGenerator))
+			using (var keyHandle = CryptoApiHelper.ImportBulkSessionKey(providerType, providerHandle, sessionKey, randomNumberGenerator, Constants.CALG_G28147, Constants.CALG_G28147_IMIT))
 			{
 				return new Gost_28147_89_SymmetricAlgorithm(providerType, providerHandle, keyHandle);
 			}
@@ -362,6 +362,10 @@ namespace GostCryptography.Gost_28147_89
 			{
 				keyExchangeExportAlgId = Constants.CALG_PRO_EXPORT;
 			}
+			else if (keyExchangeExportMethod == GostKeyExchangeExportMethod.CryptoProTk26KeyExport)
+			{
+				keyExchangeExportAlgId = Constants.CALG_PRO12_EXPORT;
+			}
 			else
 			{
 				throw ExceptionUtility.ArgumentOutOfRange(nameof(keyExchangeExportMethod));
@@ -384,7 +388,7 @@ namespace GostCryptography.Gost_28147_89
 
 		/// <inheritdoc />
 		[SecuritySafeCritical]
-		public override byte[] EncodePrivateKey(Gost_28147_89_SymmetricAlgorithmBase keyExchangeAlgorithm, GostKeyExchangeExportMethod keyExchangeExportMethod)
+		public override byte[] EncodePrivateKey(GostSymmetricAlgorithm keyExchangeAlgorithm, GostKeyExchangeExportMethod keyExchangeExportMethod)
 		{
 			if (keyExchangeAlgorithm == null)
 			{
@@ -435,6 +439,13 @@ namespace GostCryptography.Gost_28147_89
 
 				return keyExchangeInfo.Encode();
 			}
+		}
+
+
+		[SecuritySafeCritical]
+		public override GostSymmetricAlgorithm Clone()
+		{
+			return CreateFromKey(this);
 		}
 
 

@@ -7,7 +7,6 @@ using System.Xml;
 
 using GostCryptography.Base;
 using GostCryptography.Config;
-using GostCryptography.Gost_28147_89;
 
 namespace GostCryptography.Xml
 {
@@ -197,7 +196,7 @@ namespace GostCryptography.Xml
 		/// <param name="publicKey">Открытый ключ ГОСТ Р 34.10 для шифрования сессионного ключа.</param>
 		/// <returns>Массив байт, содержащий зашифрованный сессионный ключ.</returns>
 		/// <remarks>Как правило сессионный ключ используется для шифрования данных и в свою очередь так же шифруется.</remarks>
-		public static byte[] EncryptKey(Gost_28147_89_SymmetricAlgorithmBase sessionKey, GostAsymmetricAlgorithm publicKey)
+		public static byte[] EncryptKey(GostSymmetricAlgorithm sessionKey, GostAsymmetricAlgorithm publicKey)
 		{
 			return GostEncryptedXmlImpl.EncryptKey(sessionKey, publicKey);
 		}
@@ -210,7 +209,7 @@ namespace GostCryptography.Xml
 		/// <param name="exportMethod">Алгоритм экспорта сессионного ключа.</param>
 		/// <returns>Массив байт, содержащий зашифрованный сессионный ключ.</returns>
 		/// <remarks>Как правило сессионный ключ используется для шифрования данных и в свою очередь так же шифруется.</remarks>
-		public static byte[] EncryptKey(Gost_28147_89_SymmetricAlgorithmBase sessionKey, Gost_28147_89_SymmetricAlgorithmBase sharedKey, GostKeyExchangeExportMethod exportMethod = GostKeyExchangeExportMethod.GostKeyExport)
+		public static byte[] EncryptKey(GostSymmetricAlgorithm sessionKey, GostSymmetricAlgorithm sharedKey, GostKeyExchangeExportMethod exportMethod = GostKeyExchangeExportMethod.GostKeyExport)
 		{
 			return GostEncryptedXmlImpl.EncryptKey(sessionKey, sharedKey, exportMethod);
 		}

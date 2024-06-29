@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-      <GostCryptographyVersion>2.0.10</GostCryptographyVersion>
+      <GostCryptographyVersion>2.0.11</GostCryptographyVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -21,7 +21,7 @@
     <Version>$(GostCryptographyVersion)</Version>
     <Authors>Alexander Mezhov</Authors>
     <Company />
-    <Description>.NET driver for ViPNet CSP and CryptoPro CSP. Implements crypto algorithms based on Russian national cryptographic standards GOST 28147-89, GOST R 34.10 and GOST R 34.11. Also provides abstractions to sign and verify CMS/PKCS #7 messages, sign, verify and encrypt XML documents.</Description>
+    <Description>.NET driver for ViPNet CSP and CryptoPro CSP. Implements crypto algorithms based on Russian national cryptographic standards GOST 28147-89, GOST R 34.12, GOST R 34.10 and GOST R 34.11. Also provides abstractions to sign and verify CMS/PKCS #7 messages, sign, verify and encrypt XML documents.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/AlexMAS/GostCryptography</PackageProjectUrl>
     <NeutralLanguage></NeutralLanguage>
@@ -29,7 +29,12 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/AlexMAS/GostCryptography</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(SolutionDir)README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <Reference Include="System.Security" />

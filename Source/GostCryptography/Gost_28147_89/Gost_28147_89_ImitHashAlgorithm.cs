@@ -126,7 +126,7 @@ namespace GostCryptography.Gost_28147_89
 		private void InitHash()
 		{
 			var providerHandle = CryptoApiHelper.GetProviderHandle(ProviderType);
-			var hashHandle = CryptoApiHelper.CreateHashImit(providerHandle, _keyAlgorithm.GetSafeHandle());
+			var hashHandle = CryptoApiHelper.CreateHashImit(providerHandle, _keyAlgorithm.GetSafeHandle(), Constants.CALG_G28147_IMIT);
 
 			_hashHandle = hashHandle;
 		}

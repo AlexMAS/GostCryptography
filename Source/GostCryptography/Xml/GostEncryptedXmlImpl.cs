@@ -86,7 +86,7 @@ namespace GostCryptography.Xml
 			return encryptedData;
 		}
 
-		public static byte[] EncryptKey(Gost_28147_89_SymmetricAlgorithmBase sessionKey, GostAsymmetricAlgorithm publicKey)
+		public static byte[] EncryptKey(GostSymmetricAlgorithm sessionKey, GostAsymmetricAlgorithm publicKey)
 		{
 			if (sessionKey == null)
 			{
@@ -102,7 +102,7 @@ namespace GostCryptography.Xml
 			return formatter.CreateKeyExchangeData(sessionKey);
 		}
 
-		public static byte[] EncryptKey(Gost_28147_89_SymmetricAlgorithmBase sessionKey, Gost_28147_89_SymmetricAlgorithmBase sharedKey, GostKeyExchangeExportMethod exportMethod)
+		public static byte[] EncryptKey(GostSymmetricAlgorithm sessionKey, GostSymmetricAlgorithm sharedKey, GostKeyExchangeExportMethod exportMethod)
 		{
 			if (sessionKey == null)
 			{
@@ -135,15 +135,27 @@ namespace GostCryptography.Xml
 				symmetricAlgorithmUri = encryptedData.EncryptionMethod.KeyAlgorithm;
 			}
 
+			byte[] iv;
+
 			if (Gost_28147_89_SymmetricAlgorithm.AlgorithmNameValue.Equals(symmetricAlgorithmUri, StringComparison.OrdinalIgnoreCase))
 			{
-				var iv = new byte[8];
-				Buffer.BlockCopy(this.GetCipherValue(encryptedData.CipherData), 0, iv, 0, iv.Length);
-
-				return iv;
+				iv = new byte[Gost_28147_89_SymmetricAlgorithm.DefaultIvSize];
+			}
+			else if (Gost_3412_M_SymmetricAlgorithm.AlgorithmNameValue.Equals(symmetricAlgorithmUri, StringComparison.OrdinalIgnoreCase))
+			{
+				iv = new byte[Gost_3412_M_SymmetricAlgorithm.DefaultIvSize];
+			}
+			else if (Gost_3412_K_SymmetricAlgorithm.AlgorithmNameValue.Equals(symmetricAlgorithmUri, StringComparison.OrdinalIgnoreCase))
+			{
+				iv = new byte[Gost_3412_K_SymmetricAlgorithm.DefaultIvSize];
+			}
+			else
+			{
+				return base.GetDecryptionIV(encryptedData, symmetricAlgorithmUri);
 			}
 
-			return base.GetDecryptionIV(encryptedData, symmetricAlgorithmUri);
+			Buffer.BlockCopy(this.GetCipherValue(encryptedData.CipherData), 0, iv, 0, iv.Length);
+			return iv;
 		}
 
 		public override SymmetricAlgorithm GetDecryptionKey(EncryptedData encryptedData, string symmetricAlgorithmUri)
@@ -352,16 +364,16 @@ namespace GostCryptography.Xml
 
 			SymmetricAlgorithm decryptionKey = null;
 
-			if (algorithm is Gost_28147_89_SymmetricAlgorithmBase gost28147)
+			if (algorithm is GostSymmetricAlgorithm gostSymAlg)
 			{
 				if (string.Equals(encryptionKeyAlgorithm, GostEncryptedXml.XmlEncGostKeyExportUrl, StringComparison.OrdinalIgnoreCase))
 				{
-					decryptionKey = gost28147.DecodePrivateKey(keyData, GostKeyExchangeExportMethod.GostKeyExport);
+					decryptionKey = gostSymAlg.DecodePrivateKey(keyData, GostKeyExchangeExportMethod.GostKeyExport);
 				}
 
 				if (string.Equals(encryptionKeyAlgorithm, GostEncryptedXml.XmlEncGostCryptoProKeyExportUrl, StringComparison.OrdinalIgnoreCase))
 				{
-					decryptionKey = gost28147.DecodePrivateKey(keyData, GostKeyExchangeExportMethod.CryptoProKeyExport);
+					decryptionKey = gostSymAlg.DecodePrivateKey(keyData, GostKeyExchangeExportMethod.CryptoProKeyExport);
 				}
 			}
 			else

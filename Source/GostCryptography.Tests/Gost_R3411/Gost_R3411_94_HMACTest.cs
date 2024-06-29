@@ -42,7 +42,7 @@ namespace GostCryptography.Tests.Gost_R3411
 			return new MemoryStream(Encoding.UTF8.GetBytes("Some data to HMAC..."));
 		}
 
-		private static Stream CreateHmacDataStream(Gost_28147_89_SymmetricAlgorithmBase sharedKey, Stream dataStream)
+		private static Stream CreateHmacDataStream(GostSymmetricAlgorithm sharedKey, Stream dataStream)
 		{
 			// Создание объекта для вычисления HMAC
 			using (var hmac = new Gost_R3411_94_HMAC(sharedKey))
@@ -64,7 +64,7 @@ namespace GostCryptography.Tests.Gost_R3411
 			}
 		}
 
-		private static bool VerifyHmacDataStream(Gost_28147_89_SymmetricAlgorithmBase sharedKey, Stream hmacDataStream)
+		private static bool VerifyHmacDataStream(GostSymmetricAlgorithm sharedKey, Stream hmacDataStream)
 		{
 			// Создание объекта для вычисления HMAC
 			using (var hmac = new Gost_R3411_94_HMAC(sharedKey))

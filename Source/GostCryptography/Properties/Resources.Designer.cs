@@ -745,6 +745,24 @@ namespace GostCryptography.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Required GOST R 34.12 Kuznyechik key handle..
+        /// </summary>
+        internal static string RequiredGost3412_K {
+            get {
+                return ResourceManager.GetString("RequiredGost3412_K", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Required GOST R 34.12 Magma key handle..
+        /// </summary>
+        internal static string RequiredGost3412_M {
+            get {
+                return ResourceManager.GetString("RequiredGost3412_M", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hash algorithm must be GOST R 34.11, GOST R 34.11 HMAC or GOST R 34.11 Imit..
         /// </summary>
         internal static string RequiredGostHash {
@@ -786,6 +804,15 @@ namespace GostCryptography.Properties {
         internal static string SymmetryImportBulkKeyNotSupported {
             get {
                 return ResourceManager.GetString("SymmetryImportBulkKeyNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unsupported symmetric algorithm: &apos;{0}&apos;..
+        /// </summary>
+        internal static string UnsupportedSymmetricAlgorithm {
+            get {
+                return ResourceManager.GetString("UnsupportedSymmetricAlgorithm", resourceCulture);
             }
         }
         
